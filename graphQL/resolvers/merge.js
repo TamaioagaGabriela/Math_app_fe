@@ -12,8 +12,8 @@ const { dateToString } = require('../../helpers/date');
 
 const fisaFormuleUnica = async fisaFormuleId => {
   try {
-    console.log("fisaFormule");
-    console.log(fisaFormuleId);
+    // console.log("fisaFormule");
+    // console.log(fisaFormuleId);
     const fisaFormule = await FisaFormule.findById(fisaFormuleId);
          return { ...fisaFormule._doc, _id: fisaFormule.id};
   } catch (err) {
@@ -23,8 +23,8 @@ const fisaFormuleUnica = async fisaFormuleId => {
 
 const teorieUnica = async fisaTeorieId => {
   try {
-    console.log("teorie");
-    console.log(fisaTeorieId);
+    // console.log("teorie");
+    // console.log(fisaTeorieId);
     const teorie = await Teorie.findById(fisaTeorieId);
          return { ...teorie._doc, _id: teorie.id};
   } catch (err) {
@@ -34,8 +34,8 @@ const teorieUnica = async fisaTeorieId => {
 
 const getExercitiu = async exercitiuId => {
   try {
-    console.log("exercitiu");
-    console.log(exercitiuId);
+    // console.log("exercitiu");
+    // console.log(exercitiuId);
     const exercitiu = await Exercitiu.findById(exercitiuId);
          return { ...exercitiu._doc, _id: exercitiu.id};
   } catch (err) {
@@ -45,8 +45,8 @@ const getExercitiu = async exercitiuId => {
 
 const getTest = async testId => {
   try {
-    console.log("test");
-    console.log(testId);
+    // console.log("test");
+    // console.log(testId);
     const test = await Test.findById(testId);
          return { ...test._doc, _id: test.id};
   } catch (err) {
@@ -57,8 +57,8 @@ const getTest = async testId => {
 const user = async userId => {
   try {
       // const userId = "624622b826d81302468d69c4"; 
-      console.log("user");
-      console.log(userId);
+      // console.log("user");
+      // console.log(userId);
       const user = await User.findById(userId);
           return { ...user._doc, _id: user.id};
   }   catch(err) {
