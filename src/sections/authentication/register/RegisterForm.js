@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
+// import fetch from 'node-fetch';
 import Iconify from '../../../components/Iconify';
 
 // ----------------------------------------------------------------------
@@ -31,9 +32,68 @@ export default function RegisterForm() {
       email: '',
       password: ''
     },
-    validationSchema: RegisterSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    // validationSchema: RegisterSchema,
+    onSubmit: (values) => {
+      const { email, firstName, lastName, password } = values;
+
+      const requestBody = {
+        query: `
+        mutation adaugaUser($username: String!, $parola: String!, $nume: String!, $prenume: String!, $email: String!, $email_tutore: String!, $clasa: String!) {
+          adaugaUser(userInput: {
+            username: $username
+            parola: $parola
+            nume: $nume
+            prenume: $prenume
+            email: $email
+            email_tutore: $email_tutore
+            clasa: $clasa
+          }){
+            _id
+            username
+            nume
+            prenume
+            email
+            email_tutore
+            clasa
+          }
+        }
+        `,
+        variables: {
+          username: 'mara',
+          parola: password,
+          nume: lastName,
+          prenume: firstName,
+          email,
+          email_tutore: email,
+          clasa: 'XI'
+        }
+      };
+
+      console.log(JSON.stringify(requestBody));
+
+      fetch('http://localhost:8000/graphql', {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((res) => {
+          console.log(res.status);
+          if (res.status !== 200 && res.status !== 201) {
+            throw new Error('Failed!');
+          }
+          return res.json();
+        })
+        .then((resData) => {
+          // if (resData.data.adaugaUser.email) {
+          //   this.setState({ errorMessage: 'Cont creat cu succes' });
+          //   this.switchModeHandler();
+          console.log(resData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   });
 
