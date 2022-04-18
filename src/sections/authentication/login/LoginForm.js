@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
@@ -13,7 +13,6 @@ import {
   FormControlLabel
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import AuthContext from '../../../context/auth-context';
 // component
 import Iconify from '../../../components/Iconify';
 
@@ -23,12 +22,13 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  // Declare a new state variable, which we'll call "count"
-  const [authData, setAuthData] = useState('');
+  // Declare a new state variable
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
-      .email('Email gresit, parola gresita sau email neconfirmat')
+      .email('Email-ul nu respecta formatul necesar')
       .required('Email is required'),
     parola: Yup.string().required('Password is required')
   });
@@ -37,7 +37,11 @@ export default function LoginForm() {
     initialValues: {
       email: '',
       parola: '',
-      remember: true
+      remember: true,
+      userId: '',
+      token: '',
+      role: '',
+      tokenExpiration: ''
     },
     validationSchema: LoginSchema,
     onSubmit: (values) => {
@@ -70,48 +74,43 @@ export default function LoginForm() {
         .then((res) => {
           console.log(res.status);
           if (res.status !== 200 && res.status !== 201) {
-            // errorMessage = 'Email gresit, parola gresita sau email neconfirmat';
             console.log('Email gresit, parola gresita sau email neconfirmat');
-            // validateEmail(email);
+            setErrorMessage('Email gresit, parola gresita sau email neconfirmat');
+
+            setIsSubmitting(false);
+            navigate('/login', { replace: true });
             throw new Error('Failed!');
-            // navigate('/login', { replace: true });
           }
-          console.log('aicit');
           return res.json();
         })
-        .then((authData) => {
-          if (authData.token) {
-            console.log('aicit1');
-            console.log(authData);
-            authData.context.login(
-              authData.data.login.token,
-              authData.data.login.userId,
-              authData.data.login.tokenExpiration,
-              authData.data.login.role
-            );
-            // values.setState({ errorMessage: null });
-            navigate('/login', { replace: true });
-          }
+        .then((resData) => {
+          console.log('token = ', resData.data.login.token);
+          console.log('userId = ', resData.data.login.userId);
+          // if (resData.token) {
+          // authData.context.login(
+          //   authData.data.login.token,
+          //   authData.data.login.userId,
+          //   authData.data.login.tokenExpiration,
+          //   authData.data.login.role
+          // );
+          // }
+          console.log('resData = ', resData);
+          // navigate('/dashboard/app', { replace: true });
+
+          navigate('/dashboard/app', {
+            replace: true,
+            state: {
+              resData
+            }
+          });
         })
         .catch((err) => {
           console.log(err);
         });
-      console.log('aicit2');
-      // navigate('/dashboard/app', { replace: true });
     }
   });
 
-  // function validateEmail(value) {
-  //   let error;
-  //   if (!value) {
-  //     error = 'Required';
-  //   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-  //     error = 'Invalid email address';
-  //   }
-  //   return error;
-  // }
-
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, values, handleSubmit, getFieldProps } = formik;
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -119,9 +118,11 @@ export default function LoginForm() {
 
   return (
     <FormikProvider value={formik}>
-      {/* <ErrorMessage name="email" /> */}
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
+          <div>
+            <p style={{ color: 'red' }}>{errorMessage}</p>
+          </div>
           <TextField
             fullWidth
             autoComplete="username"

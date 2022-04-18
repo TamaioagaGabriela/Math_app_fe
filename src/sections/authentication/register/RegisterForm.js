@@ -14,7 +14,9 @@ import Iconify from '../../../components/Iconify';
 export default function RegisterForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  let errorMessage = '';
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -39,6 +41,30 @@ export default function RegisterForm() {
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
       const { email, firstName, lastName, password, username, clasa, emailTutore } = values;
+
+      setSendingEmail(true);
+      // Super interesting to me that you can mess with the upper and lower case
+      // of the headers on the fetch call and the world does not explode.
+      fetch(`http://localhost:8000/email`, {
+        method: 'pOSt',
+        headers: {
+          aCcePt: 'aPpliCaTIon/JsOn',
+          'cOntENt-type': 'applicAtion/JSoN'
+        },
+        body: JSON.stringify({ email: values.email })
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // Everything has come back successfully, time to update the state to
+          // reenable the button and stop the <Spinner>. Also, show a toast with a
+          // message from the server to give the user feedback and reset the form
+          // so the user can start over if she chooses.
+          setSendingEmail(false);
+          console.log('check email');
+          // notify.show(data.msg);
+          // this.form.reset();
+        })
+        .catch((err) => console.log(err));
 
       const requestBody = {
         query: `
@@ -85,18 +111,18 @@ export default function RegisterForm() {
         .then((res) => {
           console.log(res.status);
           if (res.status !== 200 && res.status !== 201) {
-            errorMessage = 'Acest username/email deja exista';
+            console.log('Acest username/email deja exista');
+            setErrorMessage('Acest username/email deja exista');
+
+            setIsSubmitting(false);
             navigate('/register', { replace: true });
-            // throw new Error('Failed!');
+            throw new Error('Failed!');
           }
           return res.json();
         })
         .then((resData) => {
           if (values.email) {
-            errorMessage = 'Cont creat cu succes';
             navigate('/login', { replace: true });
-            // this.setState({ errorMessage: 'Cont creat cu succes' });
-            // this.switchModeHandler();
           }
           console.log(resData);
         })
@@ -106,16 +132,17 @@ export default function RegisterForm() {
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Stack spacing={3}>
+        <Stack spacing={2.5}>
+          <div>
+            <p style={{ color: 'red' }}>{errorMessage}</p>
+          </div>
+
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            {/* <div>
-              <p style={{ color: 'red' }}>{errorMessage}</p>
-            </div> */}
             <TextField
               fullWidth
               label="First name"
