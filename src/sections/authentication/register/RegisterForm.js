@@ -14,6 +14,7 @@ import Iconify from '../../../components/Iconify';
 export default function RegisterForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  let errorMessage = '';
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -30,22 +31,25 @@ export default function RegisterForm() {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
+      username: '',
+      clasa: '',
+      emailTutore: ''
     },
-    // validationSchema: RegisterSchema,
+    validationSchema: RegisterSchema,
     onSubmit: (values) => {
-      const { email, firstName, lastName, password } = values;
+      const { email, firstName, lastName, password, username, clasa, emailTutore } = values;
 
       const requestBody = {
         query: `
-        mutation adaugaUser($username: String!, $parola: String!, $nume: String!, $prenume: String!, $email: String!, $email_tutore: String!, $clasa: String!) {
+        mutation adaugaUser($username: String!, $parola: String!, $nume: String!, $prenume: String!, $email: String!, $emailTutore: String!, $clasa: String!) {
           adaugaUser(userInput: {
             username: $username
             parola: $parola
             nume: $nume
             prenume: $prenume
             email: $email
-            email_tutore: $email_tutore
+            email_tutore: $emailTutore
             clasa: $clasa
           }){
             _id
@@ -59,13 +63,13 @@ export default function RegisterForm() {
         }
         `,
         variables: {
-          username: 'mara',
+          username,
           parola: password,
           nume: lastName,
           prenume: firstName,
           email,
-          email_tutore: email,
-          clasa: 'XI'
+          emailTutore,
+          clasa
         }
       };
 
@@ -81,14 +85,19 @@ export default function RegisterForm() {
         .then((res) => {
           console.log(res.status);
           if (res.status !== 200 && res.status !== 201) {
-            throw new Error('Failed!');
+            errorMessage = 'Acest username/email deja exista';
+            navigate('/register', { replace: true });
+            // throw new Error('Failed!');
           }
           return res.json();
         })
         .then((resData) => {
-          // if (resData.data.adaugaUser.email) {
-          //   this.setState({ errorMessage: 'Cont creat cu succes' });
-          //   this.switchModeHandler();
+          if (values.email) {
+            errorMessage = 'Cont creat cu succes';
+            navigate('/login', { replace: true });
+            // this.setState({ errorMessage: 'Cont creat cu succes' });
+            // this.switchModeHandler();
+          }
           console.log(resData);
         })
         .catch((err) => {
@@ -104,6 +113,9 @@ export default function RegisterForm() {
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            {/* <div>
+              <p style={{ color: 'red' }}>{errorMessage}</p>
+            </div> */}
             <TextField
               fullWidth
               label="First name"
@@ -116,6 +128,24 @@ export default function RegisterForm() {
               fullWidth
               label="Last name"
               {...getFieldProps('lastName')}
+              error={Boolean(touched.lastName && errors.lastName)}
+              helperText={touched.lastName && errors.lastName}
+            />
+          </Stack>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <TextField
+              fullWidth
+              label="Username"
+              {...getFieldProps('username')}
+              error={Boolean(touched.lastName && errors.lastName)}
+              helperText={touched.lastName && errors.lastName}
+            />
+
+            <TextField
+              fullWidth
+              label="Clasa"
+              {...getFieldProps('clasa')}
               error={Boolean(touched.lastName && errors.lastName)}
               helperText={touched.lastName && errors.lastName}
             />
@@ -148,6 +178,15 @@ export default function RegisterForm() {
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
+          />
+
+          <TextField
+            fullWidth
+            type="email"
+            label="Email tutore"
+            {...getFieldProps('emailTutore')}
+            error={Boolean(touched.email && errors.email)}
+            helperText={touched.email && errors.email}
           />
 
           <LoadingButton

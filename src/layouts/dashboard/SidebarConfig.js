@@ -27,6 +27,31 @@ const sidebarConfig = [
     icon: getIcon('eva:file-text-fill')
   },
   {
+    title: 'teorie',
+    path: '/dashboard/teorie',
+    icon: getIcon('fluent:book-20-filled')
+  },
+  {
+    title: 'formule',
+    path: '/dashboard/formule',
+    icon: getIcon('eva:file-text-fill')
+  },
+  {
+    title: 'exercitii',
+    path: '/dashboard/exercitii',
+    icon: getIcon('fluent:clipboard-edit-20-regular')
+  },
+  {
+    title: 'teste',
+    path: '/dashboard/teste',
+    icon: getIcon('fluent:clipboard-clock-20-regular')
+  },
+  {
+    title: 'exercitii gresite',
+    path: '/dashboard/exercitii_gresite',
+    icon: getIcon('fluent:clipboard-error-20-regular')
+  },
+  {
     title: 'login',
     path: '/login',
     icon: getIcon('eva:lock-fill')

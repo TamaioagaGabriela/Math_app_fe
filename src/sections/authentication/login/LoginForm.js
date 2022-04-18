@@ -13,6 +13,7 @@ import {
   FormControlLabel
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import AuthContext from '../../../context/auth-context';
 // component
 import Iconify from '../../../components/Iconify';
 
@@ -22,22 +23,93 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  // Declare a new state variable, which we'll call "count"
+  const [authData, setAuthData] = useState('');
+
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    email: Yup.string()
+      .email('Email gresit, parola gresita sau email neconfirmat')
+      .required('Email is required'),
+    parola: Yup.string().required('Password is required')
   });
 
   const formik = useFormik({
     initialValues: {
       email: '',
-      password: '',
+      parola: '',
       remember: true
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: (values) => {
+      const { email, parola } = values;
+
+      const requestBody = {
+        query: `
+        query Login($email: String!, $parola: String!) {
+          login(email: $email, parola: $parola) {
+            userId
+            token
+            role
+            tokenExpiration
+          }
+        }
+      `,
+        variables: {
+          email,
+          parola
+        }
+      };
+
+      fetch('http://localhost:8000/graphql', {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((res) => {
+          console.log(res.status);
+          if (res.status !== 200 && res.status !== 201) {
+            // errorMessage = 'Email gresit, parola gresita sau email neconfirmat';
+            console.log('Email gresit, parola gresita sau email neconfirmat');
+            // validateEmail(email);
+            throw new Error('Failed!');
+            // navigate('/login', { replace: true });
+          }
+          console.log('aicit');
+          return res.json();
+        })
+        .then((authData) => {
+          if (authData.token) {
+            console.log('aicit1');
+            console.log(authData);
+            authData.context.login(
+              authData.data.login.token,
+              authData.data.login.userId,
+              authData.data.login.tokenExpiration,
+              authData.data.login.role
+            );
+            // values.setState({ errorMessage: null });
+            navigate('/login', { replace: true });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      console.log('aicit2');
+      // navigate('/dashboard/app', { replace: true });
     }
   });
+
+  // function validateEmail(value) {
+  //   let error;
+  //   if (!value) {
+  //     error = 'Required';
+  //   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+  //     error = 'Invalid email address';
+  //   }
+  //   return error;
+  // }
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
 
@@ -47,6 +119,7 @@ export default function LoginForm() {
 
   return (
     <FormikProvider value={formik}>
+      {/* <ErrorMessage name="email" /> */}
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <TextField
@@ -58,13 +131,13 @@ export default function LoginForm() {
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
           />
-
+          {errors.email && touched.email ? <div>{errors.email}</div> : null}
           <TextField
             fullWidth
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
             label="Password"
-            {...getFieldProps('password')}
+            {...getFieldProps('parola')}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
