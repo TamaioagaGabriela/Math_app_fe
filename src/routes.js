@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
+import Teorie from './pages/Teorie';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 
@@ -22,7 +23,13 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
-        { path: 'blog', element: <Blog /> }
+        { path: 'blog', element: <Blog /> },
+        { path: 'teorie', element: <Teorie /> },
+        { path: 'formule', element: <Navigate to="/dashboard/teorie" /> },
+        { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
+        { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
+        { path: 'teste', element: <Navigate to="/dashboard/teorie" /> },
+        { path: 'exercitii_gresite', element: <Navigate to="/dashboard/teorie" /> }
       ]
     },
     {
