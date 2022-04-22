@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from '@mui/material';
 import { BlockMath, InlineMath } from 'react-katex';
+import rehypeKatex from 'rehype-katex';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import Page from '../components/Page';
 
@@ -13,23 +14,25 @@ Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about St
 # Files
 
 Given a **formula** below
+
 $$
 s = ut + \\frac{1}{2}at^{2}
 $$
+
 Calculate the value of $s$ when $u = 10\\frac{m}{s}$ and $a = 2\\frac{m}{s^{2}}$ at $t = 1s$
 `;
-  const blockMath = `
-s = ut + \\frac{1}{2}at^{2}
-`;
-  const inlineMath = `
-s = ut + \\frac{1}{2}at^{2}
-`;
+  //   const blockMath = `
+  // s = ut + \\frac{1}{2}at^{2}
+  // `;
+  //   const inlineMath = `
+  // s = ut + \\frac{1}{2}at^{2}
+  // `;
   return (
     <Page title="Dashboard: Teorie">
       <Container>
         <Markdown>{content}</Markdown>
-        <BlockMath>{blockMath}</BlockMath>
-        <InlineMath>{inlineMath}</InlineMath>
+        {/* <BlockMath>{blockMath}</BlockMath>
+        <InlineMath>{inlineMath}</InlineMath> */}
       </Container>
     </Page>
   );
