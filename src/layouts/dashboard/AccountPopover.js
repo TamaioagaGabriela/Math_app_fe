@@ -1,11 +1,12 @@
-import { useRef, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useRef, useState, useContext } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
 // components
 import Iconify from '../../components/Iconify';
 import MenuPopover from '../../components/MenuPopover';
+import AuthContext from '../../context/auth-context';
 //
 import account from '../../_mocks_/account';
 
@@ -32,7 +33,18 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const navigate = useNavigate();
+  const context = useContext(AuthContext);
+  const logout = () => {
+    context.token = null;
+    context.userId = null;
+    context.role = null;
+    navigate('/dashboard/app', { replace: true });
+  };
+
   const anchorRef = useRef(null);
+  console.log('token accountpopover = ', context.token);
+
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -106,7 +118,13 @@ export default function AccountPopover() {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined">
+          <Button
+            fullWidth
+            color="inherit"
+            variant="outlined"
+            onClick={logout}
+            // onClick={handleClose}
+          >
             Logout
           </Button>
         </Box>

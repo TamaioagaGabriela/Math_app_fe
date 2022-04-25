@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import React, { useState } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
@@ -15,6 +15,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
+import AuthContext from '../../../context/auth-context';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,8 @@ export default function LoginForm() {
   // Declare a new state variable
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const context = useContext(AuthContext);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -86,15 +89,19 @@ export default function LoginForm() {
         .then((resData) => {
           console.log('token = ', resData.data.login.token);
           console.log('userId = ', resData.data.login.userId);
-          // if (resData.token) {
-          // authData.context.login(
-          //   authData.data.login.token,
-          //   authData.data.login.userId,
-          //   authData.data.login.tokenExpiration,
-          //   authData.data.login.role
-          // );
-          // }
+          if (resData.data.login.token) {
+            context.login(
+              resData.data.login.token,
+              resData.data.login.userId,
+              resData.data.login.role,
+              resData.data.login.tokenExpiration
+            );
+            context.userId = resData.data.login.userId;
+            context.token = resData.data.login.token;
+          }
           console.log('resData = ', resData);
+          console.log('context user id', context.userId);
+
           // navigate('/dashboard/app', { replace: true });
 
           navigate('/dashboard/app', {

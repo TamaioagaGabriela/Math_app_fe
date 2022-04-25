@@ -9,6 +9,7 @@ import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
+import Logout from './Logout';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +56,7 @@ export default function DashboardNavbar({ onOpenSidebar }) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
+          <Logout />
           <LanguagePopover />
           <NotificationsPopover />
           <AccountPopover />
