@@ -43,7 +43,7 @@ export default function AccountPopover() {
   };
 
   const anchorRef = useRef(null);
-  console.log('token accountpopover = ', context.token);
+  // console.log('token accountpopover = ', context.token);
 
   const [open, setOpen] = useState(false);
 

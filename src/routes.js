@@ -14,6 +14,7 @@ import User from './pages/User';
 import NotFound from './pages/Page404';
 import AuthContext from './context/auth-context';
 import Confirm from './components/EmailConfirmation/EmailConfirmation';
+import Capitol from './pages/Capitol';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ export default function Router() {
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
-        { path: 'teorie', element: <Teorie /> },
+        { path: 'teorie', element: <Capitol /> },
         { path: 'formule', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
@@ -62,7 +63,7 @@ export default function Router() {
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
-        { path: 'teorie', element: <Teorie /> },
+        { path: 'teorie', element: <Capitol /> },
         { path: 'formule', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
