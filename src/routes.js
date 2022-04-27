@@ -15,6 +15,7 @@ import NotFound from './pages/Page404';
 import AuthContext from './context/auth-context';
 import Confirm from './components/EmailConfirmation/EmailConfirmation';
 import Capitol from './pages/Capitol';
+import Subcapitol from './pages/Subcapitol';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,7 @@ export default function Router() {
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
         { path: 'teorie', element: <Capitol /> },
+        { path: 'subcapitol', element: <Subcapitol /> },
         { path: 'formule', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
@@ -64,6 +66,7 @@ export default function Router() {
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
         { path: 'teorie', element: <Capitol /> },
+        { path: 'subcapitol', element: <Subcapitol /> },
         { path: 'formule', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
