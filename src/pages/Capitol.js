@@ -10,10 +10,7 @@ import {
   ProductCartWidget,
   ProductFilterSidebar
 } from '../sections/@dashboard/products';
-import { CapitolList } from '../sections/@dashboard/capitol';
-//
-// import CAPITOLE from '../_mocks_/capitol';
-// import CAPITOLE from '../_mocks_/CapitolDB';
+
 import CapitolDB from '../_mocks_/CapitolDB';
 
 // ----------------------------------------------------------------------
@@ -74,7 +71,6 @@ export default function Capitol() {
             <ProductSort />
           </Stack>
         </Stack>
-        {/* <CapitolList capitole={CAPITOLE} /> */}
         <CapitolDB />
         <ProductCartWidget />
       </Container>

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router-dom';
+import { AudioCard, VideoCard } from 'material-ui-player';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Button, Grid, CardMedia } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
-import CapitolItem from '../sections/@dashboard/capitol/CapitolItem';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
+import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
@@ -31,15 +31,19 @@ class CapitolDB extends Component {
       isLoading: false,
       capitole: [],
       subcapitole: [],
+      fiseTeorie: [],
       isActive: true,
       capitol: [],
-      capitolChosen: false
+      subcapitolTeorie: [],
+      capitolChosen: false,
+      subcapitolChosen: false
     };
   }
 
   componentDidMount() {
     this.fetchCapitole();
     this.fetchSubcapitole();
+    this.fetchFiseTeorie();
   }
 
   componentWillUnmount() {
@@ -74,10 +78,10 @@ class CapitolDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        console.log('fetch resData.data:', resData.data);
-        console.log('capitol index 1:', resData.data.capitole[0]._id);
-        this.setState({ isLoading: false });
+        // console.log('fetch resData.data:', resData.data);
+
         this.setState({ capitole: resData.data.capitole });
+        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
@@ -113,12 +117,55 @@ class CapitolDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        console.log('fetch resData.data:', resData.data);
-        console.log('subcapitol index 1:', resData.data.subcapitole[0]._id);
-        this.setState({ isLoading: false });
+        // console.log('fetch resData.data:', resData.data);
+
         this.setState({ subcapitole: resData.data.subcapitole });
+        this.setState({ isLoading: false });
       })
       .catch((err) => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
+  };
+
+  fetchFiseTeorie = () => {
+    this.setState({ isLoading: true });
+    const requestBody = {
+      query: `
+        query{
+          teorie{
+            _id
+            titlu
+            descriere
+            link_video
+            subcapitol_id
+          }
+        }
+        `
+    };
+
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        console.log('fetch resData.data: teorie', resData.data);
+
+        this.setState({ fiseTeorie: resData.data.teorie });
+        this.setState({ isLoading: false });
+      })
+      .catch((err) => {
+        console.log('pb la fetch');
+
         console.log(err);
         this.setState({ isLoading: false });
       });
@@ -131,12 +178,24 @@ class CapitolDB extends Component {
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
-    console.log('setCapitolChosen', capitol);
+    // console.log('setCapitolChosen', capitol);
   };
 
   setCapitol = (capitol) => {
     this.setState({ capitol });
-    console.log('setCapitol', capitol);
+    // console.log('setCapitol', capitol);
+  };
+
+  setSubcapitolChosen = (subcapitol) => {
+    // await this.setState({ subcapitolTeorie: subcapitol });
+    this.setState({ subcapitolChosen: true });
+    this.setSubcapitolTeorie(subcapitol);
+    console.log('setSubcapitolChosen', subcapitol._id);
+  };
+
+  setSubcapitolTeorie = (subcapitolTeorie) => {
+    this.setState({ subcapitolTeorie });
+    console.log('setSubcapitol', subcapitolTeorie);
   };
 
   // modalCancelHandler = () => {
@@ -152,17 +211,20 @@ class CapitolDB extends Component {
 
   render() {
     console.log('isLoading', this.state.isLoading);
-    console.log('capitole in render ', this.state.subcapitole);
     console.log('capitol:', this.state.capitol);
-    console.log('capitol._id', this.state.capitol);
+    console.log('id pt this.state.subcapitolTeorie', this.state.subcapitolTeorie._id);
+    console.log('fise teorie', this.state.fiseTeorie);
+
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id // '6245fb02354efdf16ef74b01' // this.state.capitol._id
     );
-    console.log('subcpitole filtrate:', subcapitoleFiltrate);
+    const fiseTeorieFiltrate = this.state.fiseTeorie.filter(
+      (fisaTeorie) => fisaTeorie.subcapitol_id === this.state.subcapitolTeorie._id
+    );
+
+    console.log('fiseTeorieFiltrate', fiseTeorieFiltrate);
+
     return (
-      // isLoading: this.state.isLoading,
-      // capitole: this.state.capitole
-      // // cover: mockImgCapitol()3
       <Grid container spacing={3}>
         {!this.state.capitolChosen &&
           this.state.capitole.map((capitol) => (
@@ -214,9 +276,11 @@ class CapitolDB extends Component {
               </Card>
             </Grid>
           ))}
+        {/* ---------------------------------------------------------------------------------------------------------- */}
         {/* daca am ales capitolul atunci ajung la subcapitole */}
-
+        {/* ---------------------------------------------------------------------------------------------------------- */}
         {this.state.capitolChosen &&
+          !this.state.subcapitolChosen &&
           subcapitoleFiltrate.map((subcapitol) => (
             <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
               <Card>
@@ -253,7 +317,7 @@ class CapitolDB extends Component {
                     </Typography>
                   </Stack>
                   <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Button variant="outlined" href="#outlined-buttons">
+                    <Button variant="outlined" onClick={() => this.setSubcapitolChosen(subcapitol)}>
                       Teorie
                     </Button>
                     <Button variant="outlined" href="#outlined-buttons">
@@ -263,6 +327,38 @@ class CapitolDB extends Component {
                   <Button variant="outlined" href="#outlined-buttons">
                     Adauga Teorie
                   </Button>
+                </Stack>
+              </Card>
+            </Grid>
+          ))}
+        {/* ------------------------------------------------------------------------------------------------------------- */}
+        {/* daca am ales subcapitolul atunci ajung la teorie */}
+        {/* ------------------------------------------------------------------------------------------------------------- */}
+        {this.state.capitolChosen &&
+          this.state.subcapitolChosen &&
+          fiseTeorieFiltrate.map((fisaTeorie) => (
+            <Grid key={fisaTeorie._id} item container spacing={2} marginLeft={0.1}>
+              <Card>
+                <Stack spacing={2} sx={{ p: 3 }}>
+                  <Link to="#" color="inherit" underline="hover" component={RouterLink}>
+                    <Typography variant="subtitle1">Titlu: {fisaTeorie.titlu}</Typography>
+                  </Link>
+                  <Typography variant="subtitle1">
+                    Capitolul:{' '}
+                    {
+                      this.state.capitole.find(
+                        (capitol) => capitol._id === this.state.subcapitolTeorie.capitol_id
+                      ).titlu
+                    }
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    Subcapitolul: {this.state.subcapitolTeorie.titlu} {fisaTeorie.link_video}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    Descriere:
+                    <Markdown>{fisaTeorie.descriere}</Markdown>
+                  </Typography>
+                  <CardMedia component="iframe" title="test" src={fisaTeorie.link_video} />
                 </Stack>
               </Card>
             </Grid>

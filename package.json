@@ -55,6 +55,7 @@
     "history": "^5.2.0",
     "lodash": "^4.17.21",
     "material-ui-icons": "^1.0.0-beta.36",
+    "material-ui-player": "^1.0.6",
     "node-fetch": "^3.2.3",
     "numeral": "^2.0.6",
     "prop-types": "^15.8.1",
