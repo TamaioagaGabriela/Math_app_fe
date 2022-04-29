@@ -14,17 +14,17 @@ import account from '../../_mocks_/account';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: 'Pagina principala',
     icon: 'eva:home-fill',
-    linkTo: '/'
+    linkTo: '/dashboard'
   },
   {
-    label: 'Profile',
+    label: 'Profil',
     icon: 'eva:person-fill',
-    linkTo: '#'
+    linkTo: '/dashboard/utilizator'
   },
   {
-    label: 'Settings',
+    label: 'Setari',
     icon: 'eva:settings-2-fill',
     linkTo: '#'
   }
@@ -43,7 +43,7 @@ export default function AccountPopover() {
   };
 
   const anchorRef = useRef(null);
-  // console.log('token accountpopover = ', context.token);
+  console.log('token accountpopover = ', context.userId);
 
   const [open, setOpen] = useState(false);
 
@@ -118,13 +118,7 @@ export default function AccountPopover() {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button
-            fullWidth
-            color="inherit"
-            variant="outlined"
-            onClick={logout}
-            // onClick={handleClose}
-          >
+          <Button fullWidth color="inherit" variant="outlined" onClick={logout}>
             Logout
           </Button>
         </Box>

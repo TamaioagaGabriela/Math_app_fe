@@ -11,7 +11,7 @@ import {
   ProductFilterSidebar
 } from '../sections/@dashboard/products';
 
-import CapitolDB from '../_mocks_/CapitolDB';
+import FisaFormuleDB from '../_mocks_/FisaFormuleDB';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +53,25 @@ export default function Capitol() {
           Teorie
         </Typography>
 
-        <CapitolDB />
+        <Stack
+          direction="row"
+          flexWrap="wrap-reverse"
+          alignItems="center"
+          justifyContent="flex-end"
+          sx={{ mb: 5 }}
+        >
+          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+            <ProductFilterSidebar
+              formik={formik}
+              isOpenFilter={openFilter}
+              onResetFilter={handleResetFilter}
+              onOpenFilter={handleOpenFilter}
+              onCloseFilter={handleCloseFilter}
+            />
+            <ProductSort />
+          </Stack>
+        </Stack>
+        <FisaFormuleDB />
         <ProductCartWidget />
       </Container>
     </Page>

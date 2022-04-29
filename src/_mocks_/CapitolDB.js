@@ -9,6 +9,11 @@ import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
+import {
+  ProductSort,
+  ProductCartWidget,
+  ProductFilterSidebar
+} from '../sections/@dashboard/products';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
@@ -36,7 +41,8 @@ class CapitolDB extends Component {
       capitol: [],
       subcapitolTeorie: [],
       capitolChosen: false,
-      subcapitolChosen: false
+      subcapitolChosen: false,
+      openFilter: false
     };
   }
 
@@ -49,6 +55,33 @@ class CapitolDB extends Component {
   componentWillUnmount() {
     this.state.isActive = false;
   }
+  //   const formik = useFormik({
+  //   initialValues: {
+  //     gender: '',
+  //     category: '',
+  //     colors: '',
+  //     priceRange: '',
+  //     rating: ''
+  //   },
+  //   onSubmit: () => {
+  //     setOpenFilter(false);
+  //   }
+  // });
+
+  // const { resetForm, handleSubmit } = formik;
+
+  // handleOpenFilter = () => {
+  //    this.setState({ openFilter: true });
+  // };
+
+  // handleCloseFilter = () => {
+  //    this.setState({ openFilter: true });
+  // };
+
+  // handleResetFilter = () => {
+  //   handleSubmit();
+  //   resetForm();
+  // };
 
   fetchCapitole = () => {
     this.setState({ isLoading: true });
@@ -198,19 +231,29 @@ class CapitolDB extends Component {
     console.log('setSubcapitol', subcapitolTeorie);
   };
 
-  // modalCancelHandler = () => {
-  //   this.setState({
-  //     capitolChosen: false,
-  //     capitol: ''
-  //   });
-  // };
+  modalCancelHandlerCapitol = () => {
+    this.setState({
+      capitolChosen: false,
+      capitol: []
+    });
+  };
 
-  // modalCancelHandlerCapitol = () => {
-  //   this.setState({ capitolChosen: false, capitol: '' });
-  // };
+  modalCancelHandlerSubcapitol = () => {
+    this.setState({ subcapitolChosen: false, subcapitolTeorie: [] });
+  };
+
+  modalHandleClickInapoi = () => {
+    if (this.state.capitolChosen && !this.state.subcapitolChosen) {
+      this.modalCancelHandlerCapitol();
+    } else if (this.state.capitolChosen && this.state.subcapitolChosen) {
+      this.modalCancelHandlerSubcapitol();
+    }
+  };
 
   render() {
     console.log('isLoading', this.state.isLoading);
+    console.log('capitol:', this.state.openFilter);
+
     console.log('capitol:', this.state.capitol);
     console.log('id pt this.state.subcapitolTeorie', this.state.subcapitolTeorie._id);
     console.log('fise teorie', this.state.fiseTeorie);
@@ -225,145 +268,215 @@ class CapitolDB extends Component {
     console.log('fiseTeorieFiltrate', fiseTeorieFiltrate);
 
     return (
-      <Grid container spacing={3}>
-        {!this.state.capitolChosen &&
-          this.state.capitole.map((capitol) => (
-            <Grid key={capitol._id} item xs={12} sm={6} md={3}>
-              {/* <CapitolItem capitol={capitol} /> */}
-              <Card>
-                <Box sx={{ pt: '100%', position: 'relative' }}>
-                  {status && (
-                    <Label
-                      variant="filled"
-                      color={(status === 'sale' && 'error') || 'info'}
-                      sx={{
-                        zIndex: 9,
-                        top: 16,
-                        right: 16,
-                        position: 'absolute',
-                        textTransform: 'uppercase'
-                      }}
-                    >
-                      {status}
-                    </Label>
-                  )}
-                  <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
-                </Box>
+      <container>
+        <Stack
+          direction="row"
+          flexWrap="wrap-reverse"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ mb: 5 }}
+        >
+          <Button variant="outlined" onClick={() => this.modalHandleClickInapoi()}>
+            Inapoi
+          </Button>
+          <Stack
+            direction="row"
+            spacing={1}
+            flexShrink={0}
+            sx={{ my: 1 }}
+            justifyContent="flex-end"
+          >
+            <Button variant="outlined">Sortare</Button>
+            <Button variant="outlined">filtre</Button>
+            {/* <ProductFilterSidebar
+              formik=""
+              isOpenFilter={false}
+              onResetFilter={false}
+              onOpenFilter={false}
+              onCloseFilter={false}
+            />
+            <ProductSort /> */}
+          </Stack>
+        </Stack>
 
-                <Stack spacing={2} sx={{ p: 3 }}>
-                  <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                    <Typography variant="subtitle1">{capitol.titlu}</Typography>
-                  </Link>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
-                  </Stack>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Button
-                      variant="outlined"
-                      onClick={() => this.setCapitolChosen(capitol)}
-                      // href="/dashboard/subcapitol"
-                    >
-                      Subcapitole
-                    </Button>
+        <Grid container spacing={3}>
+          {!this.state.capitolChosen &&
+            this.state.capitole.map((capitol) => (
+              <Grid key={capitol._id} item xs={12} sm={6} md={3}>
+                {/* <CapitolItem capitol={capitol} /> */}
+                <Card>
+                  <Box sx={{ pt: '100%', position: 'relative' }}>
+                    {status && (
+                      <Label
+                        variant="filled"
+                        color={(status === 'sale' && 'error') || 'info'}
+                        sx={{
+                          zIndex: 9,
+                          top: 16,
+                          right: 16,
+                          position: 'absolute',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        {status}
+                      </Label>
+                    )}
+                    <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
+                  </Box>
+
+                  <Stack spacing={2} sx={{ p: 3 }}>
+                    <Link to="#" color="inherit" underline="hover" component={RouterLink}>
+                      <Typography variant="subtitle1">{capitol.titlu}</Typography>
+                    </Link>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                      <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
+                    </Stack>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                      <Button
+                        variant="outlined"
+                        onClick={() => this.setCapitolChosen(capitol)}
+                        // href="/dashboard/subcapitol"
+                      >
+                        Subcapitole
+                      </Button>
+                      <Button variant="outlined" href="#outlined-buttons">
+                        Test
+                      </Button>
+                    </Stack>
                     <Button variant="outlined" href="#outlined-buttons">
-                      Test
+                      Adauga Subcapitol
                     </Button>
                   </Stack>
-                  <Button variant="outlined" href="#outlined-buttons">
-                    Adauga Subcapitol
-                  </Button>
-                </Stack>
-              </Card>
-            </Grid>
-          ))}
-        {/* ---------------------------------------------------------------------------------------------------------- */}
-        {/* daca am ales capitolul atunci ajung la subcapitole */}
-        {/* ---------------------------------------------------------------------------------------------------------- */}
-        {this.state.capitolChosen &&
-          !this.state.subcapitolChosen &&
-          subcapitoleFiltrate.map((subcapitol) => (
-            <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
-              <Card>
-                <Box sx={{ pt: '100%', position: 'relative' }}>
-                  {status && (
-                    <Label
-                      variant="filled"
-                      color={(status === 'sale' && 'error') || 'info'}
-                      sx={{
-                        zIndex: 9,
-                        top: 16,
-                        right: 16,
-                        position: 'absolute',
-                        textTransform: 'uppercase'
-                      }}
-                    >
-                      {status}
-                    </Label>
-                  )}
-                  <CapitolImgStyle alt={subcapitol.titlu} src={mockImgSubcapitol(subcapitol._id)} />
-                </Box>
+                </Card>
+              </Grid>
+            ))}
+          {/* ---------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales capitolul atunci ajung la subcapitole */}
+          {/* ---------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            !this.state.subcapitolChosen &&
+            subcapitoleFiltrate.map((subcapitol) => (
+              <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
+                <Card>
+                  <Box sx={{ pt: '100%', position: 'relative' }}>
+                    {status && (
+                      <Label
+                        variant="filled"
+                        color={(status === 'sale' && 'error') || 'info'}
+                        sx={{
+                          zIndex: 9,
+                          top: 16,
+                          right: 16,
+                          position: 'absolute',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        {status}
+                      </Label>
+                    )}
+                    <CapitolImgStyle
+                      alt={subcapitol.titlu}
+                      src={mockImgSubcapitol(subcapitol._id)}
+                    />
+                  </Box>
 
-                <Stack spacing={2} sx={{ p: 3 }}>
-                  <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                    <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
-                  </Link>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between">
+                  <Stack spacing={2} sx={{ p: 3 }}>
+                    <Link to="#" color="inherit" underline="hover" component={RouterLink}>
+                      <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
+                    </Link>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                      <Typography variant="subtitle1">
+                        Capitolul:{' '}
+                        {
+                          this.state.capitole.find(
+                            (capitol) => capitol._id === subcapitol.capitol_id
+                          ).titlu
+                        }
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                      <Button
+                        variant="outlined"
+                        onClick={() => this.setSubcapitolChosen(subcapitol)}
+                      >
+                        Teorie
+                      </Button>
+                      <Button variant="outlined" href="#outlined-buttons">
+                        Exercitii
+                      </Button>
+                    </Stack>
+                    <Button variant="outlined" href="#outlined-buttons">
+                      Adauga Teorie
+                    </Button>
+                  </Stack>
+                </Card>
+              </Grid>
+            ))}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales subcapitolul atunci ajung la teorie */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            fiseTeorieFiltrate.map((fisaTeorie) => (
+              <Grid
+                key={fisaTeorie._id}
+                item
+                container
+                spacing={2}
+                marginLeft={0.1}
+                marginTop={0.5}
+              >
+                <Card>
+                  <Stack spacing={2} sx={{ p: 3 }}>
+                    <Link to="#" color="inherit" underline="hover" component={RouterLink}>
+                      <Typography variant="subtitle1">Titlu: {fisaTeorie.titlu}</Typography>
+                    </Link>
                     <Typography variant="subtitle1">
                       Capitolul:{' '}
                       {
-                        this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
-                          .titlu
+                        this.state.capitole.find(
+                          (capitol) => capitol._id === this.state.subcapitolTeorie.capitol_id
+                        ).titlu
                       }
                     </Typography>
+                    <Typography variant="subtitle1">
+                      Subcapitolul: {this.state.subcapitolTeorie.titlu} {fisaTeorie.link_video}
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      Descriere:
+                      <Markdown>{fisaTeorie.descriere}</Markdown>
+                    </Typography>
+                    <CardMedia
+                      sx={{ m: 5, p: 3 }}
+                      // sx={{ width: '70%' }}
+                      component="iframe"
+                      title="Video teorie"
+                      src={fisaTeorie.link_video}
+                      width="560"
+                      height="415"
+                      // src="https://www.youtube.com/embed/rywUS-ohqeE"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                    {/* 
+                  <video
+                    width="100%"
+                    controls
+                    controlsList="nodownload"
+                    poster="link to your poster image"
+                  >
+                    {' '}
+                    <track default kind="captions" />
+                    <source src="https://www.youtube.com/watch?v=DHEOF_rcND8" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video> */}
                   </Stack>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Button variant="outlined" onClick={() => this.setSubcapitolChosen(subcapitol)}>
-                      Teorie
-                    </Button>
-                    <Button variant="outlined" href="#outlined-buttons">
-                      Exercitii
-                    </Button>
-                  </Stack>
-                  <Button variant="outlined" href="#outlined-buttons">
-                    Adauga Teorie
-                  </Button>
-                </Stack>
-              </Card>
-            </Grid>
-          ))}
-        {/* ------------------------------------------------------------------------------------------------------------- */}
-        {/* daca am ales subcapitolul atunci ajung la teorie */}
-        {/* ------------------------------------------------------------------------------------------------------------- */}
-        {this.state.capitolChosen &&
-          this.state.subcapitolChosen &&
-          fiseTeorieFiltrate.map((fisaTeorie) => (
-            <Grid key={fisaTeorie._id} item container spacing={2} marginLeft={0.1}>
-              <Card>
-                <Stack spacing={2} sx={{ p: 3 }}>
-                  <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                    <Typography variant="subtitle1">Titlu: {fisaTeorie.titlu}</Typography>
-                  </Link>
-                  <Typography variant="subtitle1">
-                    Capitolul:{' '}
-                    {
-                      this.state.capitole.find(
-                        (capitol) => capitol._id === this.state.subcapitolTeorie.capitol_id
-                      ).titlu
-                    }
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    Subcapitolul: {this.state.subcapitolTeorie.titlu} {fisaTeorie.link_video}
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    Descriere:
-                    <Markdown>{fisaTeorie.descriere}</Markdown>
-                  </Typography>
-                  <CardMedia component="iframe" title="test" src={fisaTeorie.link_video} />
-                </Stack>
-              </Card>
-            </Grid>
-          ))}
-      </Grid>
+                </Card>
+              </Grid>
+            ))}
+        </Grid>
+      </container>
     );
   }
 }

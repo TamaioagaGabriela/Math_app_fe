@@ -9,12 +9,14 @@ import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
-import Teorie from './pages/Teorie';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 import AuthContext from './context/auth-context';
 import Confirm from './components/EmailConfirmation/EmailConfirmation';
 import Capitol from './pages/Capitol';
+import FisaFormule from './pages/FisaFormule';
+import Utilizator from './pages/Utilizator';
+
 // import Subcapitol from './pages/Subcapitol';
 
 // ----------------------------------------------------------------------
@@ -29,12 +31,12 @@ export default function Router() {
       children: [
         // { path: 'login', element: <Login /> },
         { path: 'app', element: <Navigate to="/login" /> },
+        { path: 'utilizator', element: <Utilizator /> },
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
         { path: 'teorie', element: <Capitol /> },
-        // { path: 'subcapitol', element: <Subcapitol /> },
-        { path: 'formule', element: <Navigate to="/dashboard/teorie" /> },
+        { path: 'formule', element: <FisaFormule /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'teste', element: <Navigate to="/dashboard/teorie" /> },
@@ -63,11 +65,11 @@ export default function Router() {
       children: [
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
+        { path: 'utilizator', element: <Utilizator /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
         { path: 'teorie', element: <Capitol /> },
-        // { path: 'subcapitol', element: <Subcapitol /> },
-        { path: 'formule', element: <Navigate to="/dashboard/teorie" /> },
+        { path: 'formule', element: <FisaFormule /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
         { path: 'teste', element: <Navigate to="/dashboard/teorie" /> },

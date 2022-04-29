@@ -6,3 +6,6 @@ export default createContext({
   login: (token, userId, role, tokenExpiration) => {},
   logout: () => {}
 });
+
+export const UserProvider = createContext.Provider;
+export const UserConsumer = createContext.Consumer;
