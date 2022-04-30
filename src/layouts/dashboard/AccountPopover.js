@@ -16,7 +16,7 @@ const MENU_OPTIONS = [
   {
     label: 'Pagina principala',
     icon: 'eva:home-fill',
-    linkTo: '/dashboard'
+    linkTo: '/dashboard/app'
   },
   {
     label: 'Profil',
@@ -42,6 +42,7 @@ export default function AccountPopover() {
     navigate('/dashboard/app', { replace: true });
   };
 
+  const contextRef = useRef(context);
   const anchorRef = useRef(null);
   console.log('token accountpopover = ', context.userId);
 
@@ -98,11 +99,13 @@ export default function AccountPopover() {
 
         {MENU_OPTIONS.map((option) => (
           <MenuItem
+            // ref={contextRef}
             key={option.label}
             to={option.linkTo}
             component={RouterLink}
             onClick={handleClose}
             sx={{ typography: 'body2', py: 1, px: 2.5 }}
+            // contextuser={context}
           >
             <Iconify
               icon={option.icon}

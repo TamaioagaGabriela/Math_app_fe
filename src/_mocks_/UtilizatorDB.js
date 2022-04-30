@@ -15,13 +15,7 @@ const UtilizatorImgStyle = styled('img')({
   position: 'absolute'
 });
 
-const contextType = AuthContext;
-// const context = useContext(AuthContext);
-
-class UtilizatorDB extends Component {
-  //   const context = useContext(AuthContext);
-  //   static context = AuthContext;
-
+export class UtilizatorDB extends Component {
   constructor(props) {
     super(props);
 
@@ -89,18 +83,11 @@ class UtilizatorDB extends Component {
 
   getUserDetails = async () => {
     this.setState({ isLoading: true });
-    // const detaliiUser2 = this.state.detaliiUser.filter((user) => user._id === this.context.userId);
-    // await this.setState({ detaliiUser: detaliiUser2, isLoading: false });
     console.log('this.context.userId', this.context.userId);
-    console.log('this.context', contextType.context);
-
-    console.log('contextType', contextType);
+    console.log('this.context', this.context);
 
     await this.setState((prevState) => ({
-      detaliiUser: prevState.detaliiUser.filter(
-        (user) => user._id === '6259c4a623ca4e73a8cb0683'
-        //   this.context.userId
-      )
+      detaliiUser: prevState.detaliiUser.filter((user) => user._id === this.context.userId)
     }));
 
     this.setState({ isLoading: false });
@@ -108,10 +95,7 @@ class UtilizatorDB extends Component {
   };
 
   render() {
-    // const utilizator = this.state.detaliiUser.filter((user) => user._id === this.context.userId);
-
     return (
-      //   <AuthContext.Consumer>
       <Container>
         <Stack
           direction="row"
@@ -162,8 +146,8 @@ class UtilizatorDB extends Component {
           )}
         </Grid>
       </Container>
-      //   </AuthContext.Consumer>
     );
   }
 }
+UtilizatorDB.contextType = AuthContext;
 export default UtilizatorDB;

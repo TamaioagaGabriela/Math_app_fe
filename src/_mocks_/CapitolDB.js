@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { AudioCard, VideoCard } from 'material-ui-player';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material

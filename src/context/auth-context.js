@@ -7,5 +7,5 @@ export default createContext({
   logout: () => {}
 });
 
-export const UserProvider = createContext.Provider;
-export const UserConsumer = createContext.Consumer;
+export const AuthContextProvider = createContext.Provider;
+export const AuthContextConsumer = createContext.Consumer;
