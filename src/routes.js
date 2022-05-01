@@ -16,8 +16,8 @@ import Confirm from './components/EmailConfirmation/EmailConfirmation';
 import Capitol from './pages/Capitol';
 import FisaFormule from './pages/FisaFormule';
 import Utilizator from './pages/Utilizator';
-
-// import Subcapitol from './pages/Subcapitol';
+import Exercitii from './pages/Exercitii';
+import Teste from './pages/Teste';
 
 // ----------------------------------------------------------------------
 
@@ -37,9 +37,8 @@ export default function Router() {
         { path: 'blog', element: <Blog /> },
         { path: 'teorie', element: <Capitol /> },
         { path: 'formule', element: <FisaFormule /> },
-        { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
-        { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
-        { path: 'teste', element: <Navigate to="/dashboard/teorie" /> },
+        { path: 'exercitii', element: <Exercitii /> },
+        { path: 'teste', element: <Teste /> },
         { path: 'exercitii_gresite', element: <Navigate to="/dashboard/teorie" /> }
       ]
     },
@@ -70,9 +69,8 @@ export default function Router() {
         { path: 'blog', element: <Blog /> },
         { path: 'teorie', element: <Capitol /> },
         { path: 'formule', element: <FisaFormule /> },
-        { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
-        { path: 'exercitii', element: <Navigate to="/dashboard/teorie" /> },
-        { path: 'teste', element: <Navigate to="/dashboard/teorie" /> },
+        { path: 'exercitii', element: <Exercitii /> },
+        { path: 'teste', element: <Teste /> },
         { path: 'exercitii_gresite', element: <Navigate to="/dashboard/teorie" /> }
       ]
     },

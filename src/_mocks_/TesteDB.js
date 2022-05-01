@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { AudioCard, VideoCard } from 'material-ui-player';
 
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid, CardMedia } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Button, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
+import {
+  ProductSort,
+  ProductCartWidget,
+  ProductFilterSidebar
+} from '../sections/@dashboard/products';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
@@ -21,7 +25,7 @@ const CapitolImgStyle = styled('img')({
   position: 'absolute'
 });
 
-class FisaFormuleDB extends Component {
+class TesteDB extends Component {
   static context = AuthContext;
 
   constructor(props) {
@@ -30,20 +34,18 @@ class FisaFormuleDB extends Component {
     this.state = {
       isLoading: false,
       capitole: [],
-      subcapitole: [],
-      fiseFormule: [],
+      teste: [],
       isActive: true,
       capitol: [],
-      subcapitolFisaFormule: [],
+      testCapitol: [],
       capitolChosen: false,
-      subcapitolChosen: false
+      testChosen: false
     };
   }
 
   componentDidMount() {
     this.fetchCapitole();
-    this.fetchSubcapitole();
-    this.fetchFiseFormule();
+    this.fetchTeste();
   }
 
   componentWillUnmount() {
@@ -89,15 +91,23 @@ class FisaFormuleDB extends Component {
       });
   };
 
-  fetchSubcapitole = () => {
+  fetchTeste = () => {
     this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query{
-            subcapitole{
+            teste{
                 _id
-                titlu
                 capitol_id
+                exercitiu1_id
+                exercitiu2_id
+                exercitiu3_id
+                exercitiu4_id
+                exercitiu5_id
+                exercitiu6_id
+                exercitiu7_id
+                exercitiu8_id
+                exercitiu9_id
             }
         }
         `
@@ -117,9 +127,7 @@ class FisaFormuleDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data:', resData.data);
-
-        this.setState({ subcapitole: resData.data.subcapitole });
+        this.setState({ teste: resData.data.teste });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
@@ -127,74 +135,25 @@ class FisaFormuleDB extends Component {
         this.setState({ isLoading: false });
       });
   };
-
-  fetchFiseFormule = () => {
-    this.setState({ isLoading: true });
-    const requestBody = {
-      query: `
-        query{
-          fiseFormule{
-            _id
-            subcapitol_id
-            titlu
-            descriere
-          }
-        }
-        `
-    };
-
-    fetch('http://localhost:8000/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then((res) => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!');
-        }
-        return res.json();
-      })
-      .then((resData) => {
-        console.log('fetch resData.data: fiseFormule', resData.data);
-
-        this.setState({ fiseFormule: resData.data.fiseFormule });
-        this.setState({ isLoading: false });
-      })
-      .catch((err) => {
-        console.log('pb la fetch');
-
-        console.log(err);
-        this.setState({ isLoading: false });
-      });
-  };
-
-  // setCapitolList = () => {
-  //   this.setState({ capitolList: true });
-  // };
 
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
-    // console.log('setCapitolChosen', capitol);
   };
 
   setCapitol = (capitol) => {
     this.setState({ capitol });
-    // console.log('setCapitol', capitol);
   };
 
-  setSubcapitolChosen = (subcapitol) => {
-    // await this.setState({ subcapitolFisaFormule: subcapitol });
-    this.setState({ subcapitolChosen: true });
-    this.setSubcapitolFisaFormule(subcapitol);
-    console.log('setSubcapitolChosen', subcapitol._id);
+  setTestChosen = (test) => {
+    this.setState({ testChosen: true });
+    this.setTestCapitol(test);
+    console.log('setTestChosen', test._id);
   };
 
-  setSubcapitolFisaFormule = (subcapitolFisaFormule) => {
-    this.setState({ subcapitolFisaFormule });
-    console.log('setSubcapitol', subcapitolFisaFormule);
+  setTestCapitol = (testCapitol) => {
+    this.setState({ testCapitol });
+    console.log('setTest', testCapitol);
   };
 
   modalCancelHandlerCapitol = () => {
@@ -204,30 +163,27 @@ class FisaFormuleDB extends Component {
     });
   };
 
-  modalCancelHandlerSubcapitol = () => {
-    this.setState({ subcapitolChosen: false, subcapitolFisaFormule: [] });
+  modalCancelHandlerTest = () => {
+    this.setState({ testChosen: false, testCapitol: [] });
   };
 
   modalHandleClickInapoi = () => {
-    if (this.state.capitolChosen && !this.state.subcapitolChosen) {
+    if (this.state.capitolChosen && !this.state.testChosen) {
       this.modalCancelHandlerCapitol();
-    } else if (this.state.capitolChosen && this.state.subcapitolChosen) {
-      this.modalCancelHandlerSubcapitol();
+    } else if (this.state.capitolChosen && this.state.testChosen) {
+      this.modalCancelHandlerTest();
     }
   };
 
   render() {
-    console.log('isLoading', this.state.isLoading);
-    console.log('capitol:', this.state.capitol);
-
-    const subcapitoleFiltrate = this.state.subcapitole.filter(
-      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
-    );
-    const fiseFormuleFiltrate = this.state.fiseFormule.filter(
-      (fisaFormule) => fisaFormule.subcapitol_id === this.state.subcapitolFisaFormule._id
+    console.log(this.state.isLoading);
+    const testeFiltrate = this.state.teste.filter(
+      (test) => test.capitol_id === this.state.capitol._id
     );
 
-    console.log('fiseFormuleFiltrate', fiseFormuleFiltrate);
+    console.log('testeFiltrate', testeFiltrate);
+    console.log('testCapitol', this.state.testCapitol);
+    console.log('this.state.capitolChosen', this.state.capitolChosen);
 
     return (
       <container>
@@ -245,6 +201,7 @@ class FisaFormuleDB extends Component {
           >
             Inapoi
           </Button>
+
           <Stack
             direction="row"
             spacing={1}
@@ -290,31 +247,24 @@ class FisaFormuleDB extends Component {
                       <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setCapitolChosen(capitol)}
-                        // href="/dashboard/subcapitol"
-                      >
-                        Subcapitole
-                      </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
-                        Test
+                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
+                        Teste
                       </Button>
                     </Stack>
                     <Button variant="outlined" href="#outlined-buttons">
-                      Adauga Subcapitol
+                      Adauga test
                     </Button>
                   </Stack>
                 </Card>
               </Grid>
             ))}
           {/* ---------------------------------------------------------------------------------------------------------- */}
-          {/* daca am ales capitolul atunci ajung la subcapitole */}
+          {/* daca am ales capitolul atunci ajung la teste */}
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
-            !this.state.subcapitolChosen &&
-            subcapitoleFiltrate.map((subcapitol) => (
-              <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
+            !this.state.testChosen &&
+            testeFiltrate.map((test, index) => (
+              <Grid key={test._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
                     {status && (
@@ -332,71 +282,27 @@ class FisaFormuleDB extends Component {
                         {status}
                       </Label>
                     )}
-                    <CapitolImgStyle
-                      alt={subcapitol.titlu}
-                      src={mockImgSubcapitol(subcapitol._id)}
-                    />
+                    <CapitolImgStyle alt={test._id} src={mockImgCapitol(test.capitol_id)} />
                   </Box>
 
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
+                      <Typography variant="subtitle1">Testul {index + 1}</Typography>
                     </Link>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Typography variant="subtitle1">
                         Capitolul:{' '}
                         {
-                          this.state.capitole.find(
-                            (capitol) => capitol._id === subcapitol.capitol_id
-                          ).titlu
+                          this.state.capitole.find((capitol) => capitol._id === test.capitol_id)
+                            .titlu
                         }
                       </Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setSubcapitolChosen(subcapitol)}
-                      >
-                        Fise Formule
-                      </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
-                        Exercitii
+                      <Button variant="outlined" onClick={() => this.setTestChosen(test)}>
+                        Rezolva testul
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
-                      Adauga formule
-                    </Button>
-                  </Stack>
-                </Card>
-              </Grid>
-            ))}
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-          {/* daca am ales subcapitolul atunci ajung la fise formule */}
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-          {this.state.capitolChosen &&
-            this.state.subcapitolChosen &&
-            fiseFormuleFiltrate.map((fisaFormule) => (
-              <Grid key={fisaFormule._id} item container spacing={2} marginLeft={0.1}>
-                <Card>
-                  <Stack spacing={2} sx={{ p: 3 }}>
-                    <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">Titlu: {fisaFormule.titlu}</Typography>
-                    </Link>
-                    <Typography variant="subtitle1">
-                      Capitolul:{' '}
-                      {
-                        this.state.capitole.find(
-                          (capitol) => capitol._id === this.state.subcapitolFisaFormule.capitol_id
-                        ).titlu
-                      }
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      Subcapitolul: {this.state.subcapitolFisaFormule.titlu}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      Descriere:
-                      <Markdown>{fisaFormule.descriere}</Markdown>
-                    </Typography>
                   </Stack>
                 </Card>
               </Grid>
@@ -407,4 +313,4 @@ class FisaFormuleDB extends Component {
   }
 }
 
-export default FisaFormuleDB;
+export default TesteDB;

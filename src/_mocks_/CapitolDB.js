@@ -275,7 +275,11 @@ class CapitolDB extends Component {
           justifyContent="space-between"
           sx={{ mb: 5 }}
         >
-          <Button variant="outlined" onClick={() => this.modalHandleClickInapoi()}>
+          <Button
+            variant="outlined"
+            style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
+            onClick={() => this.modalHandleClickInapoi()}
+          >
             Inapoi
           </Button>
           <Stack

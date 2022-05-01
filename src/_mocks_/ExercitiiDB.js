@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { AudioCard, VideoCard } from 'material-ui-player';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid, CardMedia } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Button, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
@@ -21,7 +20,7 @@ const CapitolImgStyle = styled('img')({
   position: 'absolute'
 });
 
-class FisaFormuleDB extends Component {
+class ExercitiiDB extends Component {
   static context = AuthContext;
 
   constructor(props) {
@@ -31,19 +30,22 @@ class FisaFormuleDB extends Component {
       isLoading: false,
       capitole: [],
       subcapitole: [],
-      fiseFormule: [],
+      exercitii: [],
       isActive: true,
       capitol: [],
-      subcapitolFisaFormule: [],
+      subcapitolExercitii: [],
+      exercitiuAles: [],
       capitolChosen: false,
-      subcapitolChosen: false
+      subcapitolChosen: false,
+      exercitiuChosen: false,
+      openFilter: false
     };
   }
 
   componentDidMount() {
     this.fetchCapitole();
     this.fetchSubcapitole();
-    this.fetchFiseFormule();
+    this.fetchExercitii();
   }
 
   componentWillUnmount() {
@@ -128,17 +130,22 @@ class FisaFormuleDB extends Component {
       });
   };
 
-  fetchFiseFormule = () => {
+  fetchExercitii = () => {
     this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query{
-          fiseFormule{
+        exercitii{
             _id
             subcapitol_id
-            titlu
-            descriere
-          }
+            rezolvare
+            varianta1
+            varianta2
+            varianta3
+            varianta4
+            raspuns_corect
+            nivel_dif
+            }
         }
         `
     };
@@ -157,9 +164,7 @@ class FisaFormuleDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        console.log('fetch resData.data: fiseFormule', resData.data);
-
-        this.setState({ fiseFormule: resData.data.fiseFormule });
+        this.setState({ exercitii: resData.data.exercitii });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
@@ -170,31 +175,34 @@ class FisaFormuleDB extends Component {
       });
   };
 
-  // setCapitolList = () => {
-  //   this.setState({ capitolList: true });
-  // };
-
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
-    // console.log('setCapitolChosen', capitol);
   };
 
   setCapitol = (capitol) => {
     this.setState({ capitol });
-    // console.log('setCapitol', capitol);
   };
 
   setSubcapitolChosen = (subcapitol) => {
-    // await this.setState({ subcapitolFisaFormule: subcapitol });
     this.setState({ subcapitolChosen: true });
-    this.setSubcapitolFisaFormule(subcapitol);
+    this.setSubcapitolExercitii(subcapitol);
     console.log('setSubcapitolChosen', subcapitol._id);
   };
 
-  setSubcapitolFisaFormule = (subcapitolFisaFormule) => {
-    this.setState({ subcapitolFisaFormule });
-    console.log('setSubcapitol', subcapitolFisaFormule);
+  setSubcapitolExercitii = (subcapitolExercitii) => {
+    this.setState({ subcapitolExercitii });
+  };
+
+  setExercitiuChosen = (exercitiu) => {
+    this.setState({ exercitiuChosen: true });
+    this.setExercitiuAles(exercitiu);
+    console.log('setExercitiuChosen', this.state.exercitiuChosen);
+  };
+
+  setExercitiuAles = (exercitiuAles) => {
+    this.setState({ exercitiuAles });
+    console.log('setExercitiu', this.state.exercitiuAles);
   };
 
   modalCancelHandlerCapitol = () => {
@@ -205,29 +213,47 @@ class FisaFormuleDB extends Component {
   };
 
   modalCancelHandlerSubcapitol = () => {
-    this.setState({ subcapitolChosen: false, subcapitolFisaFormule: [] });
+    this.setState({ subcapitolChosen: false, subcapitolExercitii: [] });
+  };
+
+  modalCancelHandlerExercitiu = () => {
+    this.setState({ exercitiuChosen: false });
   };
 
   modalHandleClickInapoi = () => {
     if (this.state.capitolChosen && !this.state.subcapitolChosen) {
       this.modalCancelHandlerCapitol();
-    } else if (this.state.capitolChosen && this.state.subcapitolChosen) {
+    } else if (
+      this.state.capitolChosen &&
+      this.state.subcapitolChosen &&
+      !this.state.exercitiuChosen
+    ) {
       this.modalCancelHandlerSubcapitol();
+    } else if (
+      this.state.capitolChosen &&
+      this.state.subcapitolChosen &&
+      this.state.exercitiuChosen
+    ) {
+      this.modalCancelHandlerExercitiu();
     }
   };
 
   render() {
     console.log('isLoading', this.state.isLoading);
+    console.log('capitol:', this.state.openFilter);
+
     console.log('capitol:', this.state.capitol);
+    console.log('exercitii', this.state.exercitii);
+    console.log('exercitiuAles', this.state.exercitiuAles);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
-      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
+      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id // '6245fb02354efdf16ef74b01' // this.state.capitol._id
     );
-    const fiseFormuleFiltrate = this.state.fiseFormule.filter(
-      (fisaFormule) => fisaFormule.subcapitol_id === this.state.subcapitolFisaFormule._id
+    const exercitiiFiltrate = this.state.exercitii.filter(
+      (exercitiu) => exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
     );
 
-    console.log('fiseFormuleFiltrate', fiseFormuleFiltrate);
+    console.log('exercitiiFiltrate', exercitiiFiltrate);
 
     return (
       <container>
@@ -357,46 +383,68 @@ class FisaFormuleDB extends Component {
                         variant="outlined"
                         onClick={() => this.setSubcapitolChosen(subcapitol)}
                       >
-                        Fise Formule
-                      </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
                         Exercitii
                       </Button>
                     </Stack>
                     <Button variant="outlined" href="#outlined-buttons">
-                      Adauga formule
+                      Adauga Exercitii
                     </Button>
                   </Stack>
                 </Card>
               </Grid>
             ))}
           {/* ------------------------------------------------------------------------------------------------------------- */}
-          {/* daca am ales subcapitolul atunci ajung la fise formule */}
+          {/* daca am ales subcapitolul atunci ajung la exercitii */}
           {/* ------------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
-            fiseFormuleFiltrate.map((fisaFormule) => (
-              <Grid key={fisaFormule._id} item container spacing={2} marginLeft={0.1}>
+            exercitiiFiltrate.map((exercitiu, index) => (
+              <Grid key={exercitiu._id} item xs={12} sm={6} md={3}>
                 <Card>
+                  <Box sx={{ pt: '100%', position: 'relative' }}>
+                    {status && (
+                      <Label
+                        variant="filled"
+                        color={(status === 'sale' && 'error') || 'info'}
+                        sx={{
+                          zIndex: 9,
+                          top: 16,
+                          right: 16,
+                          position: 'absolute',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        {status}
+                      </Label>
+                    )}
+                    <CapitolImgStyle alt={exercitiu._id} src={mockImgSubcapitol(exercitiu._id)} />
+                  </Box>
+
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">Titlu: {fisaFormule.titlu}</Typography>
+                      <Typography variant="subtitle1">Exercitiul {index + 1}</Typography>
                     </Link>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                      <Typography variant="subtitle1">
+                        Capitolul:{' '}
+                        {
+                          this.state.capitole.find(
+                            (capitol) => capitol._id === this.state.subcapitolExercitii.capitol_id
+                          ).titlu
+                        }
+                      </Typography>
+                    </Stack>
                     <Typography variant="subtitle1">
-                      Capitolul:{' '}
-                      {
-                        this.state.capitole.find(
-                          (capitol) => capitol._id === this.state.subcapitolFisaFormule.capitol_id
-                        ).titlu
-                      }
+                      Subcapitolul: {this.state.subcapitolExercitii.titlu}
                     </Typography>
                     <Typography variant="subtitle1">
-                      Subcapitolul: {this.state.subcapitolFisaFormule.titlu}
+                      Nivel dificultate: {exercitiu.nivel_dif}
                     </Typography>
-                    <Typography variant="subtitle1">
-                      Descriere:
-                      <Markdown>{fisaFormule.descriere}</Markdown>
-                    </Typography>
+                    <Stack direction="row" alignItems="center" justifyContent="center">
+                      <Button variant="outlined" onClick={() => this.setExercitiuChosen(exercitiu)}>
+                        Rezolva Exercitiul
+                      </Button>
+                    </Stack>
                   </Stack>
                 </Card>
               </Grid>
@@ -407,4 +455,4 @@ class FisaFormuleDB extends Component {
   }
 }
 
-export default FisaFormuleDB;
+export default ExercitiiDB;
