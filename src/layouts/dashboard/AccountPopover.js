@@ -42,7 +42,6 @@ export default function AccountPopover() {
     navigate('/dashboard/app', { replace: true });
   };
 
-  const contextRef = useRef(context);
   const anchorRef = useRef(null);
   console.log('token accountpopover = ', context.userId);
 

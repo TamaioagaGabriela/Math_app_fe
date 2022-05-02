@@ -38,7 +38,10 @@ class ExercitiiDB extends Component {
       capitolChosen: false,
       subcapitolChosen: false,
       exercitiuChosen: false,
-      openFilter: false
+      openFilter: false,
+      selectedAnswer: null,
+      eroare: null,
+      rezultatExercitiu: null
     };
   }
 
@@ -80,8 +83,6 @@ class ExercitiiDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data:', resData.data);
-
         this.setState({ capitole: resData.data.capitole });
         this.setState({ isLoading: false });
       })
@@ -119,8 +120,6 @@ class ExercitiiDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data:', resData.data);
-
         this.setState({ subcapitole: resData.data.subcapitole });
         this.setState({ isLoading: false });
       })
@@ -168,8 +167,6 @@ class ExercitiiDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log('pb la fetch');
-
         console.log(err);
         this.setState({ isLoading: false });
       });
@@ -187,7 +184,6 @@ class ExercitiiDB extends Component {
   setSubcapitolChosen = (subcapitol) => {
     this.setState({ subcapitolChosen: true });
     this.setSubcapitolExercitii(subcapitol);
-    console.log('setSubcapitolChosen', subcapitol._id);
   };
 
   setSubcapitolExercitii = (subcapitolExercitii) => {
@@ -197,12 +193,75 @@ class ExercitiiDB extends Component {
   setExercitiuChosen = (exercitiu) => {
     this.setState({ exercitiuChosen: true });
     this.setExercitiuAles(exercitiu);
-    console.log('setExercitiuChosen', this.state.exercitiuChosen);
   };
 
   setExercitiuAles = (exercitiuAles) => {
     this.setState({ exercitiuAles });
-    console.log('setExercitiu', this.state.exercitiuAles);
+  };
+
+  setSelectedAnswer = (variantaAleasa) => {
+    this.setState({ selectedAnswer: variantaAleasa });
+  };
+
+  adaugaRezolvareExercitiu = async () => {
+    if (this.state.selectedAnswer) {
+      this.setState({ eroare: null });
+      this.setState({ rezultatExercitiu: null });
+
+      const requestBody = {
+        query: `
+        mutation{
+            adaugaRezolvareExercitiu(rezolvareExercitiuInput:  {exercitiu_id: "${this.state.exercitiuAles._id}", raspuns_user: "${this.state.selectedAnswer}"}
+            ){
+              _id
+              exercitiu{
+                _id
+                rezolvare
+                raspuns_corect
+              }
+              status
+              raspuns_user
+            }
+        }
+        `
+      };
+      const tkn = this.context.token;
+      fetch('http://localhost:8000/graphql', {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tkn}`
+        }
+      })
+        .then((res) => {
+          if (res.status !== 200 && res.status !== 201) {
+            throw new Error('Failed!');
+          }
+          return res.json();
+        })
+        .then((resData) => {
+          // this.setState((prevState) => {
+          //   const rezolvareExercitiu = {
+          //     _id: resData.data.adaugaRezolvareExercitiu._id,
+          //     status: resData.data.adaugaRezolvareExercitiu.status,
+          //     raspuns_user: resData.data.adaugaRezolvareExercitiu.raspuns_user,
+          //     raspuns_corect: resData.data.adaugaRezolvareExercitiu.exercitiu.raspuns_corect,
+          //     rezolvare: resData.data.adaugaRezolvareExercitiu.exercitiu.rezolvare,
+          //     creator: {
+          //       _id: this.context.userId
+          //     }
+          //   };
+          // return { rezolvareExercitiu };
+          // });
+          this.setState({ rezultatExercitiu: resData.data.adaugaRezolvareExercitiu.status });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      this.setState({ eroare: 'Selecteaza o varianta de raspuns!' });
+    }
   };
 
   modalCancelHandlerCapitol = () => {
@@ -239,12 +298,10 @@ class ExercitiiDB extends Component {
   };
 
   render() {
-    console.log('isLoading', this.state.isLoading);
-    console.log('capitol:', this.state.openFilter);
+    console.log(this.state.isLoading);
+    console.log(this.state.openFilter);
 
-    console.log('capitol:', this.state.capitol);
-    console.log('exercitii', this.state.exercitii);
-    console.log('exercitiuAles', this.state.exercitiuAles);
+    console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id // '6245fb02354efdf16ef74b01' // this.state.capitol._id
@@ -252,8 +309,6 @@ class ExercitiiDB extends Component {
     const exercitiiFiltrate = this.state.exercitii.filter(
       (exercitiu) => exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
     );
-
-    console.log('exercitiiFiltrate', exercitiiFiltrate);
 
     return (
       <container>
@@ -398,6 +453,7 @@ class ExercitiiDB extends Component {
           {/* ------------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
+            !this.state.exercitiuChosen &&
             exercitiiFiltrate.map((exercitiu, index) => (
               <Grid key={exercitiu._id} item xs={12} sm={6} md={3}>
                 <Card>
@@ -449,10 +505,66 @@ class ExercitiiDB extends Component {
                 </Card>
               </Grid>
             ))}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales exercitiul ajung la quiz */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen && this.state.subcapitolChosen && this.state.exercitiuChosen && (
+            <Grid key={this.state.exercitiuAles._id} item container spacing={2} marginLeft={0.1}>
+              <section className="quiz">
+                <article className="container">
+                  <h2> {this.state.exercitiuAles._id} </h2>
+                  <div className="btn-container">
+                    <Button
+                      onClick={() => {
+                        this.setSelectedAnswer(this.state.exercitiuAles.varianta1);
+                      }}
+                    >
+                      A. {this.state.exercitiuAles.varianta1}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        this.setSelectedAnswer(this.state.exercitiuAles.varianta2);
+                      }}
+                    >
+                      B. {this.state.exercitiuAles.varianta2}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        this.setSelectedAnswer(this.state.exercitiuAles.varianta3);
+                      }}
+                    >
+                      C. {this.state.exercitiuAles.varianta3}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        this.setSelectedAnswer(this.state.exercitiuAles.varianta4);
+                        console.log('selectedAnswer', this.state.selectedAnswer);
+                      }}
+                    >
+                      D. {this.state.exercitiuAles.varianta4}
+                    </Button>
+                  </div>
+                </article>
+                <Button
+                  className="next-question"
+                  onClick={() => {
+                    this.adaugaRezolvareExercitiu();
+
+                    <div>
+                      <p>{this.state.rezultatExercitiu}</p>
+                      <p>{this.state.eroare}</p>
+                    </div>;
+                  }}
+                >
+                  trimite
+                </Button>
+              </section>
+            </Grid>
+          )}
         </Grid>
       </container>
     );
   }
 }
-
+ExercitiiDB.contextType = AuthContext;
 export default ExercitiiDB;
