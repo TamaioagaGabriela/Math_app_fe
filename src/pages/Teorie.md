@@ -9,6 +9,6 @@ Given a **formula** below
 $$
 s = ut + \frac{1}{2}at^{2}
 $$
-
+$\frac{7}{6} = \frac{3}{x}$
 Calculate the value of $s$ when $u = 10\frac{m}{s}$ and &nbsp; <br></br> $a = 2\frac{m}{s^{2}}$ at $t = 1s$
 

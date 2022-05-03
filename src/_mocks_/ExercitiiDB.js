@@ -8,6 +8,7 @@ import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
+import './index.css';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
@@ -41,7 +42,14 @@ class ExercitiiDB extends Component {
       openFilter: false,
       selectedAnswer: null,
       eroare: null,
-      rezultatExercitiu: null
+      rezultatExercitiu: null,
+      raspunsTrimis: false,
+      veziRezolvare: false,
+      raspunsCorect: null,
+      btn1: false,
+      btn2: false,
+      btn3: false,
+      btn4: false
     };
   }
 
@@ -136,6 +144,7 @@ class ExercitiiDB extends Component {
         query{
         exercitii{
             _id
+            cerinta
             subcapitol_id
             rezolvare
             varianta1
@@ -170,37 +179,6 @@ class ExercitiiDB extends Component {
         console.log(err);
         this.setState({ isLoading: false });
       });
-  };
-
-  setCapitolChosen = (capitol) => {
-    this.setState({ capitolChosen: true });
-    this.setCapitol(capitol);
-  };
-
-  setCapitol = (capitol) => {
-    this.setState({ capitol });
-  };
-
-  setSubcapitolChosen = (subcapitol) => {
-    this.setState({ subcapitolChosen: true });
-    this.setSubcapitolExercitii(subcapitol);
-  };
-
-  setSubcapitolExercitii = (subcapitolExercitii) => {
-    this.setState({ subcapitolExercitii });
-  };
-
-  setExercitiuChosen = (exercitiu) => {
-    this.setState({ exercitiuChosen: true });
-    this.setExercitiuAles(exercitiu);
-  };
-
-  setExercitiuAles = (exercitiuAles) => {
-    this.setState({ exercitiuAles });
-  };
-
-  setSelectedAnswer = (variantaAleasa) => {
-    this.setState({ selectedAnswer: variantaAleasa });
   };
 
   adaugaRezolvareExercitiu = async () => {
@@ -255,12 +233,71 @@ class ExercitiiDB extends Component {
           // return { rezolvareExercitiu };
           // });
           this.setState({ rezultatExercitiu: resData.data.adaugaRezolvareExercitiu.status });
+          this.setState({
+            raspunsCorect: resData.data.adaugaRezolvareExercitiu.exercitiu.raspuns_corect
+          });
+          this.setState({ raspunsTrimis: true });
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
       this.setState({ eroare: 'Selecteaza o varianta de raspuns!' });
+    }
+  };
+
+  setCapitolChosen = (capitol) => {
+    this.setState({ capitolChosen: true });
+    this.setCapitol(capitol);
+  };
+
+  setCapitol = (capitol) => {
+    this.setState({ capitol });
+  };
+
+  setSubcapitolChosen = (subcapitol) => {
+    this.setState({ subcapitolChosen: true });
+    this.setSubcapitolExercitii(subcapitol);
+  };
+
+  setSubcapitolExercitii = (subcapitolExercitii) => {
+    this.setState({ subcapitolExercitii });
+  };
+
+  setExercitiuChosen = (exercitiu) => {
+    this.setState({ exercitiuChosen: true });
+    this.setExercitiuAles(exercitiu);
+  };
+
+  setExercitiuAles = (exercitiuAles) => {
+    this.setState({ exercitiuAles });
+  };
+
+  setSelectedAnswer = (variantaAleasa) => {
+    this.setState({ selectedAnswer: variantaAleasa });
+  };
+
+  setColorButton = (btn) => {
+    if (btn === 'btn1') {
+      this.setState({ btn1: true });
+      this.setState({ btn2: false });
+      this.setState({ btn3: false });
+      this.setState({ btn4: false });
+    } else if (btn === 'btn2') {
+      this.setState({ btn1: false });
+      this.setState({ btn2: true });
+      this.setState({ btn3: false });
+      this.setState({ btn4: false });
+    } else if (btn === 'btn3') {
+      this.setState({ btn1: false });
+      this.setState({ btn2: false });
+      this.setState({ btn3: true });
+      this.setState({ btn4: false });
+    } else if (btn === 'btn4') {
+      this.setState({ btn1: false });
+      this.setState({ btn2: false });
+      this.setState({ btn3: false });
+      this.setState({ btn4: true });
     }
   };
 
@@ -277,6 +314,38 @@ class ExercitiiDB extends Component {
 
   modalCancelHandlerExercitiu = () => {
     this.setState({ exercitiuChosen: false });
+    this.setState({ selectedAnswer: null });
+    this.setState({ eroare: null });
+    this.setState({ rezultatExercitiu: null });
+    this.setState({ btn1: false });
+    this.setState({ btn2: false });
+    this.setState({ btn3: false });
+    this.setState({ btn4: false });
+  };
+
+  modalCancelHandlerRaspuns = () => {
+    this.setState({ exercitiuChosen: false });
+    this.setState({ selectedAnswer: null });
+    this.setState({ eroare: null });
+    this.setState({ rezultatExercitiu: null });
+    this.setState({ btn1: false });
+    this.setState({ btn2: false });
+    this.setState({ btn3: false });
+    this.setState({ btn4: false });
+    this.setState({ raspunsTrimis: false });
+  };
+
+  modalCancelHandlerVeziRezolvare = () => {
+    this.setState({ exercitiuChosen: false });
+    this.setState({ selectedAnswer: null });
+    this.setState({ eroare: null });
+    this.setState({ rezultatExercitiu: null });
+    this.setState({ btn1: false });
+    this.setState({ btn2: false });
+    this.setState({ btn3: false });
+    this.setState({ btn4: false });
+    this.setState({ raspunsTrimis: false });
+    this.setState({ veziRezolvare: false });
   };
 
   modalHandleClickInapoi = () => {
@@ -291,9 +360,26 @@ class ExercitiiDB extends Component {
     } else if (
       this.state.capitolChosen &&
       this.state.subcapitolChosen &&
-      this.state.exercitiuChosen
+      this.state.exercitiuChosen &&
+      !this.state.raspunsTrimis
     ) {
       this.modalCancelHandlerExercitiu();
+    } else if (
+      this.state.capitolChosen &&
+      this.state.subcapitolChosen &&
+      this.state.exercitiuChosen &&
+      this.state.raspunsTrimis &&
+      !this.state.veziRezolvare
+    ) {
+      this.modalCancelHandlerRaspuns();
+    } else if (
+      this.state.capitolChosen &&
+      this.state.subcapitolChosen &&
+      this.state.exercitiuChosen &&
+      this.state.raspunsTrimis &&
+      this.state.veziRezolvare
+    ) {
+      this.modalCancelHandlerVeziRezolvare();
     }
   };
 
@@ -508,59 +594,257 @@ class ExercitiiDB extends Component {
           {/* ------------------------------------------------------------------------------------------------------------- */}
           {/* daca am ales exercitiul ajung la quiz */}
           {/* ------------------------------------------------------------------------------------------------------------- */}
-          {this.state.capitolChosen && this.state.subcapitolChosen && this.state.exercitiuChosen && (
-            <Grid key={this.state.exercitiuAles._id} item container spacing={2} marginLeft={0.1}>
-              <section className="quiz">
-                <article className="container">
-                  <h2> {this.state.exercitiuAles._id} </h2>
-                  <div className="btn-container">
-                    <Button
-                      onClick={() => {
-                        this.setSelectedAnswer(this.state.exercitiuAles.varianta1);
-                      }}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            this.state.exercitiuChosen &&
+            !this.state.raspunsTrimis && (
+              <Grid
+                key={this.state.exercitiuAles._id}
+                item
+                container
+                spacing={2}
+                marginLeft={0.1}
+                marginTop={-9}
+              >
+                <section className="quiz">
+                  <article className="container">
+                    <h2>
+                      {' '}
+                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                    </h2>
+                    <div className="btn-container">
+                      <Button
+                        className={this.state.btn1 ? 'answer-clicked-btn' : 'answer-btn'}
+                        onClick={() => {
+                          this.setColorButton('btn1');
+                          this.setSelectedAnswer(this.state.exercitiuAles.varianta1);
+                        }}
+                      >
+                        A. {this.state.exercitiuAles.varianta1}
+                      </Button>
+                      <Button
+                        className={this.state.btn2 ? 'answer-clicked-btn' : 'answer-btn'}
+                        onClick={() => {
+                          this.setColorButton('btn2');
+                          this.setSelectedAnswer(this.state.exercitiuAles.varianta2);
+                        }}
+                      >
+                        B. {this.state.exercitiuAles.varianta2}
+                      </Button>
+                      <Button
+                        className={this.state.btn3 ? 'answer-clicked-btn' : 'answer-btn'}
+                        onClick={() => {
+                          this.setColorButton('btn3');
+                          this.setSelectedAnswer(this.state.exercitiuAles.varianta3);
+                        }}
+                      >
+                        C. {this.state.exercitiuAles.varianta3}
+                      </Button>
+                      <Button
+                        className={this.state.btn4 ? 'answer-clicked-btn' : 'answer-btn'}
+                        onClick={() => {
+                          this.setColorButton('btn4');
+                          this.setSelectedAnswer(this.state.exercitiuAles.varianta4);
+                          console.log('selectedAnswer', this.state.selectedAnswer);
+                        }}
+                      >
+                        D. {this.state.exercitiuAles.varianta4}
+                      </Button>
+                    </div>
+                  </article>
+                  {this.state.eroare ? (
+                    <p
+                      className="exercitiu-err-p"
+                      // style={{ visibility: this.state.eroare ? 'visible' : 'hidden', width: '30%' }}
                     >
-                      A. {this.state.exercitiuAles.varianta1}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        this.setSelectedAnswer(this.state.exercitiuAles.varianta2);
-                      }}
-                    >
-                      B. {this.state.exercitiuAles.varianta2}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        this.setSelectedAnswer(this.state.exercitiuAles.varianta3);
-                      }}
-                    >
-                      C. {this.state.exercitiuAles.varianta3}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        this.setSelectedAnswer(this.state.exercitiuAles.varianta4);
-                        console.log('selectedAnswer', this.state.selectedAnswer);
-                      }}
-                    >
-                      D. {this.state.exercitiuAles.varianta4}
-                    </Button>
-                  </div>
-                </article>
-                <Button
-                  className="next-question"
-                  onClick={() => {
-                    this.adaugaRezolvareExercitiu();
+                      {this.state.eroare}
+                    </p>
+                  ) : (
+                    <p className="exercitiu-err-p" style={{ color: 'white' }}>
+                      'Selecteaza o varianta de raspuns!'
+                    </p>
+                  )}
+                  <Button
+                    className="next-question"
+                    onClick={() => {
+                      this.adaugaRezolvareExercitiu();
+                    }}
+                  >
+                    trimite
+                  </Button>
+                </section>
+              </Grid>
+            )}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am submitat raspunsul ajung la status + rezolvare */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            this.state.exercitiuChosen &&
+            this.state.raspunsTrimis &&
+            !this.state.veziRezolvare && (
+              <Grid
+                key={this.state.exercitiuAles._id}
+                item
+                container
+                spacing={2}
+                marginLeft={0.1}
+                marginTop={-9}
+              >
+                <section className="quiz">
+                  <article className="container">
+                    <h2>
+                      {' '}
+                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                    </h2>
+                    <div className="btn-container">
+                      <Button
+                        className={this.state.btn1 ? 'answer-clicked-btn' : 'answer-btn'}
+                        style={{
+                          color:
+                            this.state.exercitiuAles.varianta1 === this.state.raspunsCorect
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        A. {this.state.exercitiuAles.varianta1}
+                      </Button>
+                      <Button
+                        className={this.state.btn2 ? 'answer-clicked-btn' : 'answer-btn'}
+                        style={{
+                          color:
+                            this.state.exercitiuAles.varianta2 === this.state.raspunsCorect
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        B. {this.state.exercitiuAles.varianta2}
+                      </Button>
+                      <Button
+                        className={this.state.btn3 ? 'answer-clicked-btn' : 'answer-btn'}
+                        style={{
+                          color:
+                            this.state.exercitiuAles.varianta3 === this.state.raspunsCorect
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        C. {this.state.exercitiuAles.varianta3}
+                      </Button>
+                      <Button
+                        className={this.state.btn4 ? 'answer-clicked-btn' : 'answer-btn'}
+                        style={{
+                          color:
+                            this.state.exercitiuAles.varianta4 === this.state.raspunsCorect
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        D. {this.state.exercitiuAles.varianta4}
+                      </Button>
+                    </div>
+                  </article>
+                  <p
+                    className="exercitiu-err-p"
+                    style={{
+                      color: this.state.rezultatExercitiu === 'GRESIT' ? 'red' : 'green',
+                      fontSize: '1.1rem'
+                    }}
+                  >
+                    Raspuns: {this.state.rezultatExercitiu}
+                  </p>
+                  <Button
+                    className="next-question"
+                    onClick={() => {
+                      this.setState({ veziRezolvare: true });
+                    }}
+                  >
+                    Vezi rezolvarea
+                  </Button>
+                </section>
+              </Grid>
+            )}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* vezi rezolvarea */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            this.state.exercitiuChosen &&
+            this.state.raspunsTrimis &&
+            this.state.veziRezolvare && (
+              <Grid
+                key={this.state.exercitiuAles._id}
+                item
+                container
+                spacing={2}
+                marginLeft={0.1}
+                marginTop={-9}
+              >
+                <section className="quiz">
+                  <article className="container">
+                    <h2>
+                      {' '}
+                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                    </h2>
+                    <div className="btn-container">
+                      <Button
+                        className="answer-btn"
+                        style={{
+                          color:
+                            this.state.exercitiuAles.varianta1 === this.state.raspunsCorect
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        A. {this.state.exercitiuAles.varianta1}
+                      </Button>
+                      <Button
+                        className="answer-btn"
+                        style={{
+                          color:
+                            this.state.exercitiuAles.varianta2 === this.state.raspunsCorect
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        B. {this.state.exercitiuAles.varianta2}
+                      </Button>
+                      <Button
+                        className="answer-btn"
+                        style={{
+                          color:
+                            this.state.exercitiuAles.varianta3 === this.state.raspunsCorect
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        C. {this.state.exercitiuAles.varianta3}
+                      </Button>
+                      <Button
+                        className="answer-btn"
+                        style={{
+                          color:
+                            this.state.exercitiuAles.varianta4 === this.state.raspunsCorect
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        D. {this.state.exercitiuAles.varianta4}
+                      </Button>
+                    </div>
+                  </article>
 
-                    <div>
-                      <p>{this.state.rezultatExercitiu}</p>
-                      <p>{this.state.eroare}</p>
-                    </div>;
-                  }}
-                >
-                  trimite
-                </Button>
-              </section>
-            </Grid>
-          )}
+                  <Stack spacing={2} sx={{ p: 3 }}>
+                    <h2>
+                      <b>Rezolvare:</b>
+                    </h2>
+                    <Typography variant="subtitle1">
+                      <Markdown>{this.state.exercitiuAles.rezolvare}</Markdown>
+                    </Typography>
+                  </Stack>
+                </section>
+              </Grid>
+            )}
         </Grid>
       </container>
     );
