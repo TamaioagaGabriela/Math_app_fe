@@ -20,7 +20,6 @@ const _mapProps = (props) => ({
 });
 
 function Markdown(props) {
-  console.log('am ajuns in functie');
   return <ReactMarkdown {..._mapProps(props)} />;
 }
 
