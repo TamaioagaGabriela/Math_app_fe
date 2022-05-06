@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 
-import { Link as RouterLink, Navigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid } from '@mui/material';
-import Icon from '@mui/material/Icon';
+import { Box, Card, Link, Typography, Stack, Button, Grid, Container } from '@mui/material';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
-import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
-import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
-import DoneOutlineRoundedIcon from '@mui/icons-material/DoneOutlineRounded';
+// import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+// import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
+// import DoneOutlineRoundedIcon from '@mui/icons-material/DoneOutlineRounded';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
-import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
+import { mockImgCapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import './index.css';
 import {
@@ -64,16 +65,8 @@ class TesteDB extends Component {
       eroare: null,
       testTrimis: false,
       punctajTest: 0,
-      veziRezolvare: false
-      // raspunsSelectat1: null,
-      // raspunsSelectat2: null,
-      // raspunsSelectat3: null,
-      // raspunsSelectat4: null,
-      // raspunsSelectat5: null,
-      // raspunsSelectat6: null,
-      // raspunsSelectat7: null,
-      // raspunsSelectat8: null,
-      // raspunsSelectat9: null
+      veziRezolvare: false,
+      nrExercitiuAles: -1
     };
   }
 
@@ -295,10 +288,12 @@ class TesteDB extends Component {
   adaugaRezolvareTest = async () => {
     console.log('test id ', this.state.testCapitol._id);
     console.log('raspunsuriTest: ', this.state.raspunsuriTestByUser);
+    console.log('primul: ', this.state.raspunsuriTestByUser[0]);
+
     const requestBody = {
       query: `
           mutation{
-              adaugaRezolvareTest(rezolvareTestInput:  {test_id: "${this.state.testCapitol._id}", raspunsuri_user: "${this.state.raspunsuriTestByUser}"}
+              adaugaRezolvareTest(rezolvareTestInput:  {test_id: "${this.state.testCapitol._id}", raspunsuri_user: ["${this.state.raspunsuriTestByUser[0]}","${this.state.raspunsuriTestByUser[1]}","${this.state.raspunsuriTestByUser[2]}","${this.state.raspunsuriTestByUser[3]}","${this.state.raspunsuriTestByUser[4]}","${this.state.raspunsuriTestByUser[5]}","${this.state.raspunsuriTestByUser[6]}","${this.state.raspunsuriTestByUser[7]}","${this.state.raspunsuriTestByUser[8]}"]}
               ){
                 _id
                 punctaj
@@ -387,14 +382,23 @@ class TesteDB extends Component {
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsuriTestByUser: [] });
     this.setState({ raspunsuriCorecte: [] });
+    this.setState({ nrIntrebare: -1, punctajTest: 0 });
+    this.setState({ testTrimis: false });
     console.log(this.state.raspunsuriTestByUser);
+  };
+
+  modalCancelHandlerRezolvareExercitiu = () => {
+    this.setState({ veziRezolvare: false });
+    this.setState({ nrExercitiuAles: -1 });
   };
 
   modalHandleClickInapoi = () => {
     if (this.state.capitolChosen && !this.state.testChosen) {
       this.modalCancelHandlerCapitol();
-    } else if (this.state.capitolChosen && this.state.testChosen) {
+    } else if (this.state.capitolChosen && this.state.testChosen && !this.state.veziRezolvare) {
       this.modalCancelHandlerTest();
+    } else if (this.state.capitolChosen && this.state.testChosen && this.state.veziRezolvare) {
+      this.modalCancelHandlerRezolvareExercitiu();
     }
   };
 
@@ -404,7 +408,7 @@ class TesteDB extends Component {
     );
 
     return (
-      <container>
+      <container padding="0">
         <Stack
           direction="row"
           flexWrap="wrap-reverse"
@@ -619,54 +623,181 @@ class TesteDB extends Component {
                       this.adaugaRaspunsSelectat();
                     }}
                   >
-                    {this.state.nrIntrebare === 9 ? 'Trimite' : 'Urmatoarea intrebare'}
+                    {this.state.nrIntrebare === 8 ? 'Trimite' : 'Urmatoarea intrebare'}
                   </Button>
                 </section>
               </Grid>
             )}
           {/* ------------------------------------------------------------------------------------------------------------- */}
-          {/* daca am submitat raspunsul ajung la status + rezolvare */}
+          {/* daca am apasat trimite ajung la punctajul testului + rezolvare */}
           {/* ------------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             this.state.testChosen &&
             this.state.nrIntrebare !== -1 &&
             this.state.testTrimis &&
-            !this.state.veziRezolvare &&
-            this.state.raspunsuriTestByUser.map((raspunsUser, index) => (
-              <Grid key={raspunsUser._id} item container spacing={2} marginLeft={0.1}>
-                <Card>
-                  <Typography key={raspunsUser._id} variant="subtitle1">
+            this.state.punctajTest &&
+            !this.state.veziRezolvare && (
+              <Container width="fit-content">
+                <Card marginLeft={20}>
+                  <Typography variant="subtitle1" margin={2}>
                     {this.state.punctajTest < 50
                       ? 'Mai ai de exersat! Punctajul obtinut este: '
                       : 'Felicitari! Ai obtinut punctajul: '}
-                    {this.state.punctajTest}
+                    {this.state.punctajTest} !
                   </Typography>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    <Typography variant="subtitle1">Exercitiul {index + 1}</Typography>
-                    <ClearRoundedIcon />
-                    {raspunsUser === this.state.raspunsuriCorecte[index] ? (
-                      <CheckCircleOutlineRoundedIcon color="green" />
-                    ) : (
-                      <CheckCircleOutlineRoundedIcon color="red" />
-                    )}
-                    <TaskAltRoundedIcon />
-                    <DoneOutlineRoundedIcon />
-                    <Button
-                      className="next-question"
-                      style={{
-                        visibility:
-                          raspunsUser === this.state.raspunsuriCorecte[index] ? 'hidden' : 'visible'
-                      }}
-                      onClick={() => {
-                        this.setState({ veziRezolvare: true });
-                      }}
-                    >
-                      Vezi rezolvarea
-                    </Button>
-                  </Stack>
                 </Card>
+              </Container>
+            )}
+          {this.state.capitolChosen &&
+            this.state.testChosen &&
+            this.state.nrIntrebare !== -1 &&
+            this.state.testTrimis &&
+            this.state.punctajTest &&
+            !this.state.veziRezolvare &&
+            this.state.raspunsuriTestByUser.map((raspunsUser, index) => (
+              <Grid key={raspunsUser._id} item container spacing={1.5} padding="0">
+                <Container width="100%" padding="0">
+                  <Card padding="0">
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      margin={1.5}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        style={{
+                          color:
+                            raspunsUser === this.state.raspunsuriCorecte[index] ? 'green' : 'red'
+                        }}
+                      >
+                        Exercitiul {index + 1}
+                        {'          '}
+                      </Typography>
+                      &nbsp;
+                      {raspunsUser === this.state.raspunsuriCorecte[index] ? (
+                        <CheckCircleOutlineRoundedIcon
+                          style={{
+                            color: 'green'
+                          }}
+                        />
+                      ) : (
+                        <CloseRoundedIcon
+                          style={{
+                            color: 'red'
+                          }}
+                        />
+                      )}
+                      <Button
+                        className="next-question"
+                        style={{
+                          visibility:
+                            raspunsUser === this.state.raspunsuriCorecte[index]
+                              ? 'hidden'
+                              : 'visible'
+                        }}
+                        onClick={() => {
+                          this.setState({ veziRezolvare: true });
+                          this.setState({ nrExercitiuAles: index });
+                        }}
+                      >
+                        Vezi rezolvarea
+                      </Button>
+                    </Stack>
+                  </Card>
+                </Container>
               </Grid>
             ))}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* vezi rezolvare exercitiu ales */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            this.state.testChosen &&
+            this.state.nrIntrebare !== -1 &&
+            this.state.punctajTest &&
+            this.state.testTrimis &&
+            this.state.veziRezolvare && (
+              <Grid
+                key={this.state.exercitiiTest[this.state.nrExercitiuAles][0]._id}
+                item
+                container
+                spacing={2}
+                marginLeft={0.1}
+                marginTop={-9}
+              >
+                <section className="quiz">
+                  <article className="container">
+                    <h2>
+                      {' '}
+                      <Markdown>
+                        {this.state.exercitiiTest[this.state.nrExercitiuAles][0].cerinta}
+                      </Markdown>{' '}
+                    </h2>
+                    <div className="btn-container">
+                      <Button
+                        className="answer-btn"
+                        style={{
+                          color:
+                            this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta1 ===
+                            this.state.raspunsuriCorecte[this.state.nrExercitiuAles]
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        A. {this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta1}
+                      </Button>
+                      <Button
+                        className="answer-btn"
+                        style={{
+                          color:
+                            this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta2 ===
+                            this.state.raspunsuriCorecte[this.state.nrExercitiuAles]
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        B. {this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta2}
+                      </Button>
+                      <Button
+                        className="answer-btn"
+                        style={{
+                          color:
+                            this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta3 ===
+                            this.state.raspunsuriCorecte[this.state.nrExercitiuAles]
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        C. {this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta3}
+                      </Button>
+                      <Button
+                        className="answer-btn"
+                        style={{
+                          color:
+                            this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta4 ===
+                            this.state.raspunsuriCorecte[this.state.nrExercitiuAles]
+                              ? 'green'
+                              : 'red'
+                        }}
+                      >
+                        D. {this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta4}
+                      </Button>
+                    </div>
+                  </article>
+
+                  <Stack spacing={2} sx={{ p: 3 }}>
+                    <h2>
+                      <b>Rezolvare:</b>
+                    </h2>
+                    <Typography variant="subtitle1">
+                      <Markdown>
+                        {this.state.exercitiiTest[this.state.nrExercitiuAles][0].rezolvare}
+                      </Markdown>
+                    </Typography>
+                  </Stack>
+                </section>
+              </Grid>
+            )}
         </Grid>
       </container>
     );
