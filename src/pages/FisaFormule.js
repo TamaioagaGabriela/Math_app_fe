@@ -15,7 +15,7 @@ import FisaFormuleDB from '../_mocks_/FisaFormuleDB';
 
 // ----------------------------------------------------------------------
 
-export default function Capitol() {
+export default function FisaFormule() {
   const [openFilter, setOpenFilter] = useState(false);
 
   const formik = useFormik({
@@ -47,7 +47,7 @@ export default function Capitol() {
   };
 
   return (
-    <Page title="Dashboard: Teorie | Math app">
+    <Page title="Dashboard: Fisa formule | Math app">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Teorie

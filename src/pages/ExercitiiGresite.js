@@ -7,19 +7,19 @@ import Page from '../components/Page';
 
 import { ProductCartWidget } from '../sections/@dashboard/products';
 
-import ExercitiiDB from '../_mocks_/ExercitiiDB';
+import ExercitiiGresiteDB from '../_mocks_/ExercitiiGresiteDB';
 
 // ----------------------------------------------------------------------
 
-export default function Exercitii() {
+export default function ExercitiiGresite() {
   return (
-    <Page title="Dashboard: Exercitii | Math app">
+    <Page title="Dashboard: Exercitii gresite | Math app">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Exercitii
+          Exercitii gresite
         </Typography>
 
-        <ExercitiiDB />
+        <ExercitiiGresiteDB />
         <ProductCartWidget />
       </Container>
     </Page>

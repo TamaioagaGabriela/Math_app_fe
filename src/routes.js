@@ -18,6 +18,7 @@ import FisaFormule from './pages/FisaFormule';
 import Utilizator from './pages/Utilizator';
 import Exercitii from './pages/Exercitii';
 import Teste from './pages/Teste';
+import ExercitiiGresite from './pages/ExercitiiGresite';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ export default function Router() {
         { path: 'formule', element: <FisaFormule /> },
         { path: 'exercitii', element: <Exercitii /> },
         { path: 'teste', element: <Teste /> },
-        { path: 'exercitii_gresite', element: <Navigate to="/dashboard/teorie" /> }
+        { path: 'exercitii_gresite', element: <ExercitiiGresite /> }
       ]
     },
     {
@@ -71,7 +72,7 @@ export default function Router() {
         { path: 'formule', element: <FisaFormule /> },
         { path: 'exercitii', element: <Exercitii /> },
         { path: 'teste', element: <Teste /> },
-        { path: 'exercitii_gresite', element: <Navigate to="/dashboard/teorie" /> }
+        { path: 'exercitii_gresite', element: <ExercitiiGresite /> }
       ]
     },
     {
