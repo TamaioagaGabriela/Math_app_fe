@@ -211,14 +211,14 @@ class TesteDB extends Component {
   getExercitii = async (test) => {
     this.setState({ testCapitol: test });
     await this.setState({ nrIntrebare: 0 });
-    console.log('setTestChosen', test._id);
+    // console.log('setTestChosen', test._id);
 
-    console.log('ex1', test.exercitiu1_id);
-    console.log('this.state.exercitiu1', this.state.exercitiu1);
-    console.log(
-      'exercitiu 1',
-      this.state.exercitii.filter((exercitiu) => exercitiu._id === test.exercitiu1_id)
-    );
+    // console.log('ex1', test.exercitiu1_id);
+    // console.log('this.state.exercitiu1', this.state.exercitiu1);
+    // console.log(
+    //   'exercitiu 1',
+    //   this.state.exercitii.filter((exercitiu) => exercitiu._id === test.exercitiu1_id)
+    // );
 
     await this.setState((prevState) => ({
       exercitiu1: prevState.exercitii.filter((exercitiu) => exercitiu._id === test.exercitiu1_id)
@@ -327,7 +327,6 @@ class TesteDB extends Component {
 
     this.setState({ selectedAnswer: null });
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
-    // this.setState((prevState) => ({ nrIntrebare: prevState.nrIntrebare + 1 }));
   };
 
   setCapitolChosen = (capitol) => {

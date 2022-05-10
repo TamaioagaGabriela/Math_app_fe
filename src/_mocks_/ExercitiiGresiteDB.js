@@ -50,7 +50,9 @@ class ExercitiiGresiteDB extends Component {
       btn1: false,
       btn2: false,
       btn3: false,
-      btn4: false
+      btn4: false,
+      listaRezolvariExercitii: [],
+      exercitiiGresiteUser: []
     };
   }
 
@@ -58,6 +60,7 @@ class ExercitiiGresiteDB extends Component {
     this.fetchCapitole();
     this.fetchSubcapitole();
     this.fetchExercitii();
+    // this.fetchExercitiiGresite();
   }
 
   componentWillUnmount() {
@@ -182,6 +185,60 @@ class ExercitiiGresiteDB extends Component {
       });
   };
 
+  fetchExercitiiGresite = () => {
+    this.setState({ isLoading: true });
+    const requestBody = {
+      query: `
+        query{
+          getExercitiiGresite{
+            _id
+            exercitiu{
+               _id
+              subcapitol_id
+              rezolvare
+              varianta1
+              varianta2
+              varianta3
+              varianta4
+              raspuns_corect
+              nivel_dif
+            }
+            user{
+              _id
+            }
+            status
+            raspuns_user
+            createdAt
+          }
+        }
+        `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setExercitiiGresiteUser(resData.data.getExercitiiGresite);
+        this.setState({ listaRezolvariExercitii: resData.data.getExercitiiGresite });
+        this.setState({ isLoading: false });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
+  };
+
   adaugaRezolvareExercitiu = async () => {
     if (this.state.selectedAnswer) {
       this.setState({ eroare: null });
@@ -260,6 +317,7 @@ class ExercitiiGresiteDB extends Component {
 
   setVeziRezolvareInainte = (exercitiu) => {
     this.setState({ exercitiuChosen: true });
+    console.log('asta e exe ', exercitiu.varianta1);
     this.setExercitiuAles(exercitiu);
     this.setState({ veziRezolvareInainte: true });
   };
@@ -294,6 +352,18 @@ class ExercitiiGresiteDB extends Component {
       this.setState({ btn3: false });
       this.setState({ btn4: true });
     }
+  };
+
+  setExercitiiGresiteUser = async (listaRezolvariExercitii) => {
+    console.log(this.state.listaRezolvariExercitii);
+    console.log('listaaaaaa: ', listaRezolvariExercitii);
+    await this.setState((prevState) => ({
+      exercitiiGresiteUser: listaRezolvariExercitii.filter(
+        (exercitiuRezolvat) =>
+          exercitiuRezolvat.user._id === this.context.userId &&
+          exercitiuRezolvat.exercitiu.subcapitol_id === prevState.subcapitolExercitii._id
+      )
+    }));
   };
 
   modalCancelHandlerCapitol = () => {
@@ -340,18 +410,6 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ veziRezolvare: false });
   };
 
-  //   modalCancelHandlerVeziRezolvareInainte = () => {
-  //     this.setState({ exercitiuChosen: false });
-  //     this.setState({ selectedAnswer: null });
-  //     this.setState({ eroare: null });
-  //     this.setState({ rezultatExercitiu: null });
-  //     this.setState({ btn1: false });
-  //     this.setState({ btn2: false });
-  //     this.setState({ btn3: false });
-  //     this.setState({ btn4: false });
-  //     this.setState({ raspunsTrimis: false, veziRezolvare: false, veziRezolvareInainte: false });
-  //   };
-
   modalHandleClickInapoi = () => {
     if (this.state.capitolChosen && !this.state.subcapitolChosen) {
       this.modalCancelHandlerCapitol();
@@ -394,11 +452,20 @@ class ExercitiiGresiteDB extends Component {
     console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
-      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id // '6245fb02354efdf16ef74b01' // this.state.capitol._id
+      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
     );
     const exercitiiFiltrate = this.state.exercitii.filter(
       (exercitiu) => exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
     );
+
+    // de fapt sunt rezolvarile gresite ale user-ului
+    // const exercitiiGresiteUser = this.state.listaRezolvariExercitii.filter(
+    //   (exercitiuRezolvat) =>
+    //     exercitiuRezolvat.user._id === this.context.userId &&
+    //     exercitiuRezolvat.exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
+    // );
+
+    console.log('liste exe gresite', this.state.exercitiiGresiteUser);
 
     return (
       <container>
@@ -526,7 +593,10 @@ class ExercitiiGresiteDB extends Component {
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Button
                         variant="outlined"
-                        onClick={() => this.setSubcapitolChosen(subcapitol)}
+                        onClick={() => {
+                          this.setSubcapitolChosen(subcapitol);
+                          this.fetchExercitiiGresite();
+                        }}
                       >
                         Exercitii
                       </Button>
@@ -544,8 +614,8 @@ class ExercitiiGresiteDB extends Component {
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
             !this.state.exercitiuChosen &&
-            exercitiiFiltrate.map((exercitiu, index) => (
-              <Grid key={exercitiu._id} item xs={12} sm={6} md={3}>
+            this.state.exercitiiGresiteUser.map((rezolvareExercitiu, index) => (
+              <Grid key={rezolvareExercitiu.exercitiu._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
                     {status && (
@@ -563,7 +633,10 @@ class ExercitiiGresiteDB extends Component {
                         {status}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={exercitiu._id} src={mockImgSubcapitol(exercitiu._id)} />
+                    <CapitolImgStyle
+                      alt={rezolvareExercitiu.exercitiu._id}
+                      src={mockImgSubcapitol(rezolvareExercitiu.exercitiu._id)}
+                    />
                   </Box>
 
                   <Stack spacing={2} sx={{ p: 3 }}>
@@ -584,15 +657,18 @@ class ExercitiiGresiteDB extends Component {
                       Subcapitolul: {this.state.subcapitolExercitii.titlu}
                     </Typography>
                     <Typography variant="subtitle1">
-                      Nivel dificultate: {exercitiu.nivel_dif}
+                      Nivel dificultate: {rezolvareExercitiu.exercitiu.nivel_dif}
                     </Typography>
                     <Stack spacing={1}>
-                      <Button variant="outlined" onClick={() => this.setExercitiuChosen(exercitiu)}>
+                      <Button
+                        variant="outlined"
+                        onClick={() => this.setExercitiuChosen(rezolvareExercitiu.exercitiu)}
+                      >
                         Rezolva Exercitiul
                       </Button>
                       <Button
                         variant="outlined"
-                        onClick={() => this.setVeziRezolvareInainte(exercitiu)}
+                        onClick={() => this.setVeziRezolvareInainte(rezolvareExercitiu.exercitiu)}
                       >
                         Vezi rezolvare
                       </Button>
