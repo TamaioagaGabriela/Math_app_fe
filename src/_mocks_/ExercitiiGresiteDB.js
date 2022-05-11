@@ -51,7 +51,7 @@ class ExercitiiGresiteDB extends Component {
       btn2: false,
       btn3: false,
       btn4: false,
-      listaRezolvariExercitii: [],
+      // listaRezolvariExercitii: [],
       exercitiiGresiteUser: []
     };
   }
@@ -195,6 +195,7 @@ class ExercitiiGresiteDB extends Component {
             exercitiu{
                _id
               subcapitol_id
+              cerinta
               rezolvare
               varianta1
               varianta2
@@ -230,7 +231,7 @@ class ExercitiiGresiteDB extends Component {
       })
       .then((resData) => {
         this.setExercitiiGresiteUser(resData.data.getExercitiiGresite);
-        this.setState({ listaRezolvariExercitii: resData.data.getExercitiiGresite });
+        // this.setState({ listaRezolvariExercitii: resData.data.getExercitiiGresite });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
@@ -355,8 +356,8 @@ class ExercitiiGresiteDB extends Component {
   };
 
   setExercitiiGresiteUser = async (listaRezolvariExercitii) => {
-    console.log(this.state.listaRezolvariExercitii);
-    console.log('listaaaaaa: ', listaRezolvariExercitii);
+    // console.log(this.state.listaRezolvariExercitii);
+    // console.log('listaaaaaa: ', listaRezolvariExercitii);
     await this.setState((prevState) => ({
       exercitiiGresiteUser: listaRezolvariExercitii.filter(
         (exercitiuRezolvat) =>
@@ -383,6 +384,8 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ eroare: null });
     this.setState({ rezultatExercitiu: null });
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
+    this.setState({ exercitiiGresiteUser: [] });
+    this.fetchExercitiiGresite();
   };
 
   modalCancelHandlerRaspuns = () => {
@@ -395,6 +398,9 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ btn3: false });
     this.setState({ btn4: false });
     this.setState({ raspunsTrimis: false });
+    console.log('a intrat');
+    this.setState({ exercitiiGresiteUser: [] });
+    this.fetchExercitiiGresite();
   };
 
   modalCancelHandlerVeziRezolvare = () => {
@@ -408,6 +414,8 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ btn4: false });
     this.setState({ raspunsTrimis: false });
     this.setState({ veziRezolvare: false });
+    this.setState({ exercitiiGresiteUser: [] });
+    this.fetchExercitiiGresite();
   };
 
   modalHandleClickInapoi = () => {
@@ -425,6 +433,8 @@ class ExercitiiGresiteDB extends Component {
       this.state.exercitiuChosen &&
       !this.state.raspunsTrimis
     ) {
+      console.log('modalCancelHandlerExercitiu');
+
       this.modalCancelHandlerExercitiu();
     } else if (
       this.state.capitolChosen &&
@@ -433,6 +443,7 @@ class ExercitiiGresiteDB extends Component {
       this.state.raspunsTrimis &&
       !this.state.veziRezolvare
     ) {
+      console.log('modalCancelHandlerRaspuns');
       this.modalCancelHandlerRaspuns();
     } else if (
       this.state.capitolChosen &&
@@ -457,13 +468,6 @@ class ExercitiiGresiteDB extends Component {
     const exercitiiFiltrate = this.state.exercitii.filter(
       (exercitiu) => exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
     );
-
-    // de fapt sunt rezolvarile gresite ale user-ului
-    // const exercitiiGresiteUser = this.state.listaRezolvariExercitii.filter(
-    //   (exercitiuRezolvat) =>
-    //     exercitiuRezolvat.user._id === this.context.userId &&
-    //     exercitiuRezolvat.exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
-    // );
 
     console.log('liste exe gresite', this.state.exercitiiGresiteUser);
 
