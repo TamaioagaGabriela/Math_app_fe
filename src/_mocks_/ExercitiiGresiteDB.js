@@ -393,10 +393,7 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ selectedAnswer: null });
     this.setState({ eroare: null });
     this.setState({ rezultatExercitiu: null, raspunsCorect: null });
-    this.setState({ btn1: false });
-    this.setState({ btn2: false });
-    this.setState({ btn3: false });
-    this.setState({ btn4: false });
+    this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
     console.log('a intrat');
     this.setState({ exercitiiGresiteUser: [] });

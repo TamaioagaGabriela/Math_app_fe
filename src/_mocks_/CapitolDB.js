@@ -2,10 +2,22 @@ import React, { Component } from 'react';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid, CardMedia } from '@mui/material';
+import {
+  Box,
+  Card,
+  Link,
+  Typography,
+  Stack,
+  Button,
+  Grid,
+  CardMedia,
+  FormControl
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
+import ModalFisaTeorie from './ModalFiseTeorie';
+import Backdrop from '../components/Backdrop/Backdrop';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import {
@@ -31,6 +43,10 @@ class CapitolDB extends Component {
   constructor(props) {
     super(props);
 
+    this.titluTeorieRef = React.createRef();
+    this.descriereTeorieRef = React.createRef();
+    this.linkVideoTeorieRef = React.createRef();
+
     this.state = {
       isLoading: false,
       capitole: [],
@@ -41,7 +57,8 @@ class CapitolDB extends Component {
       subcapitolTeorie: [],
       capitolChosen: false,
       subcapitolChosen: false,
-      openFilter: false
+      openFilter: false,
+      adaugaTeorieChosen: false
     };
   }
 
@@ -203,31 +220,95 @@ class CapitolDB extends Component {
       });
   };
 
-  // setCapitolList = () => {
-  //   this.setState({ capitolList: true });
-  // };
+  modalConfirmHandler = () => {
+    const titlu = this.titluTeorieRef.current.value;
+    const descriere = this.descriereTeorieRef.current.value;
+    const linkVideo = this.linkVideoTeorieRef.current.value;
+
+    if (descriere == null) {
+      return;
+    }
+    const requestBody = {
+      query: `
+      mutation{
+        adaugaTeorie(teorieInput: {
+          titlu:"${titlu}"
+          descriere:"${descriere}"
+          link_video:"${linkVideo}"
+          subcapitol_id:"${this.state.subcapitolTeorie._id}"
+        }){
+          _id
+          subcapitol_id
+          titlu
+          link_video
+          descriere
+        }
+      }
+        `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState((prevState) => {
+          const fisaTeorie = {
+            _id: resData.data.adaugaTeorie._id,
+            subcapitol_id: resData.data.adaugaTeorie.subcapitol_id,
+            titlu: resData.data.adaugaTeorie.titlu,
+            descriere: resData.data.adaugaTeorie.descriere,
+            link_video: resData.data.link_video
+          };
+          console.log('adaugaaaa', fisaTeorie);
+          const updatedFiseTeorie = [...prevState.fiseTeorie];
+          updatedFiseTeorie.push(fisaTeorie);
+          this.setState({ adaugaTeorieChosen: false });
+          this.setState({ subcapitolChosen: false });
+          return { fiseTeorie: updatedFiseTeorie };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
-    // console.log('setCapitolChosen', capitol);
   };
 
   setCapitol = (capitol) => {
     this.setState({ capitol });
-    // console.log('setCapitol', capitol);
   };
 
   setSubcapitolChosen = (subcapitol) => {
-    // await this.setState({ subcapitolTeorie: subcapitol });
     this.setState({ subcapitolChosen: true });
     this.setSubcapitolTeorie(subcapitol);
-    console.log('setSubcapitolChosen', subcapitol._id);
   };
 
   setSubcapitolTeorie = (subcapitolTeorie) => {
     this.setState({ subcapitolTeorie });
     console.log('setSubcapitol', subcapitolTeorie);
+  };
+
+  setAdaugaTeorieChosen = () => {
+    this.setState({ adaugaTeorieChosen: true });
+  };
+
+  modalCancelHandlerAdaugaTeorie = () => {
+    this.setState({ adaugaTeorieChosen: false });
+    this.setState({ subcapitolChosen: false });
   };
 
   modalCancelHandlerCapitol = () => {
@@ -358,6 +439,7 @@ class CapitolDB extends Component {
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             !this.state.subcapitolChosen &&
+            !this.state.adaugaTeorieChosen &&
             subcapitoleFiltrate.map((subcapitol) => (
               <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
                 <Card>
@@ -408,7 +490,13 @@ class CapitolDB extends Component {
                         Exercitii
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        this.setSubcapitolChosen(subcapitol);
+                        this.setAdaugaTeorieChosen();
+                      }}
+                    >
                       Adauga Teorie
                     </Button>
                   </Stack>
@@ -420,6 +508,7 @@ class CapitolDB extends Component {
           {/* ------------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
+            !this.state.adaugaTeorieChosen &&
             fiseTeorieFiltrate.map((fisaTeorie) => (
               <Grid
                 key={fisaTeorie._id}
@@ -478,6 +567,57 @@ class CapitolDB extends Component {
                 </Card>
               </Grid>
             ))}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales sa adaug o fisa de teorie atunci ajung la formular */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            this.state.adaugaTeorieChosen && <Backdrop />}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            this.state.adaugaTeorieChosen && (
+              <ModalFisaTeorie
+                title="Adauga fisa teorie"
+                canCancel
+                canConfirm
+                onCancel={this.modalCancelHandlerAdaugaTeorie}
+                onConfirm={this.modalConfirmHandler}
+                confirmText="Confirma"
+              >
+                <Card>
+                  <Stack spacing={2} sx={{ p: 3 }}>
+                    <FormControl>
+                      <div className="form-control">
+                        <label htmlFor="titlu">
+                          <b>Titlu</b>
+                          <textarea id="titlu" cols="53" rows="3" ref={this.titluTeorieRef} />
+                        </label>
+
+                        <label htmlFor="linkVideo">
+                          <b>Link video explicativ</b>
+                          <textarea
+                            id="linkVideo"
+                            cols="53"
+                            rows="3"
+                            ref={this.linkVideoTeorieRef}
+                          />
+                        </label>
+
+                        <label htmlFor="descriere">
+                          <b>Descriere</b>
+                          <textarea
+                            id="descriere"
+                            cols="53"
+                            rows="15"
+                            ref={this.descriereTeorieRef}
+                          />
+                        </label>
+                      </div>
+                    </FormControl>
+                  </Stack>
+                </Card>
+              </ModalFisaTeorie>
+            )}
         </Grid>
       </container>
     );
