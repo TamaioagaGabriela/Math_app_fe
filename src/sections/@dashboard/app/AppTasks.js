@@ -62,7 +62,7 @@ export default function AppTasks() {
       checked: [TASKS[2]]
     },
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
     }
   });
 

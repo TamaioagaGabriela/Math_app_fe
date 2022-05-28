@@ -1,11 +1,13 @@
-import React, { createContext } from 'react';
+import React from 'react';
 
-export default createContext({
+export default React.createContext({
   token: null,
   userId: null,
-  login: (token, userId, role, tokenExpiration) => {},
+  clasa: null,
+  changeClasa: () => {},
+  login: (token, userId, role, clasa, tokenExpiration) => {},
   logout: () => {}
 });
 
-export const AuthContextProvider = createContext.Provider;
-export const AuthContextConsumer = createContext.Consumer;
+// export const AuthContextProvider = createContext.Provider;
+// export const AuthContextConsumer = createContext.Consumer;

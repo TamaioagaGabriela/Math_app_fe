@@ -1,3 +1,4 @@
+// eslint-disable-line react/no-unused-state
 import React, { Component } from 'react';
 
 import { Link as RouterLink } from 'react-router-dom';
@@ -95,7 +96,7 @@ class ExercitiiDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -132,7 +133,7 @@ class ExercitiiDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -176,7 +177,7 @@ class ExercitiiDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -239,7 +240,7 @@ class ExercitiiDB extends Component {
           this.setState({ raspunsTrimis: true });
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     } else {
       this.setState({ eroare: 'Selecteaza o varianta de raspuns!' });
@@ -387,7 +388,7 @@ class ExercitiiDB extends Component {
     console.log(this.state.isLoading);
     console.log(this.state.openFilter);
 
-    console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
+    // console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id // '6245fb02354efdf16ef74b01' // this.state.capitol._id
@@ -645,7 +646,7 @@ class ExercitiiDB extends Component {
                         onClick={() => {
                           this.setColorButton('btn4');
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta4);
-                          console.log('selectedAnswer', this.state.selectedAnswer);
+                          // console.log('selectedAnswer', this.state.selectedAnswer);
                         }}
                       >
                         D. {this.state.exercitiuAles.varianta4}

@@ -20,13 +20,13 @@ export default class Confirm extends Component {
   // where 5c40d...a9d42 is the unique id created by Mongo
   componentDidMount() {
     const { id } = this.props.match.params;
-    console.log('emailconfirmation');
-    console.log(this.state.confirming);
+    // console.log('emailconfirmation');
+    // console.log(this.state.confirming);
 
     fetch(`localhost:8000/email/confirm/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log('a ajuans aici');
+        // console.log('a ajuans aici');
         this.setState({ confirming: false });
       })
       .catch((err) => console.log(err));
@@ -37,8 +37,8 @@ export default class Confirm extends Component {
   // <Landing > component so they can confirm another email address.
 
   render() {
-    console.log('emailconfirmation');
-    console.log(this.state.confirming);
+    // console.log('emailconfirmation');
+    // console.log(this.state.confirming);
     return (
       <div className="confirm">
         {this.state.confirming ? (

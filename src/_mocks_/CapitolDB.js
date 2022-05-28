@@ -133,7 +133,7 @@ class CapitolDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -172,7 +172,7 @@ class CapitolDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -207,15 +207,15 @@ class CapitolDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        console.log('fetch resData.data: teorie', resData.data);
+        // console.log('fetch resData.data: teorie', resData.data);
 
         this.setState({ fiseTeorie: resData.data.teorie });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log('pb la fetch');
+        // console.log('pb la fetch');
 
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -270,7 +270,7 @@ class CapitolDB extends Component {
             descriere: resData.data.adaugaTeorie.descriere,
             link_video: resData.data.link_video
           };
-          console.log('adaugaaaa', fisaTeorie);
+          // console.log('adaugaaaa', fisaTeorie);
           const updatedFiseTeorie = [...prevState.fiseTeorie];
           updatedFiseTeorie.push(fisaTeorie);
           this.setState({ adaugaTeorieChosen: false });
@@ -279,7 +279,7 @@ class CapitolDB extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -299,7 +299,7 @@ class CapitolDB extends Component {
 
   setSubcapitolTeorie = (subcapitolTeorie) => {
     this.setState({ subcapitolTeorie });
-    console.log('setSubcapitol', subcapitolTeorie);
+    // console.log('setSubcapitol', subcapitolTeorie);
   };
 
   setAdaugaTeorieChosen = () => {
@@ -331,13 +331,22 @@ class CapitolDB extends Component {
   };
 
   render() {
-    console.log('isLoading', this.state.isLoading);
-    console.log('capitol:', this.state.openFilter);
+    // console.log('isLoading', this.state.isLoading);
+    // console.log('capitol:', this.state.openFilter);
 
-    console.log('capitol:', this.state.capitol);
-    console.log('id pt this.state.subcapitolTeorie', this.state.subcapitolTeorie._id);
-    console.log('fise teorie', this.state.fiseTeorie);
+    // console.log('capitol:', this.state.capitol);
+    // console.log('id pt this.state.subcapitolTeorie', this.state.subcapitolTeorie._id);
+    // console.log('fise teorie', this.state.fiseTeorie);
 
+    console.log(this.state.isLoading);
+    console.log(this.state.openFilter);
+    console.log(this.context);
+
+    const capitoleFiltrate = this.state.capitole.filter(
+      (capitol) => capitol.clasa === this.context.clasa
+    );
+    // console.log('#########', capitoleFiltrate);
+    // console.log('#########', capitoleFiltrate);
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id // '6245fb02354efdf16ef74b01' // this.state.capitol._id
     );
@@ -345,7 +354,7 @@ class CapitolDB extends Component {
       (fisaTeorie) => fisaTeorie.subcapitol_id === this.state.subcapitolTeorie._id
     );
 
-    console.log('fiseTeorieFiltrate', fiseTeorieFiltrate);
+    // console.log('fiseTeorieFiltrate', fiseTeorieFiltrate);
 
     return (
       <container>
@@ -385,7 +394,7 @@ class CapitolDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            this.state.capitole.map((capitol) => (
+            capitoleFiltrate.map((capitol) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 {/* <CapitolItem capitol={capitol} /> */}
                 <Card>
@@ -413,7 +422,7 @@ class CapitolDB extends Component {
                       <Typography variant="subtitle1">{capitol.titlu}</Typography>
                     </Link>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
+                      <Typography variant="subtitle1">Clasa a {capitol.clasa}-a</Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Button
@@ -623,5 +632,7 @@ class CapitolDB extends Component {
     );
   }
 }
+
+CapitolDB.contextType = AuthContext;
 
 export default CapitolDB;

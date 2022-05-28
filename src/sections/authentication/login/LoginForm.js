@@ -44,6 +44,7 @@ export default function LoginForm() {
       userId: '',
       token: '',
       role: '',
+      clasa: '',
       tokenExpiration: ''
     },
     validationSchema: LoginSchema,
@@ -57,6 +58,7 @@ export default function LoginForm() {
             userId
             token
             role
+            clasa
             tokenExpiration
           }
         }
@@ -75,9 +77,9 @@ export default function LoginForm() {
         }
       })
         .then((res) => {
-          console.log(res.status);
+          // console.log(res.status);
           if (res.status !== 200 && res.status !== 201) {
-            console.log('Email gresit, parola gresita sau email neconfirmat');
+            // console.log('Email gresit, parola gresita sau email neconfirmat');
             setErrorMessage('Email gresit, parola gresita sau email neconfirmat');
 
             setIsSubmitting(false);
@@ -87,20 +89,24 @@ export default function LoginForm() {
           return res.json();
         })
         .then((resData) => {
-          console.log('token = ', resData.data.login.token);
-          console.log('userId = ', resData.data.login.userId);
+          // console.log('token = ', resData.data.login.token);
+          // console.log('userId = ', resData.data.login.userId);
           if (resData.data.login.token) {
             context.login(
               resData.data.login.token,
               resData.data.login.userId,
               resData.data.login.role,
+              resData.data.login.clasa,
               resData.data.login.tokenExpiration
             );
             context.userId = resData.data.login.userId;
+            context.clasa = resData.data.login.clasa;
             context.token = resData.data.login.token;
+            console.log('context', context);
           }
-          console.log('resData = ', resData);
-          console.log('context user id', context.userId);
+          // console.log('resData = ', resData);
+          // console.log('context user id', context.userId);
+          // console.log('context clasa id', context.clasa);
 
           // navigate('/dashboard/app', { replace: true });
 
@@ -112,7 +118,7 @@ export default function LoginForm() {
           });
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     }
   });

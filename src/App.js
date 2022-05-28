@@ -35,9 +35,9 @@ export default function App() {
     [token, userId]
   );
 
-  console.log(authContext.userId);
-  console.log('token:');
-  console.log(authContext.token);
+  // console.log(authContext.userId);
+  // console.log('token:');
+  // console.log(authContext.token);
 
   return (
     <AuthContext.Provider value={authContext}>

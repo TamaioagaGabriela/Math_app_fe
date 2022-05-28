@@ -99,7 +99,7 @@ class ExercitiiGresiteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -136,7 +136,7 @@ class ExercitiiGresiteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -180,7 +180,7 @@ class ExercitiiGresiteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -235,7 +235,7 @@ class ExercitiiGresiteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -285,7 +285,7 @@ class ExercitiiGresiteDB extends Component {
           this.setState({ raspunsTrimis: true });
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     } else {
       this.setState({ eroare: 'Selecteaza o varianta de raspuns!' });
@@ -318,7 +318,7 @@ class ExercitiiGresiteDB extends Component {
 
   setVeziRezolvareInainte = (exercitiu) => {
     this.setState({ exercitiuChosen: true });
-    console.log('asta e exe ', exercitiu.varianta1);
+    // console.log('asta e exe ', exercitiu.varianta1);
     this.setExercitiuAles(exercitiu);
     this.setState({ veziRezolvareInainte: true });
   };
@@ -395,7 +395,7 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ rezultatExercitiu: null, raspunsCorect: null });
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
-    console.log('a intrat');
+    // console.log('a intrat');
     this.setState({ exercitiiGresiteUser: [] });
     this.fetchExercitiiGresite();
   };
@@ -430,7 +430,7 @@ class ExercitiiGresiteDB extends Component {
       this.state.exercitiuChosen &&
       !this.state.raspunsTrimis
     ) {
-      console.log('modalCancelHandlerExercitiu');
+      // console.log('modalCancelHandlerExercitiu');
 
       this.modalCancelHandlerExercitiu();
     } else if (
@@ -440,7 +440,7 @@ class ExercitiiGresiteDB extends Component {
       this.state.raspunsTrimis &&
       !this.state.veziRezolvare
     ) {
-      console.log('modalCancelHandlerRaspuns');
+      // console.log('modalCancelHandlerRaspuns');
       this.modalCancelHandlerRaspuns();
     } else if (
       this.state.capitolChosen &&
@@ -454,10 +454,10 @@ class ExercitiiGresiteDB extends Component {
   };
 
   render() {
-    console.log(this.state.isLoading);
-    console.log(this.state.openFilter);
+    // console.log(this.state.isLoading);
+    // console.log(this.state.openFilter);
 
-    console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
+    // console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
@@ -466,7 +466,7 @@ class ExercitiiGresiteDB extends Component {
       (exercitiu) => exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
     );
 
-    console.log('liste exe gresite', this.state.exercitiiGresiteUser);
+    // console.log('liste exe gresite', this.state.exercitiiGresiteUser);
 
     return (
       <container>
@@ -818,7 +818,7 @@ class ExercitiiGresiteDB extends Component {
                         onClick={() => {
                           this.setColorButton('btn4');
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta4);
-                          console.log('selectedAnswer', this.state.selectedAnswer);
+                          // console.log('selectedAnswer', this.state.selectedAnswer);
                         }}
                       >
                         D. {this.state.exercitiuAles.varianta4}

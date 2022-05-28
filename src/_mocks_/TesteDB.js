@@ -114,7 +114,7 @@ class TesteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -159,7 +159,7 @@ class TesteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -203,7 +203,7 @@ class TesteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -270,8 +270,8 @@ class TesteDB extends Component {
       this.state.raspunsuriCorecte.push(
         await this.state.exercitiiTest[this.state.nrIntrebare][0].raspuns_corect
       );
-      console.log('raspunsuriTest: ', this.state.raspunsuriTestByUser);
-      console.log('raspunsuriCorecte: ', this.state.raspunsuriCorecte);
+      // console.log('raspunsuriTest: ', this.state.raspunsuriTestByUser);
+      // console.log('raspunsuriCorecte: ', this.state.raspunsuriCorecte);
 
       if (this.state.nrIntrebare === 8) {
         this.adaugaRezolvareTest();
@@ -286,9 +286,9 @@ class TesteDB extends Component {
   };
 
   adaugaRezolvareTest = async () => {
-    console.log('test id ', this.state.testCapitol._id);
-    console.log('raspunsuriTest: ', this.state.raspunsuriTestByUser);
-    console.log('primul: ', this.state.raspunsuriTestByUser[0]);
+    // console.log('test id ', this.state.testCapitol._id);
+    // console.log('raspunsuriTest: ', this.state.raspunsuriTestByUser);
+    // console.log('primul: ', this.state.raspunsuriTestByUser[0]);
 
     const requestBody = {
       query: `
@@ -322,7 +322,7 @@ class TesteDB extends Component {
         this.setState({ testTrimis: true });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
 
     this.setState({ selectedAnswer: null });
@@ -367,8 +367,8 @@ class TesteDB extends Component {
   };
 
   modalCancelHandlerCapitol = () => {
-    console.log(this.state.isLoading);
-    console.log('testCapitol', this.state.testCapitol);
+    // console.log(this.state.isLoading);
+    // console.log('testCapitol', this.state.testCapitol);
     this.setState({
       capitolChosen: false,
       capitol: []
@@ -383,7 +383,7 @@ class TesteDB extends Component {
     this.setState({ raspunsuriCorecte: [] });
     this.setState({ nrIntrebare: -1, punctajTest: 0 });
     this.setState({ testTrimis: false });
-    console.log(this.state.raspunsuriTestByUser);
+    // console.log(this.state.raspunsuriTestByUser);
   };
 
   modalCancelHandlerRezolvareExercitiu = () => {
@@ -405,6 +405,8 @@ class TesteDB extends Component {
     const testeFiltrate = this.state.teste.filter(
       (test) => test.capitol_id === this.state.capitol._id
     );
+
+    console.log(this.state.isLoading);
 
     return (
       <container padding="0">

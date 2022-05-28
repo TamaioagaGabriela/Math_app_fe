@@ -70,21 +70,21 @@ export class UtilizatorDB extends Component {
       })
       .then((resData) => {
         this.setState({ detaliiUser: resData.data.detaliiUser });
-        console.log('detaliiUser', this.state.detaliiUser);
+        // console.log('detaliiUser', this.state.detaliiUser);
 
         this.setState({ isLoading: false });
         this.getUserDetails();
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
 
   getUserDetails = async () => {
     this.setState({ isLoading: true });
-    console.log('this.context.userId', this.context.userId);
-    console.log('this.context', this.context);
+    // console.log('this.context.userId', this.context.userId);
+    // console.log('this.context', this.context);
 
     await this.setState((prevState) => ({
       detaliiUser: prevState.detaliiUser.filter((user) => user._id === this.context.userId)

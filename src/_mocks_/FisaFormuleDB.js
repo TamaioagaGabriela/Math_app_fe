@@ -84,7 +84,7 @@ class FisaFormuleDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -123,7 +123,7 @@ class FisaFormuleDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -157,15 +157,15 @@ class FisaFormuleDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        console.log('fetch resData.data: fiseFormule', resData.data);
+        // console.log('fetch resData.data: fiseFormule', resData.data);
 
         this.setState({ fiseFormule: resData.data.fiseFormule });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        console.log('pb la fetch');
+        // console.log('pb la fetch');
 
-        console.log(err);
+        // console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -189,12 +189,12 @@ class FisaFormuleDB extends Component {
     // await this.setState({ subcapitolFisaFormule: subcapitol });
     this.setState({ subcapitolChosen: true });
     this.setSubcapitolFisaFormule(subcapitol);
-    console.log('setSubcapitolChosen', subcapitol._id);
+    // console.log('setSubcapitolChosen', subcapitol._id);
   };
 
   setSubcapitolFisaFormule = (subcapitolFisaFormule) => {
     this.setState({ subcapitolFisaFormule });
-    console.log('setSubcapitol', subcapitolFisaFormule);
+    // console.log('setSubcapitol', subcapitolFisaFormule);
   };
 
   modalCancelHandlerCapitol = () => {
@@ -217,8 +217,8 @@ class FisaFormuleDB extends Component {
   };
 
   render() {
-    console.log('isLoading', this.state.isLoading);
-    console.log('capitol:', this.state.capitol);
+    // console.log('isLoading', this.state.isLoading);
+    // console.log('capitol:', this.state.capitol);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
@@ -227,7 +227,7 @@ class FisaFormuleDB extends Component {
       (fisaFormule) => fisaFormule.subcapitol_id === this.state.subcapitolFisaFormule._id
     );
 
-    console.log('fiseFormuleFiltrate', fiseFormuleFiltrate);
+    // console.log('fiseFormuleFiltrate', fiseFormuleFiltrate);
 
     return (
       <container>

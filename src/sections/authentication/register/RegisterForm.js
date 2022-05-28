@@ -60,7 +60,7 @@ export default function RegisterForm() {
           // message from the server to give the user feedback and reset the form
           // so the user can start over if she chooses.
           setSendingEmail(false);
-          console.log('check email');
+          // console.log('check email');
           // notify.show(data.msg);
           // this.form.reset();
         })
@@ -99,7 +99,7 @@ export default function RegisterForm() {
         }
       };
 
-      console.log(JSON.stringify(requestBody));
+      // console.log(JSON.stringify(requestBody));
 
       fetch('http://localhost:8000/graphql', {
         method: 'POST',
@@ -109,9 +109,9 @@ export default function RegisterForm() {
         }
       })
         .then((res) => {
-          console.log(res.status);
+          // console.log(res.status);
           if (res.status !== 200 && res.status !== 201) {
-            console.log('Acest username/email deja exista');
+            // console.log('Acest username/email deja exista');
             setErrorMessage('Acest username/email deja exista');
 
             setIsSubmitting(false);
@@ -124,10 +124,10 @@ export default function RegisterForm() {
           if (values.email) {
             navigate('/login', { replace: true });
           }
-          console.log(resData);
+          // console.log(resData);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     }
   });
