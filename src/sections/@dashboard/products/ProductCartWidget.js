@@ -1,8 +1,12 @@
 // material
+import { useRef, useState, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import { Badge } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 // component
 import Iconify from '../../../components/Iconify';
+import ExercitiiGresiteDB from '../../../_mocks_/ExercitiiGresiteDB';
+import AuthContext from '../../../context/auth-context';
 
 // ----------------------------------------------------------------------
 
@@ -30,11 +34,82 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function CartWidget() {
+  const context = useContext(AuthContext);
+  const [exercitiiGresiteCount, setExercitiiGresiteCount] = useState([]);
+
+  const fetchExercitiiGresite = () => {
+    const requestBody = {
+      query: `
+        query{
+          getExercitiiGresite{
+            _id
+            exercitiu{
+               _id
+              subcapitol_id
+              cerinta
+              rezolvare
+              varianta1
+              varianta2
+              varianta3
+              varianta4
+              raspuns_corect
+              nivel_dif
+            }
+            user{
+              _id
+            }
+            status
+            raspuns_user
+            createdAt
+          }
+        }
+        `
+    };
+    const tkn = context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        setExercitiiGresiteCount(resData.data.getExercitiiGresite);
+        // console.log('in fetch exercitiiGresiteCount', exercitiiGresiteCount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getExercitii = () => {
+    fetchExercitiiGresite();
+    // console.log('in card', exercitiiGresiteCount);
+    return exercitiiGresiteCount.filter(
+      (exercitiuRezolvat) => exercitiuRezolvat.user._id === context.userId
+    ).length;
+  };
+
   return (
     <RootStyle>
-      <Badge showZero badgeContent={0} color="error" max={99}>
-        <Iconify icon="eva:shopping-cart-fill" width={24} height={24} />
-      </Badge>
+      <Tooltip
+        title="Exercitii gresite"
+        placement="bottom"
+        text-color="red"
+        background-color="black"
+      >
+        <Badge showZero badgeContent={getExercitii()} color="error" max={99}>
+          {/* <Icon icon="ant-design:calculator-outlined" /> */}
+          <Iconify icon="ant-design:calculator-outlined" width={30} height={30} />
+        </Badge>
+      </Tooltip>
     </RootStyle>
   );
 }

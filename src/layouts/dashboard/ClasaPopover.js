@@ -58,6 +58,7 @@ export default function ClasaPopover() {
     context.clasa = val;
     console.log(window.location.pathname);
     navigate(window.location.pathname, { replace: true });
+    setOpen(false);
   };
 
   const handleOpen = () => {

@@ -6,7 +6,6 @@ import { Container, Typography } from '@mui/material';
 import Page from '../components/Page';
 
 import { ProductCartWidget } from '../sections/@dashboard/products';
-
 import ExercitiiGresiteDB from '../_mocks_/ExercitiiGresiteDB';
 
 // ----------------------------------------------------------------------
@@ -18,9 +17,8 @@ export default function ExercitiiGresite() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Exercitii gresite
         </Typography>
-
         <ExercitiiGresiteDB />
-        <ProductCartWidget />
+        {/* <ProductCartWidget /> */}
       </Container>
     </Page>
   );

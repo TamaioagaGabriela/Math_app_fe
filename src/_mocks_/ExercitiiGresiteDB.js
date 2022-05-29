@@ -8,6 +8,7 @@ import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
+import { ProductCartWidget } from '../sections/@dashboard/products';
 import './index.css';
 
 const status = 'Completed';
@@ -52,7 +53,9 @@ class ExercitiiGresiteDB extends Component {
       btn3: false,
       btn4: false,
       // listaRezolvariExercitii: [],
-      exercitiiGresiteUser: []
+      exercitiiGresiteUser: [],
+      exercitiiGresiteUserAll: [],
+      exercitiiGresiteCount: 0
     };
   }
 
@@ -231,6 +234,7 @@ class ExercitiiGresiteDB extends Component {
       })
       .then((resData) => {
         this.setExercitiiGresiteUser(resData.data.getExercitiiGresite);
+        this.setExercitiiGresiteUserAll(resData.data.getExercitiiGresite);
         // this.setState({ listaRezolvariExercitii: resData.data.getExercitiiGresite });
         this.setState({ isLoading: false });
       })
@@ -367,6 +371,22 @@ class ExercitiiGresiteDB extends Component {
     }));
   };
 
+  setExercitiiGresiteUserAll = async (listaRezolvariExercitii) => {
+    // console.log(this.state.listaRezolvariExercitii);
+    // console.log('listaaaaaa: ', listaRezolvariExercitii);
+    await this.setState((prevState) => ({
+      exercitiiGresiteUserAll: listaRezolvariExercitii.filter(
+        (exercitiuRezolvat) => exercitiuRezolvat.user._id === this.context.userId
+      )
+    }));
+
+    await this.setState((prevState) => ({
+      exercitiiGresiteCount: listaRezolvariExercitii.filter(
+        (exercitiuRezolvat) => exercitiuRezolvat.user._id === this.context.userId
+      ).length
+    }));
+  };
+
   modalCancelHandlerCapitol = () => {
     this.setState({
       capitolChosen: false,
@@ -457,6 +477,10 @@ class ExercitiiGresiteDB extends Component {
     console.log(this.state.isLoading);
     console.log(this.state.openFilter);
 
+    // console.log(this.getExercitiiGresiteUserAll());
+
+    console.log('exercitiiGresiteUserAll', this.state.exercitiiGresiteUserAll);
+    console.log(this.state.exercitiiGresiteCount);
     // console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
@@ -1019,6 +1043,7 @@ class ExercitiiGresiteDB extends Component {
               </Grid>
             )}
         </Grid>
+        <ProductCartWidget />
       </container>
     );
   }
