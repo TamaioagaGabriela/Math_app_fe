@@ -217,7 +217,7 @@ class FisaFormuleDB extends Component {
   };
 
   render() {
-    // console.log('isLoading', this.state.isLoading);
+    console.log('isLoading', this.state.isLoading);
     // console.log('capitol:', this.state.capitol);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(

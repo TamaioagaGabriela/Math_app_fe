@@ -454,8 +454,8 @@ class ExercitiiGresiteDB extends Component {
   };
 
   render() {
-    // console.log(this.state.isLoading);
-    // console.log(this.state.openFilter);
+    console.log(this.state.isLoading);
+    console.log(this.state.openFilter);
 
     // console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
 

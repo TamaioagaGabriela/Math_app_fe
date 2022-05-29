@@ -1,8 +1,9 @@
-import React, { useRef, useState, Component } from 'react';
+import React, { useRef, useState, useContext, Component } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // material
 import { alpha } from '@mui/material/styles';
-import { Box, MenuItem, ListItemIcon, ListItemText, Button } from '@mui/material';
+import { Box, MenuItem, ListItemText, Button } from '@mui/material';
 // components
 import MenuPopover from '../../components/MenuPopover';
 import AuthContext from '../../context/auth-context';
@@ -46,81 +47,61 @@ const CLASE = [
 
 // ----------------------------------------------------------------------
 
-class ClasaPopover extends Component {
-  static context = AuthContext;
+export default function ClasaPopover() {
+  const [open, setOpen] = useState(false);
 
-  constructor(props) {
-    super(props);
+  const anchorRef = useRef(null);
+  const navigate = useNavigate();
+  const context = useContext(AuthContext);
 
-    this.anchorRef = React.createRef();
-    // const [clasa, setClasa] = useState('0');
-    this.state = {
-      open: false
-      //   anchorRef: useRef(null)
-    };
-  }
+  const changeClasa = (val) => {
+    context.clasa = val;
+    console.log(window.location.pathname);
+    navigate(window.location.pathname, { replace: true });
+  };
 
-  //   handleOpen = () => {
-  //     this.setState({ open: true });
-  //   };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-  //   handleClose = () => {
-  //     this.setState({ open: false });
-  //   };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-  //   handleClick2 = () => {
-  //     // console.log('####', val);
-  //     this.setState({ open: false });
-  //   };
-
-  render() {
-    // console.log(this.state.open);
-    // console.log(this.state.anchorRef);
-    return (
-      <>
-        <Button
-          ref={this.anchorRef}
-          onClick={() => this.setState({ open: true })}
-          sx={{
-            padding: 0,
-            width: 44,
-            height: 44,
-            ...(this.state.open && {
-              bgcolor: (theme) =>
-                alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
-            })
-          }}
-        >
-          Alege clasa
-        </Button>
-
-        <MenuPopover
-          open={this.state.open}
-          onClose={() => this.setState({ open: false })}
-          anchorEl={this.anchorRef.current}
-        >
-          <Box sx={{ py: 1 }}>
-            {CLASE.map((option) => (
-              <MenuItem
-                key={option.value}
-                selected={option.value === CLASE[0].value}
-                onClick={() => {
-                  this.context.clasa = option.value;
-                }}
-                // clasaValue={option.value}
-                sx={{ py: 1, px: 2.5 }}
-              >
-                <ListItemText primaryTypographyProps={{ variant: 'body2' }}>
-                  {option.label}
-                </ListItemText>
-              </MenuItem>
-            ))}
-          </Box>
-        </MenuPopover>
-      </>
-    );
-  }
+  return (
+    <>
+      <Button
+        ref={anchorRef}
+        onClick={handleOpen}
+        sx={{
+          padding: 0,
+          width: 44,
+          height: 44,
+          ...(open && {
+            bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
+          })
+        }}
+      >
+        Alege clasa
+      </Button>
+      <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current}>
+        <Box sx={{ py: 1 }}>
+          {CLASE.map((option) => (
+            <MenuItem
+              key={option.value}
+              selected={option.value === CLASE[0].value}
+              onClick={() => {
+                changeClasa(option.value);
+              }}
+              sx={{ py: 1, px: 2.5 }}
+            >
+              <ListItemText primaryTypographyProps={{ variant: 'body2' }}>
+                {option.label}
+              </ListItemText>
+            </MenuItem>
+          ))}
+        </Box>
+      </MenuPopover>
+    </>
+  );
 }
-
-ClasaPopover.contextType = AuthContext;
-export default ClasaPopover;

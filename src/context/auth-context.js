@@ -4,7 +4,7 @@ export default React.createContext({
   token: null,
   userId: null,
   clasa: null,
-  changeClasa: () => {},
+  changeClasa: (val) => {},
   login: (token, userId, role, clasa, tokenExpiration) => {},
   logout: () => {}
 });
