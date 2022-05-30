@@ -11,7 +11,8 @@
   
   .modal__header {
     padding: 1rem;
-    background: #2a9d8f;
+    background: rgb(141, 120, 250); 
+    /* #2a9d8f; */
     color: black;
   }
   
@@ -30,9 +31,9 @@
     padding: 1rem;
   }
   
-  @media (min-width: 768px) {
+  /* @media (min-width: 768px) {
     .modal {
       width: 30rem;
-      left: calc((100% - 30rem) / 2);
+      left: calc((100% - 20rem) / 2);
     }
-  }
+  } */

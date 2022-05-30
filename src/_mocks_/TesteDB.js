@@ -211,14 +211,6 @@ class TesteDB extends Component {
   getExercitii = async (test) => {
     this.setState({ testCapitol: test });
     await this.setState({ nrIntrebare: 0 });
-    // console.log('setTestChosen', test._id);
-
-    // console.log('ex1', test.exercitiu1_id);
-    // console.log('this.state.exercitiu1', this.state.exercitiu1);
-    // console.log(
-    //   'exercitiu 1',
-    //   this.state.exercitii.filter((exercitiu) => exercitiu._id === test.exercitiu1_id)
-    // );
 
     await this.setState((prevState) => ({
       exercitiu1: prevState.exercitii.filter((exercitiu) => exercitiu._id === test.exercitiu1_id)
@@ -322,7 +314,7 @@ class TesteDB extends Component {
         this.setState({ testTrimis: true });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
       });
 
     this.setState({ selectedAnswer: null });
@@ -424,17 +416,6 @@ class TesteDB extends Component {
           >
             Inapoi
           </Button>
-
-          <Stack
-            direction="row"
-            spacing={1}
-            flexShrink={0}
-            sx={{ my: 1 }}
-            justifyContent="flex-end"
-          >
-            <Button variant="outlined">Sortare</Button>
-            <Button variant="outlined">filtre</Button>
-          </Stack>
         </Stack>
 
         <Grid container spacing={3}>

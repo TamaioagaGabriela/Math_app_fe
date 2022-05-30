@@ -11,6 +11,8 @@ import {
   Button,
   Grid,
   CardMedia,
+  Paper,
+  TextField,
   FormControl
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -372,24 +374,6 @@ class CapitolDB extends Component {
           >
             Inapoi
           </Button>
-          <Stack
-            direction="row"
-            spacing={1}
-            flexShrink={0}
-            sx={{ my: 1 }}
-            justifyContent="flex-end"
-          >
-            <Button variant="outlined">Sortare</Button>
-            <Button variant="outlined">filtre</Button>
-            {/* <ProductFilterSidebar
-              formik=""
-              isOpenFilter={false}
-              onResetFilter={false}
-              onOpenFilter={false}
-              onCloseFilter={false}
-            />
-            <ProductSort /> */}
-          </Stack>
         </Stack>
 
         <Grid container spacing={3}>
@@ -593,38 +577,36 @@ class CapitolDB extends Component {
                 onConfirm={this.modalConfirmHandler}
                 confirmText="Confirma"
               >
-                <Card>
-                  <Stack spacing={2} sx={{ p: 3 }}>
-                    <FormControl>
-                      <div className="form-control">
-                        <label htmlFor="titlu">
-                          <b>Titlu</b>
-                          <textarea id="titlu" cols="53" rows="3" ref={this.titluTeorieRef} />
-                        </label>
-
-                        <label htmlFor="linkVideo">
-                          <b>Link video explicativ</b>
-                          <textarea
-                            id="linkVideo"
-                            cols="53"
-                            rows="3"
-                            ref={this.linkVideoTeorieRef}
-                          />
-                        </label>
-
-                        <label htmlFor="descriere">
-                          <b>Descriere</b>
-                          <textarea
-                            id="descriere"
-                            cols="53"
-                            rows="15"
-                            ref={this.descriereTeorieRef}
-                          />
-                        </label>
-                      </div>
-                    </FormControl>
-                  </Stack>
-                </Card>
+                <Paper>
+                  <TextField
+                    id="titlu"
+                    label="titlu"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Titlu"
+                    ref={this.titluTeorieRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Link video explicativ"
+                    label="Link video explicativ"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Link video explicativ"
+                    ref={this.linkVideoTeorieRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Descriere"
+                    label="Descriere"
+                    style={{ width: '100%', borderColor: 'yellow !important' }}
+                    rows={5}
+                    margin="dense"
+                    placeholder="Descriere"
+                    ref={this.descriereTeorieRef}
+                    multiline
+                  />
+                </Paper>
               </ModalFisaTeorie>
             )}
         </Grid>

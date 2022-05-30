@@ -1,5 +1,6 @@
 // material
 import { useRef, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Badge } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
@@ -36,6 +37,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 export default function CartWidget() {
   const context = useContext(AuthContext);
   const [exercitiiGresiteCount, setExercitiiGresiteCount] = useState([]);
+  const navigate = useNavigate();
 
   const fetchExercitiiGresite = () => {
     const requestBody = {
@@ -106,8 +108,12 @@ export default function CartWidget() {
         background-color="black"
       >
         <Badge showZero badgeContent={getExercitii()} color="error" max={99}>
-          {/* <Icon icon="ant-design:calculator-outlined" /> */}
-          <Iconify icon="ant-design:calculator-outlined" width={30} height={30} />
+          <Iconify
+            icon="ant-design:calculator-outlined"
+            width={30}
+            height={30}
+            onClick={() => navigate('/dashboard/exercitii_gresite', { replace: true })}
+          />
         </Badge>
       </Tooltip>
     </RootStyle>

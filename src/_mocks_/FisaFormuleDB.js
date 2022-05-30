@@ -157,44 +157,31 @@ class FisaFormuleDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data: fiseFormule', resData.data);
-
         this.setState({ fiseFormule: resData.data.fiseFormule });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log('pb la fetch');
-
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
 
-  // setCapitolList = () => {
-  //   this.setState({ capitolList: true });
-  // };
-
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
-    // console.log('setCapitolChosen', capitol);
   };
 
   setCapitol = (capitol) => {
     this.setState({ capitol });
-    // console.log('setCapitol', capitol);
   };
 
   setSubcapitolChosen = (subcapitol) => {
-    // await this.setState({ subcapitolFisaFormule: subcapitol });
     this.setState({ subcapitolChosen: true });
     this.setSubcapitolFisaFormule(subcapitol);
-    // console.log('setSubcapitolChosen', subcapitol._id);
   };
 
   setSubcapitolFisaFormule = (subcapitolFisaFormule) => {
     this.setState({ subcapitolFisaFormule });
-    // console.log('setSubcapitol', subcapitolFisaFormule);
   };
 
   modalCancelHandlerCapitol = () => {
@@ -218,7 +205,6 @@ class FisaFormuleDB extends Component {
 
   render() {
     console.log('isLoading', this.state.isLoading);
-    // console.log('capitol:', this.state.capitol);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
@@ -226,8 +212,6 @@ class FisaFormuleDB extends Component {
     const fiseFormuleFiltrate = this.state.fiseFormule.filter(
       (fisaFormule) => fisaFormule.subcapitol_id === this.state.subcapitolFisaFormule._id
     );
-
-    // console.log('fiseFormuleFiltrate', fiseFormuleFiltrate);
 
     return (
       <container>
@@ -245,16 +229,6 @@ class FisaFormuleDB extends Component {
           >
             Inapoi
           </Button>
-          <Stack
-            direction="row"
-            spacing={1}
-            flexShrink={0}
-            sx={{ my: 1 }}
-            justifyContent="flex-end"
-          >
-            <Button variant="outlined">Sortare</Button>
-            <Button variant="outlined">filtre</Button>
-          </Stack>
         </Stack>
 
         <Grid container spacing={3}>
