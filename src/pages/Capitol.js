@@ -5,11 +5,7 @@ import { Container, Stack, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
 
-import {
-  ProductSort,
-  ProductCartWidget,
-  ProductFilterSidebar
-} from '../sections/@dashboard/products';
+import { ProductCartWidget } from '../sections/@dashboard/products';
 
 import CapitolDB from '../_mocks_/CapitolDB';
 

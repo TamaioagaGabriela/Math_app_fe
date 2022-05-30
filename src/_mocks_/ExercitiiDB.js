@@ -1,18 +1,42 @@
 // eslint-disable-line react/no-unused-state
 import React, { Component } from 'react';
-
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid } from '@mui/material';
+import {
+  Box,
+  Card,
+  Link,
+  Typography,
+  Stack,
+  Menu,
+  Button,
+  MenuItem,
+  Grid,
+  Radio,
+  Drawer,
+  Divider,
+  IconButton,
+  RadioGroup,
+  FormControlLabel
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
+
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
+import Iconify from '../components/Iconify';
+import Scrollbar from '../components/Scrollbar';
 import './index.css';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
+
+const SORT_BY_OPTIONS = [
+  { value: 'nivelDificultateAsc', label: 'Nivel dificultate: crescator' },
+  { value: 'nivelDificultateDesc', label: 'Nivel dificultate: descrescator' }
+];
+const FILTER_NIVEL_DIFICULTATE_OPTIONS = ['Toate', 'Scazut', 'Mediu', 'Ridicat'];
 
 const CapitolImgStyle = styled('img')({
   top: 0,
@@ -27,6 +51,8 @@ class ExercitiiDB extends Component {
 
   constructor(props) {
     super(props);
+
+    this.anchorRef = React.createRef();
 
     this.state = {
       isLoading: false,
@@ -50,7 +76,10 @@ class ExercitiiDB extends Component {
       btn1: false,
       btn2: false,
       btn3: false,
-      btn4: false
+      btn4: false,
+      filtru: 'Toate',
+      openSort: null,
+      order: 'asc'
     };
   }
 
@@ -96,7 +125,7 @@ class ExercitiiDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -133,7 +162,7 @@ class ExercitiiDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -177,7 +206,7 @@ class ExercitiiDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -220,19 +249,6 @@ class ExercitiiDB extends Component {
           return res.json();
         })
         .then((resData) => {
-          // this.setState((prevState) => {
-          //   const rezolvareExercitiu = {
-          //     _id: resData.data.adaugaRezolvareExercitiu._id,
-          //     status: resData.data.adaugaRezolvareExercitiu.status,
-          //     raspuns_user: resData.data.adaugaRezolvareExercitiu.raspuns_user,
-          //     raspuns_corect: resData.data.adaugaRezolvareExercitiu.exercitiu.raspuns_corect,
-          //     rezolvare: resData.data.adaugaRezolvareExercitiu.exercitiu.rezolvare,
-          //     creator: {
-          //       _id: this.context.userId
-          //     }
-          //   };
-          // return { rezolvareExercitiu };
-          // });
           this.setState({ rezultatExercitiu: resData.data.adaugaRezolvareExercitiu.status });
           this.setState({
             raspunsCorect: resData.data.adaugaRezolvareExercitiu.exercitiu.raspuns_corect
@@ -240,7 +256,7 @@ class ExercitiiDB extends Component {
           this.setState({ raspunsTrimis: true });
         })
         .catch((err) => {
-          // console.log(err);
+          console.log(err);
         });
     } else {
       this.setState({ eroare: 'Selecteaza o varianta de raspuns!' });
@@ -384,18 +400,90 @@ class ExercitiiDB extends Component {
     }
   };
 
+  modalHandleRequestSort = (value) => {
+    if (value === 'nivelDificultateAsc') {
+      this.setState({ order: 'asc' });
+    } else {
+      this.setState({ order: 'desc' });
+    }
+  };
+
+  modalHandleOpenSort = () => {
+    this.setState({ openSort: true });
+  };
+
+  modalHandleCloseSort = () => {
+    this.setState({ openSort: null });
+  };
+
+  modalHandleOpenFilter = () => {
+    this.setState({ openFilter: true });
+  };
+
+  modalHandleCloseFilter = () => {
+    this.setState({ openFilter: false });
+  };
+
+  modalHandleResetFilter = () => {
+    this.setState({ openFilter: false });
+    this.setState({ filtru: 'Toate' });
+  };
+
+  applySort = (exercitiiFiltrate) => {
+    console.log('this.state.order', this.state.order);
+    const stabilizedThis = exercitiiFiltrate;
+
+    let sorted = [];
+
+    console.log('stabilizedThis[[0]]', stabilizedThis[0]);
+
+    if (this.state.order === 'asc') {
+      sorted = stabilizedThis.sort((a, b) => {
+        console.log('aaaaaaaa', a.nivel_dif);
+        if (
+          (a.nivel_dif === 'ridicat' && b.nivel_dif === 'mediu') ||
+          (a.nivel_dif === 'mediu' && b.nivel_dif === 'scazut')
+        ) {
+          return 1;
+        }
+        return -1;
+      });
+    } else if (this.state.order === 'desc') {
+      sorted = stabilizedThis.sort((a, b) => {
+        if (
+          (a.nivel_dif === 'ridicat' && b.nivel_dif === 'mediu') ||
+          (a.nivel_dif === 'mediu' && b.nivel_dif === 'scazut')
+        ) {
+          return -1;
+        }
+        return 1;
+      });
+    }
+    return sorted;
+  };
+
   render() {
     console.log(this.state.isLoading);
-    console.log(this.state.openFilter);
-
-    // console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
+    console.log(this.state.openFilter, this.state.filtru, this.state.order);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
-      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id // '6245fb02354efdf16ef74b01' // this.state.capitol._id
+      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
     );
-    const exercitiiFiltrate = this.state.exercitii.filter(
-      (exercitiu) => exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
-    );
+
+    const exercitiiFiltrate =
+      this.state.filtru === 'Toate'
+        ? this.state.exercitii.filter(
+            (exercitiu) => exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
+          )
+        : this.state.exercitii.filter(
+            (exercitiu) =>
+              exercitiu.subcapitol_id === this.state.subcapitolExercitii._id &&
+              exercitiu.nivel_dif === this.state.filtru.toString().toLowerCase()
+          );
+
+    const exercitiiFiltrateSortate = this.applySort(exercitiiFiltrate);
+
+    console.log('exercitiiFiltrateSortate', exercitiiFiltrateSortate);
 
     return (
       <container>
@@ -413,16 +501,141 @@ class ExercitiiDB extends Component {
           >
             Inapoi
           </Button>
-          <Stack
-            direction="row"
-            spacing={1}
-            flexShrink={0}
-            sx={{ my: 1 }}
-            justifyContent="flex-end"
-          >
-            <Button variant="outlined">Sortare</Button>
-            <Button variant="outlined">filtre</Button>
-          </Stack>
+          {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+          {/* sortare si filtrare exercitii */}
+          {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+          {this.state.capitolChosen && this.state.subcapitolChosen && !this.state.exercitiuChosen && (
+            <Stack
+              direction="row"
+              spacing={1}
+              flexShrink={0}
+              sx={{ my: 1 }}
+              justifyContent="flex-end"
+            >
+              {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              {/* Filtrare exercitii */}
+              {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              <Button
+                disableRipple
+                variant="outlined"
+                endIcon={<Iconify icon="ic:round-filter-list" />}
+                onClick={() => this.modalHandleOpenFilter()}
+              >
+                Filtrare&nbsp;
+              </Button>
+              <Drawer
+                anchor="right"
+                open={Boolean(this.state.openFilter)}
+                onClose={() => this.modalHandleCloseFilter()}
+                PaperProps={{
+                  sx: { width: 280, border: 'none', overflow: 'hidden' }
+                }}
+              >
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  sx={{ px: 1, py: 2 }}
+                >
+                  <Typography variant="subtitle1" sx={{ ml: 1 }}>
+                    Filtre
+                  </Typography>
+                  <IconButton onClick={() => this.modalHandleCloseFilter()}>
+                    <Iconify icon="eva:close-fill" width={20} height={20} />
+                  </IconButton>
+                </Stack>
+                <Divider />
+                <Scrollbar>
+                  <Stack spacing={3} sx={{ p: 3 }}>
+                    <div>
+                      <Typography variant="subtitle1" gutterBottom>
+                        Nivel de dificultate
+                      </Typography>
+                      <RadioGroup>
+                        {FILTER_NIVEL_DIFICULTATE_OPTIONS.map((item) => (
+                          <FormControlLabel
+                            key={item}
+                            value={item}
+                            control={<Radio />}
+                            label={item}
+                            onClick={() => this.setState({ filtru: item })}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </div>
+                  </Stack>
+                </Scrollbar>
+                <Box sx={{ p: 3 }}>
+                  <Button
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="outlined"
+                    onClick={() => {
+                      this.modalHandleCloseFilter();
+                    }}
+                  >
+                    Seteaza filtrul
+                  </Button>
+                  &nbsp;
+                  <Button
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="outlined"
+                    onClick={() => this.modalHandleResetFilter()}
+                    startIcon={<Iconify icon="ic:round-clear-all" />}
+                  >
+                    Sterge filtrul
+                  </Button>
+                </Box>
+              </Drawer>
+              {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              {/* Sortare exercitii */}
+              {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              <>
+                <Button
+                  // color="inherit"
+                  ref={this.anchorRef}
+                  variant="outlined"
+                  disableRipple
+                  onClick={() => this.modalHandleOpenSort()}
+                  endIcon={
+                    <Iconify
+                      icon={this.state.openSort ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'}
+                    />
+                  }
+                >
+                  Sortare dificultate: &nbsp;
+                  <Typography component="span" variant="subtitle2" sx={{ color: '#49BD47' }}>
+                    crescator
+                  </Typography>
+                </Button>
+                <Menu
+                  keepMounted
+                  anchorEl={this.anchorRef.current}
+                  open={Boolean(this.state.openSort)}
+                  onClose={() => this.modalHandleCloseSort()}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  {SORT_BY_OPTIONS.map((option) => (
+                    <MenuItem
+                      key={option.value}
+                      // selected={option.value === 'newest'}
+                      onClick={() => {
+                        this.modalHandleRequestSort(option.value);
+                        this.modalHandleCloseSort();
+                      }}
+                      sx={{ typography: 'body2' }}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            </Stack>
+          )}
         </Stack>
 
         <Grid container spacing={3}>

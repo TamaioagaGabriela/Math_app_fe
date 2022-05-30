@@ -8,7 +8,6 @@ import Page from '../components/Page';
 
 import {
   ProductSort,
-  ProductList,
   ProductCartWidget,
   ProductFilterSidebar
 } from '../sections/@dashboard/products';

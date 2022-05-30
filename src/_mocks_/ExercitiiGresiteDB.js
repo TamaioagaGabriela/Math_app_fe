@@ -2,17 +2,41 @@ import React, { Component } from 'react';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid } from '@mui/material';
+import {
+  Box,
+  Card,
+  Link,
+  Typography,
+  Stack,
+  Menu,
+  Button,
+  MenuItem,
+  Grid,
+  Radio,
+  Drawer,
+  Divider,
+  IconButton,
+  RadioGroup,
+  FormControlLabel
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import { ProductCartWidget } from '../sections/@dashboard/products';
+import Iconify from '../components/Iconify';
+import Scrollbar from '../components/Scrollbar';
 import './index.css';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
+
+const SORT_BY_OPTIONS = [
+  { value: 'nivelDificultateAsc', label: 'Nivel dificultate: crescator' },
+  { value: 'nivelDificultateDesc', label: 'Nivel dificultate: descrescator' }
+];
+const FILTER_NIVEL_DIFICULTATE_OPTIONS = ['Toate', 'Scazut', 'Mediu', 'Ridicat'];
 
 const CapitolImgStyle = styled('img')({
   top: 0,
@@ -27,6 +51,8 @@ class ExercitiiGresiteDB extends Component {
 
   constructor(props) {
     super(props);
+
+    this.anchorRef = React.createRef();
 
     this.state = {
       isLoading: false,
@@ -52,10 +78,12 @@ class ExercitiiGresiteDB extends Component {
       btn2: false,
       btn3: false,
       btn4: false,
-      // listaRezolvariExercitii: [],
       exercitiiGresiteUser: [],
       exercitiiGresiteUserAll: [],
-      exercitiiGresiteCount: 0
+      exercitiiGresiteCount: 0,
+      filtru: 'Toate',
+      openSort: null,
+      order: 'asc'
     };
   }
 
@@ -102,7 +130,7 @@ class ExercitiiGresiteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -139,7 +167,7 @@ class ExercitiiGresiteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -183,7 +211,7 @@ class ExercitiiGresiteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -235,11 +263,11 @@ class ExercitiiGresiteDB extends Component {
       .then((resData) => {
         this.setExercitiiGresiteUser(resData.data.getExercitiiGresite);
         this.setExercitiiGresiteUserAll(resData.data.getExercitiiGresite);
-        // this.setState({ listaRezolvariExercitii: resData.data.getExercitiiGresite });
+
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -289,7 +317,7 @@ class ExercitiiGresiteDB extends Component {
           this.setState({ raspunsTrimis: true });
         })
         .catch((err) => {
-          // console.log(err);
+          console.log(err);
         });
     } else {
       this.setState({ eroare: 'Selecteaza o varianta de raspuns!' });
@@ -415,7 +443,6 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ rezultatExercitiu: null, raspunsCorect: null });
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
-    // console.log('a intrat');
     this.setState({ exercitiiGresiteUser: [] });
     this.fetchExercitiiGresite();
   };
@@ -473,15 +500,74 @@ class ExercitiiGresiteDB extends Component {
     }
   };
 
+  modalHandleRequestSort = (value) => {
+    if (value === 'nivelDificultateAsc') {
+      this.setState({ order: 'asc' });
+    } else {
+      this.setState({ order: 'desc' });
+    }
+  };
+
+  modalHandleOpenSort = () => {
+    this.setState({ openSort: true });
+  };
+
+  modalHandleCloseSort = () => {
+    this.setState({ openSort: null });
+  };
+
+  modalHandleOpenFilter = () => {
+    this.setState({ openFilter: true });
+  };
+
+  modalHandleCloseFilter = () => {
+    this.setState({ openFilter: false });
+  };
+
+  modalHandleResetFilter = () => {
+    this.setState({ openFilter: false });
+    this.setState({ filtru: 'Toate' });
+  };
+
+  applySort = (exercitiiFiltrate) => {
+    console.log('this.state.order', this.state.order);
+    const stabilizedThis = exercitiiFiltrate;
+
+    let sorted = [];
+
+    console.log('stabilizedThis[[0]]', stabilizedThis);
+
+    if (this.state.order === 'asc') {
+      sorted = stabilizedThis.sort((a, b) => {
+        console.log('aaaaaaaa', a.nivel_dif);
+        if (
+          (a.nivel_dif === 'ridicat' && b.nivel_dif === 'mediu') ||
+          (a.nivel_dif === 'mediu' && b.nivel_dif === 'scazut')
+        ) {
+          return 1;
+        }
+        return -1;
+      });
+    } else if (this.state.order === 'desc') {
+      sorted = stabilizedThis.sort((a, b) => {
+        if (
+          (a.nivel_dif === 'ridicat' && b.nivel_dif === 'mediu') ||
+          (a.nivel_dif === 'mediu' && b.nivel_dif === 'scazut')
+        ) {
+          return -1;
+        }
+        return 1;
+      });
+    }
+    return sorted;
+  };
+
   render() {
     console.log(this.state.isLoading);
-    console.log(this.state.openFilter);
-
-    // console.log(this.getExercitiiGresiteUserAll());
+    console.log(this.state.openFilter, this.state.filtru, this.state.order);
 
     console.log('exercitiiGresiteUserAll', this.state.exercitiiGresiteUserAll);
     console.log(this.state.exercitiiGresiteCount);
-    // console.log('rezultatExercitiu', this.state.rezultatExercitiu, this.state.eroare);
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
@@ -490,7 +576,22 @@ class ExercitiiGresiteDB extends Component {
       (exercitiu) => exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
     );
 
-    // console.log('liste exe gresite', this.state.exercitiiGresiteUser);
+    const exercitiiGresiteFiltrate =
+      this.state.filtru === 'Toate'
+        ? this.state.exercitiiGresiteUser.filter(
+            (exercitiuRezolvat) =>
+              exercitiuRezolvat.user._id === this.context.userId &&
+              exercitiuRezolvat.exercitiu.subcapitol_id === this.state.subcapitolExercitii._id
+          )
+        : this.state.exercitiiGresiteUser.filter(
+            (exercitiuRezolvat) =>
+              exercitiuRezolvat.user._id === this.context.userId &&
+              exercitiuRezolvat.exercitiu.subcapitol_id === this.state.subcapitolExercitii._id &&
+              exercitiuRezolvat.exercitiu.nivel_dif === this.state.filtru.toString().toLowerCase()
+          );
+
+    const exercitiiGresiteFiltrateSortate = this.applySort(exercitiiGresiteFiltrate);
+    console.log('exercitiiGresiteFiltrateSortate', exercitiiGresiteFiltrateSortate);
 
     return (
       <container>
@@ -508,16 +609,141 @@ class ExercitiiGresiteDB extends Component {
           >
             Inapoi
           </Button>
-          <Stack
-            direction="row"
-            spacing={1}
-            flexShrink={0}
-            sx={{ my: 1 }}
-            justifyContent="flex-end"
-          >
-            <Button variant="outlined">Sortare</Button>
-            <Button variant="outlined">filtre</Button>
-          </Stack>
+          {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+          {/* sortare si filtrare exercitii */}
+          {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+          {this.state.capitolChosen && this.state.subcapitolChosen && !this.state.exercitiuChosen && (
+            <Stack
+              direction="row"
+              spacing={1}
+              flexShrink={0}
+              sx={{ my: 1 }}
+              justifyContent="flex-end"
+            >
+              {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              {/* Filtrare exercitii */}
+              {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              <Button
+                disableRipple
+                variant="outlined"
+                endIcon={<Iconify icon="ic:round-filter-list" />}
+                onClick={() => this.modalHandleOpenFilter()}
+              >
+                Filtrare&nbsp;
+              </Button>
+              <Drawer
+                anchor="right"
+                open={Boolean(this.state.openFilter)}
+                onClose={() => this.modalHandleCloseFilter()}
+                PaperProps={{
+                  sx: { width: 280, border: 'none', overflow: 'hidden' }
+                }}
+              >
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  sx={{ px: 1, py: 2 }}
+                >
+                  <Typography variant="subtitle1" sx={{ ml: 1 }}>
+                    Filtre
+                  </Typography>
+                  <IconButton onClick={() => this.modalHandleCloseFilter()}>
+                    <Iconify icon="eva:close-fill" width={20} height={20} />
+                  </IconButton>
+                </Stack>
+                <Divider />
+                <Scrollbar>
+                  <Stack spacing={3} sx={{ p: 3 }}>
+                    <div>
+                      <Typography variant="subtitle1" gutterBottom>
+                        Nivel de dificultate
+                      </Typography>
+                      <RadioGroup>
+                        {FILTER_NIVEL_DIFICULTATE_OPTIONS.map((item) => (
+                          <FormControlLabel
+                            key={item}
+                            value={item}
+                            control={<Radio />}
+                            label={item}
+                            onClick={() => this.setState({ filtru: item })}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </div>
+                  </Stack>
+                </Scrollbar>
+                <Box sx={{ p: 3 }}>
+                  <Button
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="outlined"
+                    onClick={() => {
+                      this.modalHandleCloseFilter();
+                    }}
+                  >
+                    Seteaza filtrul
+                  </Button>
+                  &nbsp;
+                  <Button
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="outlined"
+                    onClick={() => this.modalHandleResetFilter()}
+                    startIcon={<Iconify icon="ic:round-clear-all" />}
+                  >
+                    Sterge filtrul
+                  </Button>
+                </Box>
+              </Drawer>
+              {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              {/* Sortare exercitii */}
+              {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              <>
+                <Button
+                  // color="inherit"
+                  ref={this.anchorRef}
+                  variant="outlined"
+                  disableRipple
+                  onClick={() => this.modalHandleOpenSort()}
+                  endIcon={
+                    <Iconify
+                      icon={this.state.openSort ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'}
+                    />
+                  }
+                >
+                  Sortare dificultate: &nbsp;
+                  <Typography component="span" variant="subtitle2" sx={{ color: '#49BD47' }}>
+                    crescator
+                  </Typography>
+                </Button>
+                <Menu
+                  keepMounted
+                  anchorEl={this.anchorRef.current}
+                  open={Boolean(this.state.openSort)}
+                  onClose={() => this.modalHandleCloseSort()}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  {SORT_BY_OPTIONS.map((option) => (
+                    <MenuItem
+                      key={option.value}
+                      // selected={option.value === 'newest'}
+                      onClick={() => {
+                        this.modalHandleRequestSort(option.value);
+                        this.modalHandleCloseSort();
+                      }}
+                      sx={{ typography: 'body2' }}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            </Stack>
+          )}
         </Stack>
 
         <Grid container spacing={3}>
@@ -639,7 +865,8 @@ class ExercitiiGresiteDB extends Component {
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
             !this.state.exercitiuChosen &&
-            this.state.exercitiiGresiteUser.map((rezolvareExercitiu, index) => (
+            exercitiiGresiteFiltrate.map((rezolvareExercitiu, index) => (
+              // this.state.exercitiiGresiteUser.map((rezolvareExercitiu, index) => (
               <Grid key={rezolvareExercitiu.exercitiu._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
