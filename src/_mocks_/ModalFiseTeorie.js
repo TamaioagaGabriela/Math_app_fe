@@ -26,7 +26,7 @@ const modal = (props) => (
         <Stack direction="row" justifyContent="flex-end">
           {props.canConfirm && (
             <Button size="medium" variant="outlined" className="btn" onClick={props.onConfirm}>
-              Adauga Teorie
+              {props.numeButon}
             </Button>
           )}
         </Stack>

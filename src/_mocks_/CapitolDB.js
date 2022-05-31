@@ -12,21 +12,16 @@ import {
   Grid,
   CardMedia,
   Paper,
-  TextField,
-  FormControl
+  TextField
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import ModalFisaTeorie from './ModalFiseTeorie';
+
 import Backdrop from '../components/Backdrop/Backdrop';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
-import {
-  ProductSort,
-  ProductCartWidget,
-  ProductFilterSidebar
-} from '../sections/@dashboard/products';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
@@ -48,6 +43,9 @@ class CapitolDB extends Component {
     this.titluTeorieRef = React.createRef();
     this.descriereTeorieRef = React.createRef();
     this.linkVideoTeorieRef = React.createRef();
+    this.titluSubcapitolRef = React.createRef();
+    this.titluCapitolRef = React.createRef();
+    this.clasaCapitolRef = React.createRef();
 
     this.state = {
       isLoading: false,
@@ -60,7 +58,9 @@ class CapitolDB extends Component {
       capitolChosen: false,
       subcapitolChosen: false,
       openFilter: false,
-      adaugaTeorieChosen: false
+      adaugaTeorieChosen: false,
+      adaugaCapitolChosen: false,
+      adaugaSubcapitolChosen: false
     };
   }
 
@@ -73,33 +73,6 @@ class CapitolDB extends Component {
   componentWillUnmount() {
     this.state.isActive = false;
   }
-  //   const formik = useFormik({
-  //   initialValues: {
-  //     gender: '',
-  //     category: '',
-  //     colors: '',
-  //     priceRange: '',
-  //     rating: ''
-  //   },
-  //   onSubmit: () => {
-  //     setOpenFilter(false);
-  //   }
-  // });
-
-  // const { resetForm, handleSubmit } = formik;
-
-  // handleOpenFilter = () => {
-  //    this.setState({ openFilter: true });
-  // };
-
-  // handleCloseFilter = () => {
-  //    this.setState({ openFilter: true });
-  // };
-
-  // handleResetFilter = () => {
-  //   handleSubmit();
-  //   resetForm();
-  // };
 
   fetchCapitole = () => {
     this.setState({ isLoading: true });
@@ -129,13 +102,11 @@ class CapitolDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data:', resData.data);
-
         this.setState({ capitole: resData.data.capitole });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -168,13 +139,11 @@ class CapitolDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data:', resData.data);
-
         this.setState({ subcapitole: resData.data.subcapitole });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -209,16 +178,124 @@ class CapitolDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data: teorie', resData.data);
-
         this.setState({ fiseTeorie: resData.data.teorie });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log('pb la fetch');
-
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
+      });
+  };
+
+  modalConfirmHandlerSubcapitol = () => {
+    const titlu = this.titluSubcapitolRef.current.value;
+
+    console.log(titlu, this.state.capitol._id);
+    if (titlu == null) {
+      return;
+    }
+    const requestBody = {
+      query: `
+      mutation{
+        adaugaSubcapitol(subcapitolInput: {
+          capitol_id:"${this.state.capitol._id}",
+          titlu: "${titlu}"
+        }){
+          _id
+          capitol_id
+          titlu
+        }
+      }
+        `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState((prevState) => {
+          const subcapitol = {
+            _id: resData.data.adaugaSubcapitol._id,
+            capitol_id: resData.data.adaugaSubcapitol.capitol_id,
+            titlu: resData.data.adaugaSubcapitol.titlu
+          };
+          const updatedSubcapitole = [...prevState.subcapitole];
+          updatedSubcapitole.push(subcapitol);
+          console.log('push subcapitol', updatedSubcapitole);
+          this.setState({ adaugaSubcapitolChosen: false });
+          this.setState({ capitolChosen: false });
+          return { subcapitole: updatedSubcapitole };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  modalConfirmHandlerCapitol = () => {
+    const titlu = this.titluCapitolRef.current.value;
+    const clasa = this.clasaCapitolRef.current.value;
+
+    if (titlu == null) {
+      return;
+    }
+    const requestBody = {
+      query: `
+        mutation{
+          adaugaCapitol(capitolInput: {
+            clasa: "${clasa}"
+            titlu: "${titlu}"
+          }){
+            _id
+            titlu
+            clasa
+          }
+        }
+        `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState((prevState) => {
+          const capitol = {
+            _id: resData.data.adaugaCapitol._id,
+            clasa: resData.data.adaugaCapitol.clasa,
+            titlu: resData.data.adaugaCapitol.titlu
+          };
+          // console.log('adaugaaaa', fisaTeorie);
+          const updatedCapitole = [...prevState.capitole];
+          updatedCapitole.push(capitol);
+          this.setState({ adaugaCapitolChosen: false });
+          this.setState({ capitolChosen: false });
+          return { capitole: updatedCapitole };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -281,7 +358,7 @@ class CapitolDB extends Component {
         });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
       });
   };
 
@@ -301,16 +378,32 @@ class CapitolDB extends Component {
 
   setSubcapitolTeorie = (subcapitolTeorie) => {
     this.setState({ subcapitolTeorie });
-    // console.log('setSubcapitol', subcapitolTeorie);
   };
 
   setAdaugaTeorieChosen = () => {
     this.setState({ adaugaTeorieChosen: true });
   };
 
+  setAdaugaCapitolChosen = () => {
+    this.setState({ adaugaCapitolChosen: true });
+  };
+
+  setAdaugaSubcapitolChosen = () => {
+    this.setState({ adaugaSubcapitolChosen: true });
+  };
+
   modalCancelHandlerAdaugaTeorie = () => {
     this.setState({ adaugaTeorieChosen: false });
     this.setState({ subcapitolChosen: false });
+  };
+
+  modalCancelHandlerAdaugaSubcapitol = () => {
+    this.setState({ adaugaSubcapitolChosen: false });
+    this.setState({ capitolChosen: false });
+  };
+
+  modalCancelHandlerAdaugaCapitol = () => {
+    this.setState({ adaugaCapitolChosen: false });
   };
 
   modalCancelHandlerCapitol = () => {
@@ -333,13 +426,6 @@ class CapitolDB extends Component {
   };
 
   render() {
-    // console.log('isLoading', this.state.isLoading);
-    // console.log('capitol:', this.state.openFilter);
-
-    // console.log('capitol:', this.state.capitol);
-    // console.log('id pt this.state.subcapitolTeorie', this.state.subcapitolTeorie._id);
-    // console.log('fise teorie', this.state.fiseTeorie);
-
     console.log(this.state.isLoading);
     console.log(this.state.openFilter);
     console.log(this.context);
@@ -347,16 +433,12 @@ class CapitolDB extends Component {
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
     );
-    // console.log('#########', capitoleFiltrate);
-    // console.log('#########', capitoleFiltrate);
     const subcapitoleFiltrate = this.state.subcapitole.filter(
-      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id // '6245fb02354efdf16ef74b01' // this.state.capitol._id
+      (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
     );
     const fiseTeorieFiltrate = this.state.fiseTeorie.filter(
       (fisaTeorie) => fisaTeorie.subcapitol_id === this.state.subcapitolTeorie._id
     );
-
-    // console.log('fiseTeorieFiltrate', fiseTeorieFiltrate);
 
     return (
       <container>
@@ -374,13 +456,27 @@ class CapitolDB extends Component {
           >
             Inapoi
           </Button>
+          <Stack
+            direction="row"
+            spacing={1}
+            flexShrink={0}
+            sx={{ my: 1 }}
+            justifyContent="flex-end"
+          >
+            <Button
+              variant="outlined"
+              style={{ visibility: this.state.capitolChosen ? 'hidden' : 'visible' }}
+              onClick={() => this.setAdaugaCapitolChosen()}
+            >
+              Adauga capitol
+            </Button>
+          </Stack>
         </Stack>
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
             capitoleFiltrate.map((capitol) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
-                {/* <CapitolItem capitol={capitol} /> */}
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
                     {status && (
@@ -420,7 +516,13 @@ class CapitolDB extends Component {
                         Test
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        this.setCapitolChosen(capitol);
+                        this.setAdaugaSubcapitolChosen();
+                      }}
+                    >
                       Adauga Subcapitol
                     </Button>
                   </Stack>
@@ -432,6 +534,7 @@ class CapitolDB extends Component {
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             !this.state.subcapitolChosen &&
+            !this.state.adaugaSubcapitolChosen &&
             !this.state.adaugaTeorieChosen &&
             subcapitoleFiltrate.map((subcapitol) => (
               <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
@@ -501,6 +604,7 @@ class CapitolDB extends Component {
           {/* ------------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
+            !this.state.adaugaSubcapitolChosen &&
             !this.state.adaugaTeorieChosen &&
             fiseTeorieFiltrate.map((fisaTeorie) => (
               <Grid
@@ -571,6 +675,7 @@ class CapitolDB extends Component {
             this.state.adaugaTeorieChosen && (
               <ModalFisaTeorie
                 title="Adauga fisa teorie"
+                numeButon="Adauga teorie"
                 canCancel
                 canConfirm
                 onCancel={this.modalCancelHandlerAdaugaTeorie}
@@ -579,12 +684,12 @@ class CapitolDB extends Component {
               >
                 <Paper>
                   <TextField
-                    id="titlu"
-                    label="titlu"
+                    id="Titlu"
+                    label="Titlu"
                     style={{ width: '100%' }}
                     margin="dense"
                     placeholder="Titlu"
-                    ref={this.titluTeorieRef}
+                    inputRef={this.titluTeorieRef}
                     multiline
                   />
                   <TextField
@@ -593,7 +698,7 @@ class CapitolDB extends Component {
                     style={{ width: '100%' }}
                     margin="dense"
                     placeholder="Link video explicativ"
-                    ref={this.linkVideoTeorieRef}
+                    inputRef={this.linkVideoTeorieRef}
                     multiline
                   />
                   <TextField
@@ -603,7 +708,76 @@ class CapitolDB extends Component {
                     rows={5}
                     margin="dense"
                     placeholder="Descriere"
-                    ref={this.descriereTeorieRef}
+                    inputRef={this.descriereTeorieRef}
+                    multiline
+                  />
+                </Paper>
+              </ModalFisaTeorie>
+            )}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales sa adaug un capitol atunci ajung la formular */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {!this.state.capitolChosen && this.state.adaugaCapitolChosen && <Backdrop />}
+          {!this.state.capitolChosen && this.state.adaugaCapitolChosen && (
+            <ModalFisaTeorie
+              title="Adauga capitol"
+              numeButon="Adauga capitol"
+              canCancel
+              canConfirm
+              onCancel={this.modalCancelHandlerAdaugaCapitol}
+              onConfirm={this.modalConfirmHandlerCapitol}
+              confirmText="Confirma"
+            >
+              <Paper>
+                <TextField
+                  id="Titlu"
+                  label="Titlu"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Titlu"
+                  inputRef={this.titluCapitolRef}
+                  multiline
+                />
+
+                <TextField
+                  id="Clasa"
+                  label="Clasa"
+                  style={{ width: '100%', borderColor: 'yellow !important' }}
+                  rows={5}
+                  margin="dense"
+                  placeholder="Clasa"
+                  inputRef={this.clasaCapitolRef}
+                  multiline
+                />
+              </Paper>
+            </ModalFisaTeorie>
+          )}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales sa adaug un subcapitol atunci ajung la formular */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            !this.state.subcapitolChosen &&
+            this.state.adaugaSubcapitolChosen && <Backdrop />}
+          {this.state.capitolChosen &&
+            !this.state.subcapitolChosen &&
+            this.state.adaugaSubcapitolChosen && (
+              <ModalFisaTeorie
+                title="Adauga subcapitol"
+                numeButon="Adauga"
+                canCancel
+                canConfirm
+                onCancel={this.modalCancelHandlerAdaugaSubcapitol}
+                onConfirm={this.modalConfirmHandlerSubcapitol}
+                confirmText="Confirma"
+              >
+                <Paper>
+                  <TextField
+                    id="Titlu"
+                    label="Titlu"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Titlu"
+                    inputRef={this.titluSubcapitolRef}
                     multiline
                   />
                 </Paper>

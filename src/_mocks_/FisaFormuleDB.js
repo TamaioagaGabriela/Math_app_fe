@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { AudioCard, VideoCard } from 'material-ui-player';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid, CardMedia } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Button, Grid, Paper, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
+import ModalFisaTeorie from './ModalFiseTeorie';
+import Backdrop from '../components/Backdrop/Backdrop';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 
@@ -27,6 +28,9 @@ class FisaFormuleDB extends Component {
   constructor(props) {
     super(props);
 
+    this.titluFormuleRef = React.createRef();
+    this.descriereFormuleRef = React.createRef();
+
     this.state = {
       isLoading: false,
       capitole: [],
@@ -36,7 +40,8 @@ class FisaFormuleDB extends Component {
       capitol: [],
       subcapitolFisaFormule: [],
       capitolChosen: false,
-      subcapitolChosen: false
+      subcapitolChosen: false,
+      adaugaFormuleChosen: false
     };
   }
 
@@ -166,6 +171,66 @@ class FisaFormuleDB extends Component {
       });
   };
 
+  modalConfirmHandler = () => {
+    const titlu = this.titluFormuleRef.current.value;
+    const descriere = this.descriereFormuleRef.current.value;
+    console.log('adaugaaaa', titlu);
+
+    if (titlu == null) {
+      return;
+    }
+    const requestBody = {
+      query: `
+      mutation{
+        adaugaFisaFormule(fisaFormuleInput: {
+          subcapitol_id:"${this.state.subcapitolFisaFormule._id}",
+          titlu:"${titlu}",
+          descriere: "${descriere}"
+        }){
+          _id
+          subcapitol_id
+          titlu
+          descriere
+        }
+      }
+      `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState((prevState) => {
+          const fisaFormule = {
+            _id: resData.data.adaugaFisaFormule._id,
+            subcapitol_id: resData.data.adaugaFisaFormule.subcapitol_id,
+            titlu: resData.data.adaugaFisaFormule.titlu,
+            descriere: resData.data.adaugaFisaFormule.descriere
+          };
+          console.log('adaugaaaa', fisaFormule);
+          const updatedFiseFormule = [...prevState.fiseFormule];
+          updatedFiseFormule.push(fisaFormule);
+          this.setState({ adaugaFormuleChosen: false });
+          this.setState({ subcapitolChosen: false });
+          return { fiseFormule: updatedFiseFormule };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
@@ -182,6 +247,15 @@ class FisaFormuleDB extends Component {
 
   setSubcapitolFisaFormule = (subcapitolFisaFormule) => {
     this.setState({ subcapitolFisaFormule });
+  };
+
+  setAdaugaFormuleChosen = () => {
+    this.setState({ adaugaFormuleChosen: true });
+  };
+
+  modalCancelHandlerAdaugaFormule = () => {
+    this.setState({ adaugaFormuleChosen: false });
+    this.setState({ subcapitolChosen: false });
   };
 
   modalCancelHandlerCapitol = () => {
@@ -275,9 +349,6 @@ class FisaFormuleDB extends Component {
                         Test
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
-                      Adauga Subcapitol
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -287,6 +358,7 @@ class FisaFormuleDB extends Component {
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             !this.state.subcapitolChosen &&
+            !this.state.adaugaFormuleChosen &&
             subcapitoleFiltrate.map((subcapitol) => (
               <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
                 <Card>
@@ -337,7 +409,14 @@ class FisaFormuleDB extends Component {
                         Exercitii
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
+                    <Button
+                      variant="outlined"
+                      href="#outlined-buttons"
+                      onClick={() => {
+                        this.setSubcapitolChosen(subcapitol);
+                        this.setAdaugaFormuleChosen();
+                      }}
+                    >
                       Adauga formule
                     </Button>
                   </Stack>
@@ -349,6 +428,7 @@ class FisaFormuleDB extends Component {
           {/* ------------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
+            !this.state.adaugaFormuleChosen &&
             fiseFormuleFiltrate.map((fisaFormule) => (
               <Grid key={fisaFormule._id} item container spacing={2} marginLeft={0.1}>
                 <Card>
@@ -375,6 +455,47 @@ class FisaFormuleDB extends Component {
                 </Card>
               </Grid>
             ))}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales sa adaug o fisa de teorie atunci ajung la formular */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            this.state.adaugaFormuleChosen && <Backdrop />}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            this.state.adaugaFormuleChosen && (
+              <ModalFisaTeorie
+                title="Adauga fisa formule"
+                numeButon="Adauga fisa formule"
+                canCancel
+                canConfirm
+                onCancel={this.modalCancelHandlerAdaugaFormule}
+                onConfirm={this.modalConfirmHandler}
+                confirmText="Confirma"
+              >
+                <Paper>
+                  <TextField
+                    id="Titlu"
+                    label="Titlu"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Titlu"
+                    inputRef={this.titluFormuleRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Descriere"
+                    label="Descriere"
+                    style={{ width: '100%', borderColor: 'yellow !important' }}
+                    rows={5}
+                    margin="dense"
+                    placeholder="Descriere"
+                    inputRef={this.descriereFormuleRef}
+                    multiline
+                  />
+                </Paper>
+              </ModalFisaTeorie>
+            )}
         </Grid>
       </container>
     );

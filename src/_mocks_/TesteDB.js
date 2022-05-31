@@ -2,14 +2,28 @@ import React, { Component } from 'react';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack, Button, Grid, Container } from '@mui/material';
+import {
+  Box,
+  Card,
+  Link,
+  Typography,
+  Stack,
+  Button,
+  Grid,
+  Container,
+  Paper,
+  TextField
+} from '@mui/material';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 // import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 // import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
 // import DoneOutlineRoundedIcon from '@mui/icons-material/DoneOutlineRounded';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { styled } from '@mui/material/styles';
+import ModalFisaTeorie from './ModalFiseTeorie';
+import Backdrop from '../components/Backdrop/Backdrop';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol } from '../utils/mockImages';
@@ -37,6 +51,16 @@ class TesteDB extends Component {
 
   constructor(props) {
     super(props);
+
+    this.exercitiu1TestRef = React.createRef();
+    this.exercitiu2TestRef = React.createRef();
+    this.exercitiu3TestRef = React.createRef();
+    this.exercitiu4TestRef = React.createRef();
+    this.exercitiu5TestRef = React.createRef();
+    this.exercitiu6TestRef = React.createRef();
+    this.exercitiu7TestRef = React.createRef();
+    this.exercitiu8TestRef = React.createRef();
+    this.exercitiu9TestRef = React.createRef();
 
     this.state = {
       isLoading: false,
@@ -66,7 +90,8 @@ class TesteDB extends Component {
       testTrimis: false,
       punctajTest: 0,
       veziRezolvare: false,
-      nrExercitiuAles: -1
+      nrExercitiuAles: -1,
+      adaugaTestChosen: false
     };
   }
 
@@ -108,13 +133,11 @@ class TesteDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data:', resData.data);
-
         this.setState({ capitole: resData.data.capitole });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -159,7 +182,7 @@ class TesteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -203,7 +226,7 @@ class TesteDB extends Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -358,6 +381,92 @@ class TesteDB extends Component {
     }
   };
 
+  setAdaugaTestChosen = () => {
+    this.setState({ adaugaTestChosen: true });
+  };
+
+  modalCancelHandlerAdaugaTest = () => {
+    this.setState({ adaugaTestChosen: false });
+    this.setState({ capitolChosen: false });
+  };
+
+  modalConfirmHandler = () => {
+    const exercitiu1 = this.exercitiu1TestRef.current.value;
+    const exercitiu2 = this.exercitiu2TestRef.current.value;
+    const exercitiu3 = this.exercitiu3TestRef.current.value;
+    const exercitiu4 = this.exercitiu4TestRef.current.value;
+    const exercitiu5 = this.exercitiu5TestRef.current.value;
+    const exercitiu6 = this.exercitiu6TestRef.current.value;
+    const exercitiu7 = this.exercitiu7TestRef.current.value;
+    const exercitiu8 = this.exercitiu8TestRef.current.value;
+    const exercitiu9 = this.exercitiu9TestRef.current.value;
+
+    const requestBody = {
+      query: `
+      mutation{
+        adaugaTest(testInput: {
+          capitol_id: "${this.state.capitol._id}",
+          exercitiu1_id:"${exercitiu1}",
+          exercitiu2_id:"${exercitiu2}",
+          exercitiu3_id:"${exercitiu3}",
+          exercitiu4_id:"${exercitiu4}",
+          exercitiu5_id:"${exercitiu5}",
+          exercitiu6_id:"${exercitiu6}",
+          exercitiu7_id:"${exercitiu7}",
+          exercitiu8_id:"${exercitiu8}",
+          exercitiu9_id:"${exercitiu9}"
+        }){
+          _id
+          capitol_id
+          exercitiu1_id
+          exercitiu2_id
+          exercitiu3_id
+          exercitiu4_id
+          exercitiu5_id
+          exercitiu6_id
+          exercitiu7_id
+          exercitiu8_id
+          exercitiu9_id
+          
+        }
+      }
+      `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState((prevState) => {
+          const test = {
+            _id: resData.data.adaugaTest._id,
+            capitol_id: resData.data.adaugaTest.capitol_id,
+            titlu: resData.data.adaugaExercitiu.titlu,
+            descriere: resData.data.adaugaExercitiu.descriere
+          };
+          const updatedTeste = [...prevState.teste];
+          updatedTeste.push(test);
+          this.setState({ adaugaTestChosen: false });
+          this.setState({ capitolChosen: false });
+          return { teste: updatedTeste };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   modalCancelHandlerCapitol = () => {
     // console.log(this.state.isLoading);
     // console.log('testCapitol', this.state.testCapitol);
@@ -455,7 +564,14 @@ class TesteDB extends Component {
                         Teste
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
+                    <Button
+                      variant="outlined"
+                      href="#outlined-buttons"
+                      onClick={() => {
+                        this.setCapitolChosen(capitol);
+                        this.setAdaugaTestChosen();
+                      }}
+                    >
                       Adauga test
                     </Button>
                   </Stack>
@@ -780,6 +896,107 @@ class TesteDB extends Component {
                 </section>
               </Grid>
             )}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales sa adaug un test atunci ajung la formular */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen && !this.state.testChosen && this.state.adaugaTestChosen && (
+            <Backdrop />
+          )}
+          {this.state.capitolChosen && !this.state.testChosen && this.state.adaugaExercitiuChosen && (
+            <ModalFisaTeorie
+              title="Adauga test"
+              numeButon="Adauga test"
+              canCancel
+              canConfirm
+              onCancel={this.modalCancelHandlerAdaugaTest}
+              onConfirm={this.modalConfirmHandler}
+              confirmText="Confirma"
+            >
+              <Paper>
+                <TextField
+                  id="Exercitiu 1"
+                  label="Exercitiu 1"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 1"
+                  inputRef={this.exercitiu1TestRef}
+                  multiline
+                />
+                <TextField
+                  id="Exercitiu 2"
+                  label="Exercitiu 2"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 2"
+                  inputRef={this.exercitiu2TestRef}
+                  multiline
+                />
+                <TextField
+                  id="Exercitiu 3"
+                  label="Exercitiu 3"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 3"
+                  inputRef={this.exercitiu1TestRef}
+                  multiline
+                />
+                <TextField
+                  id="Exercitiu 4"
+                  label="Exercitiu 4"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 4"
+                  inputRef={this.exercitiu1TestRef}
+                  multiline
+                />
+                <TextField
+                  id="Exercitiu 5"
+                  label="Exercitiu 5"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 5"
+                  inputRef={this.exercitiu1TestRef}
+                  multiline
+                />
+                <TextField
+                  id="Exercitiu 6"
+                  label="Exercitiu 6"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 6"
+                  inputRef={this.exercitiu1TestRef}
+                  multiline
+                />
+                <TextField
+                  id="Exercitiu 7"
+                  label="Exercitiu 7"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 7"
+                  inputRef={this.exercitiu7TestRef}
+                  multiline
+                />
+                <TextField
+                  id="Exercitiu 8"
+                  label="Exercitiu 8"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 8"
+                  inputRef={this.exercitiu8TestRef}
+                  multiline
+                />
+                <TextField
+                  id="Exercitiu 9"
+                  label="Exercitiu 9"
+                  style={{ width: '100%' }}
+                  margin="dense"
+                  placeholder="Exercitiu 9"
+                  inputRef={this.exercitiu9TestRef}
+                  multiline
+                />
+              </Paper>
+            </ModalFisaTeorie>
+          )}
         </Grid>
       </container>
     );

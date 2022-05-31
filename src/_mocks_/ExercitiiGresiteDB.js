@@ -790,9 +790,6 @@ class ExercitiiGresiteDB extends Component {
                         Test
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
-                      Adauga Subcapitol
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -849,12 +846,9 @@ class ExercitiiGresiteDB extends Component {
                           this.fetchExercitiiGresite();
                         }}
                       >
-                        Exercitii
+                        Exercitii gresite
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
-                      Adauga Exercitii
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>

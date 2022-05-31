@@ -17,13 +17,16 @@ import {
   Divider,
   IconButton,
   RadioGroup,
-  FormControlLabel
+  FormControlLabel,
+  Paper,
+  TextField
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
-
+import ModalFisaTeorie from './ModalFiseTeorie';
+import Backdrop from '../components/Backdrop/Backdrop';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import Iconify from '../components/Iconify';
 import Scrollbar from '../components/Scrollbar';
@@ -52,6 +55,15 @@ class ExercitiiDB extends Component {
   constructor(props) {
     super(props);
 
+    this.cerintaExercitiuRef = React.createRef();
+    this.rezolvareExercitiuRef = React.createRef();
+    this.raspunsCorectExercitiuRef = React.createRef();
+    this.nivelDificultateExercitiuRef = React.createRef();
+    this.varianta1ExercitiuRef = React.createRef();
+    this.varianta2ExercitiuRef = React.createRef();
+    this.varianta3ExercitiuRef = React.createRef();
+    this.varianta4ExercitiuRef = React.createRef();
+
     this.anchorRef = React.createRef();
 
     this.state = {
@@ -79,7 +91,8 @@ class ExercitiiDB extends Component {
       btn4: false,
       filtru: 'Toate',
       openSort: null,
-      order: 'asc'
+      order: 'asc',
+      adaugaExercitiuChosen: false
     };
   }
 
@@ -316,6 +329,98 @@ class ExercitiiDB extends Component {
       this.setState({ btn3: false });
       this.setState({ btn4: true });
     }
+  };
+
+  setAdaugaExercitiuChosen = () => {
+    this.setState({ adaugaExercitiuChosen: true });
+  };
+
+  modalCancelHandlerAdaugaExercitiu = () => {
+    this.setState({ adaugaExercitiuChosen: false });
+    this.setState({ subcapitolChosen: false });
+  };
+
+  modalConfirmHandler = () => {
+    const cerinta = this.cerintaExercitiuRef.current.value;
+    const rezolvare = this.rezolvareExercitiuRef.current.value;
+    const raspunsCorect = this.raspunsCorectExercitiuRef.current.value;
+    const nivelDificultate = this.nivelDificultateExercitiuRef.current.value;
+    const varianta1 = this.varianta1ExercitiuRef.current.value;
+    const varianta2 = this.varianta2ExercitiuRef.current.value;
+    const varianta3 = this.varianta3ExercitiuRef.current.value;
+    const varianta4 = this.varianta4ExercitiuRef.current.value;
+
+    if (cerinta == null) {
+      return;
+    }
+    const requestBody = {
+      query: `
+      mutation{
+        adaugaExercitiu(exercitiuInput: {
+          subcapitol_id: "${this.state.subcapitolExercitii._id}",
+          cerinta: "${cerinta}"
+          rezolvare:"${rezolvare}",
+          varianta1:"${varianta1}",
+          varianta2:"${varianta2}",
+          varianta3:"${varianta3}",
+          varianta4:"${varianta4}",
+          raspuns_corect:"${raspunsCorect}",
+          nivel_dif:"${nivelDificultate}"
+        }){
+          _id
+          subcapitol_id
+          cerinta
+          rezolvare
+          varianta2
+          varianta1
+          varianta3
+          varianta4
+          raspuns_corect
+          nivel_dif
+        }
+      }
+      `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState((prevState) => {
+          const exercitiu = {
+            _id: resData.data.adaugaExercitiu._id,
+            subcapitol_id: resData.data.adaugaExercitiu.subcapitol_id,
+            cerinta: resData.data.adaugaExercitiu.cerinta,
+            rezolvare: resData.data.adaugaExercitiu.rezolvare,
+            varianta1: resData.data.adaugaExercitiu.varianta1,
+            varianta2: resData.data.adaugaExercitiu.varianta2,
+            varianta3: resData.data.adaugaExercitiu.varianta3,
+            varianta4: resData.data.adaugaExercitiu.varianta4,
+            raspuns_corect: resData.data.adaugaExercitiu.raspuns_corect,
+            nivel_dif: resData.data.adaugaExercitiu.nivel_dif
+          };
+          const updatedExercitii = [...prevState.exercitii];
+          updatedExercitii.push(exercitiu);
+          console.log('updated/Exercitii', updatedExercitii);
+          this.setState({ adaugaExercitiuChosen: false });
+          this.setState({ subcapitolChosen: false });
+          return { exercitii: updatedExercitii };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   modalCancelHandlerCapitol = () => {
@@ -682,9 +787,6 @@ class ExercitiiDB extends Component {
                         Test
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
-                      Adauga Subcapitol
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -741,7 +843,14 @@ class ExercitiiDB extends Component {
                         Exercitii
                       </Button>
                     </Stack>
-                    <Button variant="outlined" href="#outlined-buttons">
+                    <Button
+                      variant="outlined"
+                      href="#outlined-buttons"
+                      onClick={() => {
+                        this.setSubcapitolChosen(subcapitol);
+                        this.setAdaugaExercitiuChosen();
+                      }}
+                    >
                       Adauga Exercitii
                     </Button>
                   </Stack>
@@ -1058,6 +1167,103 @@ class ExercitiiDB extends Component {
                   </Stack>
                 </section>
               </Grid>
+            )}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {/* daca am ales sa adaug un exercitiu atunci ajung la formular */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            !this.state.exercitiuChosen &&
+            this.state.adaugaExercitiuChosen && <Backdrop />}
+          {this.state.capitolChosen &&
+            this.state.subcapitolChosen &&
+            !this.state.exercitiuChosen &&
+            this.state.adaugaExercitiuChosen && (
+              <ModalFisaTeorie
+                title="Adauga exercitiu"
+                numeButon="Adauga exercitiu"
+                canCancel
+                canConfirm
+                onCancel={this.modalCancelHandlerAdaugaExercitiu}
+                onConfirm={this.modalConfirmHandler}
+                confirmText="Confirma"
+              >
+                <Paper>
+                  <TextField
+                    id="Cerinta"
+                    label="Cerinta"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Cerinta"
+                    inputRef={this.cerintaExercitiuRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Rezolvare"
+                    label="Rezolvare"
+                    style={{ width: '100%', borderColor: 'yellow !important' }}
+                    rows={5}
+                    margin="dense"
+                    placeholder="Rezolvare"
+                    inputRef={this.rezolvareExercitiuRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Raspuns corect"
+                    label="Raspuns corect"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Raspuns corect"
+                    inputRef={this.raspunsCorectExercitiuRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Nivel dificultate"
+                    label="Nivel dificultate"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Nivel dificultate"
+                    inputRef={this.nivelDificultateExercitiuRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Varianta 1"
+                    label="Varianta 1"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Varianta 1"
+                    inputRef={this.varianta1ExercitiuRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Varianta 2"
+                    label="Varianta 2"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Varianta 2"
+                    inputRef={this.varianta2ExercitiuRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Varianta 3"
+                    label="Varianta 3"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Varianta 3"
+                    inputRef={this.varianta3ExercitiuRef}
+                    multiline
+                  />
+                  <TextField
+                    id="Varianta 4"
+                    label="Varianta 4"
+                    style={{ width: '100%' }}
+                    margin="dense"
+                    placeholder="Varianta 4"
+                    inputRef={this.varianta4ExercitiuRef}
+                    multiline
+                  />
+                </Paper>
+              </ModalFisaTeorie>
             )}
         </Grid>
       </container>
