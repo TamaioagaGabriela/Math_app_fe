@@ -41,7 +41,8 @@ class FisaFormuleDB extends Component {
       subcapitolFisaFormule: [],
       capitolChosen: false,
       subcapitolChosen: false,
-      adaugaFormuleChosen: false
+      adaugaFormuleChosen: false,
+      accesariFiseFormule: []
     };
   }
 
@@ -49,6 +50,7 @@ class FisaFormuleDB extends Component {
     this.fetchCapitole();
     this.fetchSubcapitole();
     this.fetchFiseFormule();
+    this.fetchAccesariFiseFormule();
   }
 
   componentWillUnmount() {
@@ -83,13 +85,11 @@ class FisaFormuleDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data:', resData.data);
-
         this.setState({ capitole: resData.data.capitole });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -119,16 +119,15 @@ class FisaFormuleDB extends Component {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error('Failed!');
         }
+
         return res.json();
       })
       .then((resData) => {
-        // console.log('fetch resData.data:', resData.data);
-
         this.setState({ subcapitole: resData.data.subcapitole });
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         this.setState({ isLoading: false });
       });
   };
@@ -230,6 +229,109 @@ class FisaFormuleDB extends Component {
       });
   };
 
+  fetchAccesariFiseFormule = () => {
+    const requestBody = {
+      query: `
+        query{
+            accesariFise{
+              _id
+              user {
+                _id
+                username
+                email
+                nume
+                prenume
+              }  
+              fisa{
+                _id
+                titlu
+                descriere
+                subcapitol_id
+              }
+              createdAt
+              updatedAt  
+            }
+          }
+        `
+    };
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState({ accesariFiseFormule: resData.data.accesariFise });
+        this.setState({ isLoading: false });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
+  };
+
+  adaugaAccesare = async (subcapitolId) => {
+    const fiseFormuleFiltrate = this.state.fiseFormule.filter(
+      (fisaFormule) => fisaFormule.subcapitol_id === subcapitolId
+    );
+
+    const fisaId = fiseFormuleFiltrate[0]._id;
+    console.log('fisaID', fisaId);
+    console.log('this.context.userId', this.context.userId);
+    const requestBody = {
+      query: `
+        mutation{
+          adaugaAccesareFisa(accesareFisaInput: {
+            fisa_id:"${fisaId}",
+            user_id:"${this.context.userId}"
+          }){
+          _id
+            user{
+              _id
+            }
+            fisa{
+              _id
+              subcapitol_id
+            }
+          }
+        }
+        `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        console.log(resData.data.adaugaAccesareFisa._id);
+        console.log('accesari dupa adaugare', this.state.accesariFiseFormule);
+        //  const updatedAccesari = [...prevState.accesariFiseFormule];
+        //  updatedExercitii.push(exercitiu);
+        //  console.log('updated/Exercitii', updatedExercitii);
+        //  this.setState({ adaugaExercitiuChosen: false });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
@@ -285,6 +387,13 @@ class FisaFormuleDB extends Component {
       (fisaFormule) => fisaFormule.subcapitol_id === this.state.subcapitolFisaFormule._id
     );
 
+    console.log('accesari', this.state.accesariFiseFormule);
+    // interesant
+    // console.log(
+    //   fiseFormuleFiltrate[0] && fiseFormuleFiltrate[0]._id
+    //     ? fiseFormuleFiltrate[0]._id
+    //     : fiseFormuleFiltrate[0]
+    // );
     return (
       <container>
         <Stack
@@ -348,11 +457,7 @@ class FisaFormuleDB extends Component {
                       <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setCapitolChosen(capitol)}
-                        // href="/dashboard/subcapitol"
-                      >
+                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
                         Subcapitole
                       </Button>
                       <Button variant="outlined" href="#outlined-buttons">
@@ -411,7 +516,10 @@ class FisaFormuleDB extends Component {
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Button
                         variant="outlined"
-                        onClick={() => this.setSubcapitolChosen(subcapitol)}
+                        onClick={() => {
+                          this.setSubcapitolChosen(subcapitol);
+                          this.adaugaAccesare(subcapitol._id);
+                        }}
                       >
                         Fise Formule
                       </Button>

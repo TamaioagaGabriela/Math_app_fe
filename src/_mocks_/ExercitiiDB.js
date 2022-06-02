@@ -55,6 +55,12 @@ const CapitolImgStyle = styled('img')({
 class ExercitiiDB extends Component {
   static context = AuthContext;
 
+  static getColorPercentage = (percentage) => {
+    if (percentage === 100) return 'success';
+    if (percentage < 50) return 'warning';
+    return 'info';
+  };
+
   constructor(props) {
     super(props);
 
@@ -333,6 +339,57 @@ class ExercitiiDB extends Component {
     }
   };
 
+  getPercentagePerSubcapitol = (subcapitolId) => {
+    const exercitiiFiltrate =
+      this.state.filtru === 'Toate'
+        ? this.state.exercitii.filter((exercitiu) => exercitiu.subcapitol_id === subcapitolId)
+        : this.state.exercitii.filter(
+            (exercitiu) =>
+              exercitiu.subcapitol_id === subcapitolId &&
+              exercitiu.nivel_dif === this.state.filtru.toString().toLowerCase()
+          );
+
+    const exercitiiFiltrateSortate = this.applySort(exercitiiFiltrate);
+
+    // toate rezolvarile CORECTE ale unui user, filtrate in functie de subcapitol
+    const rezolvariExercitiiFiltrate = this.state.rezolvariExercitii.filter(
+      (rezolvare) =>
+        rezolvare.user._id === this.context.userId &&
+        rezolvare.status === 'CORECT' &&
+        rezolvare.exercitiu.subcapitol_id === subcapitolId
+    );
+
+    const idExercitiiRezolvate = rezolvariExercitiiFiltrate.map((x) => x.exercitiu._id);
+    // console.log('idExercitiiRezolvate', idExercitiiRezolvate);
+
+    const rezolvariExercitiiDistincte = [...new Set(idExercitiiRezolvate)];
+    // console.log('rezolvariExercitiiDistincte', rezolvariExercitiiDistincte);
+
+    if (
+      Number.isNaN(
+        parseInt((100 * rezolvariExercitiiDistincte.length) / exercitiiFiltrateSortate.length, 10)
+      )
+    )
+      return 0;
+
+    return parseInt(
+      (100 * rezolvariExercitiiDistincte.length) / exercitiiFiltrateSortate.length,
+      10
+    );
+  };
+
+  // getPercentagePerExercitiu = (exercitiuId) => {
+  //   // toate rezolvarile CORECTE ale unui user, filtrate in functie de exercitiu
+  //   const rezolvariExercitiiFiltrate = this.state.rezolvariExercitii.filter(
+  //     (rezolvare) =>
+  //       rezolvare.user._id === this.context.userId &&
+  //       rezolvare.status === 'CORECT' &&
+  //       rezolvare.exercitiu._id === exercitiuId
+  //   );
+  //   if (rezolvariExercitiiFiltrate.length === 1) return 'Rezolvat';
+  //   return 'Nerezolvat';
+  // };
+
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
@@ -364,29 +421,19 @@ class ExercitiiDB extends Component {
     this.setState({ selectedAnswer: variantaAleasa });
   };
 
-  // onlyUnique = (value, index) => this.indexOf(value) === index;
-
   setColorButton = (btn) => {
     if (btn === 'btn1') {
-      this.setState({ btn1: true });
-      this.setState({ btn2: false });
-      this.setState({ btn3: false });
-      this.setState({ btn4: false });
+      this.setState({ btn1: true, btn2: false });
+      this.setState({ btn3: false, btn4: false });
     } else if (btn === 'btn2') {
-      this.setState({ btn1: false });
-      this.setState({ btn2: true });
-      this.setState({ btn3: false });
-      this.setState({ btn4: false });
+      this.setState({ btn1: false, btn2: true });
+      this.setState({ btn3: false, btn4: false });
     } else if (btn === 'btn3') {
-      this.setState({ btn1: false });
-      this.setState({ btn2: false });
-      this.setState({ btn3: true });
-      this.setState({ btn4: false });
+      this.setState({ btn1: false, btn2: false });
+      this.setState({ btn3: true, btn4: false });
     } else if (btn === 'btn4') {
-      this.setState({ btn1: false });
-      this.setState({ btn2: false });
-      this.setState({ btn3: false });
-      this.setState({ btn4: true });
+      this.setState({ btn1: false, btn2: false });
+      this.setState({ btn3: false, btn4: true });
     }
   };
 
@@ -473,7 +520,6 @@ class ExercitiiDB extends Component {
           updatedExercitii.push(exercitiu);
           console.log('updated/Exercitii', updatedExercitii);
           this.setState({ adaugaExercitiuChosen: false });
-          // this.setState({ subcapitolChosen: false });
           return { exercitii: updatedExercitii };
         });
       })
@@ -498,10 +544,7 @@ class ExercitiiDB extends Component {
     this.setState({ selectedAnswer: null });
     this.setState({ eroare: null });
     this.setState({ rezultatExercitiu: null });
-    this.setState({ btn1: false });
-    this.setState({ btn2: false });
-    this.setState({ btn3: false });
-    this.setState({ btn4: false });
+    this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
   };
 
   modalCancelHandlerRaspuns = () => {
@@ -509,10 +552,7 @@ class ExercitiiDB extends Component {
     this.setState({ selectedAnswer: null });
     this.setState({ eroare: null });
     this.setState({ rezultatExercitiu: null });
-    this.setState({ btn1: false });
-    this.setState({ btn2: false });
-    this.setState({ btn3: false });
-    this.setState({ btn4: false });
+    this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
   };
 
@@ -521,10 +561,7 @@ class ExercitiiDB extends Component {
     this.setState({ selectedAnswer: null });
     this.setState({ eroare: null });
     this.setState({ rezultatExercitiu: null });
-    this.setState({ btn1: false });
-    this.setState({ btn2: false });
-    this.setState({ btn3: false });
-    this.setState({ btn4: false });
+    this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
     this.setState({ veziRezolvare: false });
   };
@@ -599,11 +636,8 @@ class ExercitiiDB extends Component {
 
     let sorted = [];
 
-    console.log('stabilizedThis[[0]]', stabilizedThis[0]);
-
     if (this.state.order === 'asc') {
       sorted = stabilizedThis.sort((a, b) => {
-        console.log('aaaaaaaa', a.nivel_dif);
         if (
           (a.nivel_dif === 'ridicat' && b.nivel_dif === 'mediu') ||
           (a.nivel_dif === 'mediu' && b.nivel_dif === 'scazut')
@@ -646,40 +680,8 @@ class ExercitiiDB extends Component {
           );
 
     const exercitiiFiltrateSortate = this.applySort(exercitiiFiltrate);
-    const rezolvariExercitiiFiltrate = this.state.rezolvariExercitii.filter(
-      (rezolvare) =>
-        // rezolvare.exercitiu.subcapitol_id === this.state.subcapitolExercitii._id &&
-        rezolvare.user._id === this.context.userId && rezolvare.status === 'CORECT'
-    );
-
-    console.log('exercitiiFiltrateSortate', exercitiiFiltrateSortate);
-
-    console.log('exercitiiFiltrate length', exercitiiFiltrateSortate.length);
-
-    console.log('rezolvari ', rezolvariExercitiiFiltrate);
-
-    const idExercitiiRezolvate = rezolvariExercitiiFiltrate.map((x) => x.exercitiu._id);
-    console.log('idExercitiiRezolvate', idExercitiiRezolvate);
-    const rezolvariExercitiiDistincte = [...new Set(idExercitiiRezolvate)];
-    console.log('rezolvariExercitiiDistincte', rezolvariExercitiiDistincte);
-
-    const progressPercentage = parseInt(
-      (100 * rezolvariExercitiiDistincte.length) / exercitiiFiltrateSortate.length,
-      10
-    );
 
     console.log(subcapitoleFiltrate);
-
-    // console.log(
-    //   parseInt((100 * rezolvariExercitiiDistincte.length) / exercitiiFiltrateSortate.length, 10)
-    // );
-
-    // idExercitiiRezolvate.filter((x, idx) =>
-    // idExercitiiRezolvate.indexOf(x) === idx))
-
-    // const rezolvariExercitiiCorecte = rezolvariExercitiiFiltrate.filter(this.onlyUnique);
-
-    // console.log('distinct values', rezolvariExercitiiCorecte);
 
     return (
       <container>
@@ -885,11 +887,7 @@ class ExercitiiDB extends Component {
                       <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setCapitolChosen(capitol)}
-                        // href="/dashboard/subcapitol"
-                      >
+                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
                         Subcapitole
                       </Button>
                       <Button variant="outlined" href="#outlined-buttons">
@@ -912,7 +910,9 @@ class ExercitiiDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={ExercitiiDB.getColorPercentage(
+                          this.getPercentagePerSubcapitol(subcapitol._id)
+                        )}
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -921,7 +921,9 @@ class ExercitiiDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {progressPercentage === 100 ? 'Completed' : `${progressPercentage} %`}
+                        {this.getPercentagePerSubcapitol(subcapitol._id) === 100
+                          ? 'Completed'
+                          : `${this.getPercentagePerSubcapitol(subcapitol._id)} %`}
                       </Label>
                     )}
                     <CapitolImgStyle
@@ -978,7 +980,13 @@ class ExercitiiDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.state.rezolvariExercitii.find(
+                          (rezolvare) =>
+                            rezolvare.exercitiu._id === exercitiu._id &&
+                            rezolvare.user._id === this.context.userId
+                        )
+                          ? 'Rezolvat'
+                          : 'Nerezolvat'}
                       </Label>
                     )}
                     <CapitolImgStyle alt={exercitiu._id} src={mockImgSubcapitol(exercitiu._id)} />

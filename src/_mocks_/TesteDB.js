@@ -49,6 +49,19 @@ const CapitolImgStyle = styled('img')({
 class TesteDB extends Component {
   static context = AuthContext;
 
+  static getColorPercentageTest = (percentage) => {
+    if (parseInt(percentage, 10) === 100) return 'success';
+    if (parseInt(percentage, 10) >= 50) return 'info';
+    if (parseInt(percentage, 10) < 50 && parseInt(percentage, 10) !== 0) return 'error';
+    return 'warning';
+  };
+
+  static getColorPercentage = (percentage) => {
+    if (percentage === 100) return 'success';
+    if (percentage < 50) return 'warning';
+    return 'info';
+  };
+
   constructor(props) {
     super(props);
 
@@ -91,7 +104,8 @@ class TesteDB extends Component {
       punctajTest: 0,
       veziRezolvare: false,
       nrExercitiuAles: -1,
-      adaugaTestChosen: false
+      adaugaTestChosen: false,
+      rezolvariTeste: []
     };
   }
 
@@ -99,6 +113,7 @@ class TesteDB extends Component {
     this.fetchCapitole();
     this.fetchTeste();
     this.fetchExercitii();
+    this.fetchRezolvariTeste();
   }
 
   componentWillUnmount() {
@@ -285,8 +300,6 @@ class TesteDB extends Component {
       this.state.raspunsuriCorecte.push(
         await this.state.exercitiiTest[this.state.nrIntrebare][0].raspuns_corect
       );
-      // console.log('raspunsuriTest: ', this.state.raspunsuriTestByUser);
-      // console.log('raspunsuriCorecte: ', this.state.raspunsuriCorecte);
 
       if (this.state.nrIntrebare === 8) {
         this.adaugaRezolvareTest();
@@ -301,10 +314,6 @@ class TesteDB extends Component {
   };
 
   adaugaRezolvareTest = async () => {
-    // console.log('test id ', this.state.testCapitol._id);
-    // console.log('raspunsuriTest: ', this.state.raspunsuriTestByUser);
-    // console.log('primul: ', this.state.raspunsuriTestByUser[0]);
-
     const requestBody = {
       query: `
           mutation{
@@ -344,6 +353,82 @@ class TesteDB extends Component {
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
   };
 
+  fetchRezolvariTeste = () => {
+    const requestBody = {
+      query: `
+        query{
+           rezolvariTeste{
+              _id
+              test{
+                _id
+                capitol_id
+                exercitiu1_id
+                exercitiu2_id
+                exercitiu3_id
+                exercitiu4_id
+                exercitiu5_id
+                exercitiu6_id
+                exercitiu7_id
+                exercitiu8_id
+                exercitiu9_id
+              }
+              user{
+                _id
+                email
+                username
+                parola
+                nume
+                prenume
+              }
+              punctaj
+              raspunsuri_user
+              createdAt
+              updatedAt
+            }
+          }
+        `
+    };
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState({ rezolvariTeste: resData.data.rezolvariTeste });
+        this.setState({ isLoading: false });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
+  };
+
+  getPercentagePerCapitol = (capitolId) => {
+    const testeFiltrate = this.state.teste.filter((test) => test.capitol_id === capitolId);
+
+    // toate rezolvarile CORECTE ale unui user, filtrate in functie de capitolul testului
+    const rezolvariTesteFiltrate = this.state.rezolvariTeste.filter(
+      (rezolvare) =>
+        rezolvare.user._id === this.context.userId && rezolvare.test.capitol_id === capitolId
+    );
+
+    const idTesteRezolvate = rezolvariTesteFiltrate.map((x) => x.test._id);
+    const rezolvariTesteDistincte = [...new Set(idTesteRezolvate)];
+
+    if (Number.isNaN(parseInt((100 * rezolvariTesteDistincte.length) / testeFiltrate.length, 10)))
+      return 0;
+
+    return parseInt((100 * rezolvariTesteDistincte.length) / testeFiltrate.length, 10);
+  };
+
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
@@ -359,25 +444,13 @@ class TesteDB extends Component {
 
   setColorButton = (btn) => {
     if (btn === 'btn1') {
-      this.setState({ btn1: true });
-      this.setState({ btn2: false });
-      this.setState({ btn3: false });
-      this.setState({ btn4: false });
+      this.setState({ btn1: true, btn2: false, btn3: false, btn4: false });
     } else if (btn === 'btn2') {
-      this.setState({ btn1: false });
-      this.setState({ btn2: true });
-      this.setState({ btn3: false });
-      this.setState({ btn4: false });
+      this.setState({ btn1: false, btn2: true, btn3: false, btn4: false });
     } else if (btn === 'btn3') {
-      this.setState({ btn1: false });
-      this.setState({ btn2: false });
-      this.setState({ btn3: true });
-      this.setState({ btn4: false });
+      this.setState({ btn1: false, btn2: false, btn3: true, btn4: false });
     } else if (btn === 'btn4') {
-      this.setState({ btn1: false });
-      this.setState({ btn2: false });
-      this.setState({ btn3: false });
-      this.setState({ btn4: true });
+      this.setState({ btn1: false, btn2: false, btn3: false, btn4: true });
     }
   };
 
@@ -387,7 +460,6 @@ class TesteDB extends Component {
 
   modalCancelHandlerAdaugaTest = () => {
     this.setState({ adaugaTestChosen: false });
-    // this.setState({ capitolChosen: false });
   };
 
   modalConfirmHandler = () => {
@@ -554,7 +626,9 @@ class TesteDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={TesteDB.getColorPercentage(
+                          this.getPercentagePerCapitol(capitol._id)
+                        )}
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -563,7 +637,9 @@ class TesteDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.getPercentagePerCapitol(capitol._id) === 100
+                          ? 'Completed'
+                          : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
                     <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
@@ -597,16 +673,43 @@ class TesteDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={TesteDB.getColorPercentageTest(
+                          this.state.rezolvariTeste.find(
+                            (rezolvare) =>
+                              rezolvare.test._id === test._id &&
+                              rezolvare.user._id === this.context.userId
+                          )
+                            ? `${
+                                this.state.rezolvariTeste.find(
+                                  (rezolvare) =>
+                                    rezolvare.test._id === test._id &&
+                                    rezolvare.user._id === this.context.userId
+                                ).punctaj
+                              }`
+                            : 0
+                        )}
                         sx={{
                           zIndex: 9,
                           top: 16,
                           right: 16,
                           position: 'absolute',
                           textTransform: 'uppercase'
+                          // fontSize: 13
                         }}
                       >
-                        {status}
+                        {this.state.rezolvariTeste.find(
+                          (rezolvare) =>
+                            rezolvare.test._id === test._id &&
+                            rezolvare.user._id === this.context.userId
+                        )
+                          ? `${
+                              this.state.rezolvariTeste.find(
+                                (rezolvare) =>
+                                  rezolvare.test._id === test._id &&
+                                  rezolvare.user._id === this.context.userId
+                              ).punctaj
+                            } / 100`
+                          : 'Nerezolvat'}
                       </Label>
                     )}
                     <CapitolImgStyle alt={test._id} src={mockImgCapitol(test.capitol_id)} />
