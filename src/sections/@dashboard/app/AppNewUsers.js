@@ -1,6 +1,7 @@
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Card, Typography } from '@mui/material';
+import { Card, Typography, Link } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
 // component
@@ -38,14 +39,17 @@ const TOTAL = 1352831;
 
 export default function AppNewUsers() {
   return (
-    <RootStyle>
-      <IconWrapperStyle>
-        <Iconify icon="ant-design:apple-filled" width={24} height={24} />
-      </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        New Users
-      </Typography>
-    </RootStyle>
+    <Link underline="none" component={RouterLink} to="/dashboard/formule">
+      <RootStyle>
+        <IconWrapperStyle>
+          <Iconify icon="ant-design:apple-filled" width={24} height={24} />
+        </IconWrapperStyle>
+        {/* <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography> */}
+        <Typography variant="h3">Formule</Typography>
+        <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+          New Users
+        </Typography>
+      </RootStyle>
+    </Link>
   );
 }

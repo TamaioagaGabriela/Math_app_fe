@@ -19,7 +19,10 @@ import {
   RadioGroup,
   FormControlLabel,
   Paper,
-  TextField
+  TextField,
+  FormControl,
+  InputLabel,
+  Select
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
@@ -92,7 +95,8 @@ class ExercitiiDB extends Component {
       filtru: 'Toate',
       openSort: null,
       order: 'asc',
-      adaugaExercitiuChosen: false
+      adaugaExercitiuChosen: false,
+      rezolvariExercitii: []
     };
   }
 
@@ -100,6 +104,7 @@ class ExercitiiDB extends Component {
     this.fetchCapitole();
     this.fetchSubcapitole();
     this.fetchExercitii();
+    this.fetchRezolvariExercitii();
   }
 
   componentWillUnmount() {
@@ -224,6 +229,58 @@ class ExercitiiDB extends Component {
       });
   };
 
+  fetchRezolvariExercitii = () => {
+    const requestBody = {
+      query: `
+        query{
+            rezolvariExercitii{
+              _id
+              exercitiu{
+                _id
+                subcapitol_id
+                rezolvare
+                raspuns_corect
+                nivel_dif
+              }
+              user{
+                _id
+                email
+                username
+                parola
+                nume
+                prenume
+              }
+              status
+              raspuns_user
+              createdAt
+              updatedAt
+            }
+          }
+        `
+    };
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState({ rezolvariExercitii: resData.data.rezolvariExercitii });
+        this.setState({ isLoading: false });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
+  };
+
   adaugaRezolvareExercitiu = async () => {
     if (this.state.selectedAnswer) {
       this.setState({ eroare: null });
@@ -307,6 +364,8 @@ class ExercitiiDB extends Component {
     this.setState({ selectedAnswer: variantaAleasa });
   };
 
+  // onlyUnique = (value, index) => this.indexOf(value) === index;
+
   setColorButton = (btn) => {
     if (btn === 'btn1') {
       this.setState({ btn1: true });
@@ -337,7 +396,7 @@ class ExercitiiDB extends Component {
 
   modalCancelHandlerAdaugaExercitiu = () => {
     this.setState({ adaugaExercitiuChosen: false });
-    this.setState({ subcapitolChosen: false });
+    // this.setState({ subcapitolChosen: false });
   };
 
   modalConfirmHandler = () => {
@@ -414,7 +473,7 @@ class ExercitiiDB extends Component {
           updatedExercitii.push(exercitiu);
           console.log('updated/Exercitii', updatedExercitii);
           this.setState({ adaugaExercitiuChosen: false });
-          this.setState({ subcapitolChosen: false });
+          // this.setState({ subcapitolChosen: false });
           return { exercitii: updatedExercitii };
         });
       })
@@ -587,8 +646,40 @@ class ExercitiiDB extends Component {
           );
 
     const exercitiiFiltrateSortate = this.applySort(exercitiiFiltrate);
+    const rezolvariExercitiiFiltrate = this.state.rezolvariExercitii.filter(
+      (rezolvare) =>
+        // rezolvare.exercitiu.subcapitol_id === this.state.subcapitolExercitii._id &&
+        rezolvare.user._id === this.context.userId && rezolvare.status === 'CORECT'
+    );
 
     console.log('exercitiiFiltrateSortate', exercitiiFiltrateSortate);
+
+    console.log('exercitiiFiltrate length', exercitiiFiltrateSortate.length);
+
+    console.log('rezolvari ', rezolvariExercitiiFiltrate);
+
+    const idExercitiiRezolvate = rezolvariExercitiiFiltrate.map((x) => x.exercitiu._id);
+    console.log('idExercitiiRezolvate', idExercitiiRezolvate);
+    const rezolvariExercitiiDistincte = [...new Set(idExercitiiRezolvate)];
+    console.log('rezolvariExercitiiDistincte', rezolvariExercitiiDistincte);
+
+    const progressPercentage = parseInt(
+      (100 * rezolvariExercitiiDistincte.length) / exercitiiFiltrateSortate.length,
+      10
+    );
+
+    console.log(subcapitoleFiltrate);
+
+    // console.log(
+    //   parseInt((100 * rezolvariExercitiiDistincte.length) / exercitiiFiltrateSortate.length, 10)
+    // );
+
+    // idExercitiiRezolvate.filter((x, idx) =>
+    // idExercitiiRezolvate.indexOf(x) === idx))
+
+    // const rezolvariExercitiiCorecte = rezolvariExercitiiFiltrate.filter(this.onlyUnique);
+
+    // console.log('distinct values', rezolvariExercitiiCorecte);
 
     return (
       <container>
@@ -620,6 +711,24 @@ class ExercitiiDB extends Component {
               {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
               {/* Filtrare exercitii */}
               {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
+              <Button
+                variant="outlined"
+                style={{
+                  display:
+                    this.state.capitolChosen &&
+                    this.state.subcapitolChosen &&
+                    !this.state.exercitiuChosen &&
+                    this.context.role === 'Profesor'
+                      ? 'inline'
+                      : 'none'
+                }}
+                onClick={() => {
+                  // this.setSubcapitolChosen(subcapitol);
+                  this.setAdaugaExercitiuChosen();
+                }}
+              >
+                Adauga Exercitii
+              </Button>
               <Button
                 disableRipple
                 variant="outlined"
@@ -812,7 +921,7 @@ class ExercitiiDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {progressPercentage === 100 ? 'Completed' : `${progressPercentage} %`}
                       </Label>
                     )}
                     <CapitolImgStyle
@@ -843,16 +952,6 @@ class ExercitiiDB extends Component {
                         Exercitii
                       </Button>
                     </Stack>
-                    <Button
-                      variant="outlined"
-                      href="#outlined-buttons"
-                      onClick={() => {
-                        this.setSubcapitolChosen(subcapitol);
-                        this.setAdaugaExercitiuChosen();
-                      }}
-                    >
-                      Adauga Exercitii
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -1217,20 +1316,25 @@ class ExercitiiDB extends Component {
                     inputRef={this.raspunsCorectExercitiuRef}
                     multiline
                   />
-                  <TextField
-                    id="Nivel dificultate"
-                    label="Nivel dificultate"
-                    style={{ width: '100%' }}
-                    margin="dense"
-                    placeholder="Nivel dificultate"
-                    inputRef={this.nivelDificultateExercitiuRef}
-                    multiline
-                  />
+                  <FormControl sx={{ minWidth: 180 }} margin="dense">
+                    <InputLabel id="demo-simple-select-helper-label">Nivel dificultate</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-helper-label"
+                      id="demo-simple-select-helper"
+                      label="Nivel dificultate"
+                      inputRef={this.nivelDificultateExercitiuRef}
+                    >
+                      <MenuItem value="scazut">Scazut</MenuItem>
+                      <MenuItem value="mediu">Mediu</MenuItem>
+                      <MenuItem value="ridicat">Ridicat</MenuItem>
+                    </Select>
+                  </FormControl>
                   <TextField
                     id="Varianta 1"
                     label="Varianta 1"
-                    style={{ width: '100%' }}
+                    style={{ width: '20%' }}
                     margin="dense"
+                    marginRight="100"
                     placeholder="Varianta 1"
                     inputRef={this.varianta1ExercitiuRef}
                     multiline
@@ -1238,7 +1342,7 @@ class ExercitiiDB extends Component {
                   <TextField
                     id="Varianta 2"
                     label="Varianta 2"
-                    style={{ width: '100%' }}
+                    style={{ width: '20%' }}
                     margin="dense"
                     placeholder="Varianta 2"
                     inputRef={this.varianta2ExercitiuRef}
@@ -1247,7 +1351,7 @@ class ExercitiiDB extends Component {
                   <TextField
                     id="Varianta 3"
                     label="Varianta 3"
-                    style={{ width: '100%' }}
+                    style={{ width: '20%' }}
                     margin="dense"
                     placeholder="Varianta 3"
                     inputRef={this.varianta3ExercitiuRef}
@@ -1256,7 +1360,7 @@ class ExercitiiDB extends Component {
                   <TextField
                     id="Varianta 4"
                     label="Varianta 4"
-                    style={{ width: '100%' }}
+                    style={{ width: '20%' }}
                     margin="dense"
                     placeholder="Varianta 4"
                     inputRef={this.varianta4ExercitiuRef}

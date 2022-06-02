@@ -1,6 +1,7 @@
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Card, Typography } from '@mui/material';
+import { Card, Typography, Link } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
 //
@@ -38,14 +39,20 @@ const TOTAL = 1723315;
 
 export default function AppItemOrders() {
   return (
-    <RootStyle>
-      <IconWrapperStyle>
-        <Iconify icon="ant-design:windows-filled" width={24} height={24} />
-      </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Item Orders
-      </Typography>
-    </RootStyle>
+    <Link underline="none" component={RouterLink} to="/dashboard/exercitii">
+      <RootStyle>
+        <IconWrapperStyle>
+          <Iconify icon="ant-design:windows-filled" width={24} height={24} />
+        </IconWrapperStyle>
+        {/* <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography> */}
+        <Typography variant="h4">Exercitii</Typography>
+        <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
+          Item Orders
+        </Typography>
+        {/* <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+          Item Orders
+        </Typography> */}
+      </RootStyle>
+    </Link>
   );
 }

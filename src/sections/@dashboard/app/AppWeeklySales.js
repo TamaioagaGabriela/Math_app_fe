@@ -1,6 +1,7 @@
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Card, Typography } from '@mui/material';
+import { Card, Typography, Link } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
 // component
@@ -38,14 +39,16 @@ const TOTAL = 714000;
 
 export default function AppWeeklySales() {
   return (
-    <RootStyle>
-      <IconWrapperStyle>
-        <Iconify icon="ant-design:android-filled" width={24} height={24} />
-      </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Weekly Sales
-      </Typography>
-    </RootStyle>
+    <Link underline="none" component={RouterLink} to="/dashboard/teorie">
+      <RootStyle>
+        <IconWrapperStyle>
+          <Iconify icon="ant-design:android-filled" width={24} height={24} />
+        </IconWrapperStyle>
+        <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+        <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+          Teorie
+        </Typography>
+      </RootStyle>
+    </Link>
   );
 }

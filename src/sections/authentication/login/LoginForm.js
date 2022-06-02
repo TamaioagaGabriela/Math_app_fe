@@ -59,6 +59,8 @@ export default function LoginForm() {
             token
             role
             clasa
+            nume
+            email
             tokenExpiration
           }
         }
@@ -97,17 +99,19 @@ export default function LoginForm() {
               resData.data.login.userId,
               resData.data.login.role,
               resData.data.login.clasa,
+              resData.data.login.nume,
+              resData.data.login.email,
               resData.data.login.tokenExpiration
             );
             context.userId = resData.data.login.userId;
             context.clasa = resData.data.login.clasa;
             context.token = resData.data.login.token;
+            context.role = resData.data.login.role;
+            context.nume = resData.data.login.nume;
+            context.email = resData.data.login.email;
             console.log('context', context);
           }
-          // console.log('resData = ', resData);
-          // console.log('context user id', context.userId);
           // console.log('context clasa id', context.clasa);
-
           // navigate('/dashboard/app', { replace: true });
 
           navigate('/dashboard/app', {

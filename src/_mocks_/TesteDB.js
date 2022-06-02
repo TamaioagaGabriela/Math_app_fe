@@ -387,7 +387,7 @@ class TesteDB extends Component {
 
   modalCancelHandlerAdaugaTest = () => {
     this.setState({ adaugaTestChosen: false });
-    this.setState({ capitolChosen: false });
+    // this.setState({ capitolChosen: false });
   };
 
   modalConfirmHandler = () => {
@@ -458,7 +458,7 @@ class TesteDB extends Component {
           const updatedTeste = [...prevState.teste];
           updatedTeste.push(test);
           this.setState({ adaugaTestChosen: false });
-          this.setState({ capitolChosen: false });
+          // this.setState({ capitolChosen: false });
           return { teste: updatedTeste };
         });
       })
@@ -525,6 +525,23 @@ class TesteDB extends Component {
           >
             Inapoi
           </Button>
+          <Button
+            variant="outlined"
+            href="#outlined-buttons"
+            style={{
+              display:
+                this.state.capitolChosen &&
+                !this.state.testChosen &&
+                this.context.role === 'Profesor'
+                  ? 'inline'
+                  : 'none'
+            }}
+            onClick={() => {
+              this.setAdaugaTestChosen();
+            }}
+          >
+            Adauga test
+          </Button>
         </Stack>
 
         <Grid container spacing={3}>
@@ -564,16 +581,6 @@ class TesteDB extends Component {
                         Teste
                       </Button>
                     </Stack>
-                    <Button
-                      variant="outlined"
-                      href="#outlined-buttons"
-                      onClick={() => {
-                        this.setCapitolChosen(capitol);
-                        this.setAdaugaTestChosen();
-                      }}
-                    >
-                      Adauga test
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -902,7 +909,7 @@ class TesteDB extends Component {
           {this.state.capitolChosen && !this.state.testChosen && this.state.adaugaTestChosen && (
             <Backdrop />
           )}
-          {this.state.capitolChosen && !this.state.testChosen && this.state.adaugaExercitiuChosen && (
+          {this.state.capitolChosen && !this.state.testChosen && this.state.adaugaTestChosen && (
             <ModalFisaTeorie
               title="Adauga test"
               numeButon="Adauga test"

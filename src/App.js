@@ -16,6 +16,9 @@ export default function App() {
   const [token, setToken] = useState(null);
   const [role, setRole] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [nume, setNume] = useState(null);
+  const [clasa, setClasa] = useState(null);
+  const [email, setEmail] = useState(null);
   const [tokenExpiration, setTokenExpiration] = useState(null);
   const [login, setLogin] = useState({ token, userId, role });
   const [logout, setLogout] = useState({ token: null, userId: null, role: null });
@@ -25,11 +28,14 @@ export default function App() {
     () => ({
       token,
       userId,
-      login: (token, userId, role, tokenExpiration) => {},
+      login: (token, userId, role, clasa, nume, email, tokenExpiration) => {},
       logout: () => {
         setToken(null);
         setRole(null);
         setUserId(null);
+        setClasa(null);
+        setNume(null);
+        setEmail(null);
       }
     }),
     [token, userId]

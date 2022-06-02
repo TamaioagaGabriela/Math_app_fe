@@ -1,6 +1,7 @@
 import React, { Component, useContext } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Stack, Button, Grid, Container, Typography, Card, Box } from '@mui/material';
+import { Stack, Button, Grid, Container, Typography, Card, Box, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Spinner from '../components/Spinner/Spinner';
 import AuthContext from '../context/auth-context';
@@ -104,9 +105,9 @@ export class UtilizatorDB extends Component {
           //   justifyContent="space-between"
           sx={{ mb: 5 }}
         >
-          <Button variant="outlined" onClick={() => this.modalHandleClickInapoi()}>
-            Inapoi
-          </Button>
+          <Link to="/dashboard/app" color="inherit" underline="hover" component={RouterLink}>
+            <Button variant="outlined">Inapoi</Button>
+          </Link>
         </Stack>
 
         <Grid container spacing={3} marginLeft="0.1%">

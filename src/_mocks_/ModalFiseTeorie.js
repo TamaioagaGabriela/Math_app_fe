@@ -3,7 +3,18 @@ import React from 'react';
 import './ModalTerenuri.css';
 
 const modal = (props) => (
-  <Grid container spacing={0} direction="column" alignItems="center" justify="center">
+  <Grid
+    container
+    position="absolute"
+    width="50%"
+    left="35%"
+    marginLeft="auto"
+    spacing={0}
+    direction="column"
+    alignItems="center"
+    justify="center"
+    // marginTop="-45%"
+  >
     <Card marginBottom="0px">
       <header className="modal__header">
         <h1>{props.title}</h1>

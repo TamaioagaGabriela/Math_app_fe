@@ -12,7 +12,11 @@ import {
   Grid,
   CardMedia,
   Paper,
-  TextField
+  TextField,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControl
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
@@ -234,7 +238,7 @@ class CapitolDB extends Component {
           updatedSubcapitole.push(subcapitol);
           console.log('push subcapitol', updatedSubcapitole);
           this.setState({ adaugaSubcapitolChosen: false });
-          this.setState({ capitolChosen: false });
+          // this.setState({ capitolChosen: false });
           return { subcapitole: updatedSubcapitole };
         });
       })
@@ -353,7 +357,7 @@ class CapitolDB extends Component {
           const updatedFiseTeorie = [...prevState.fiseTeorie];
           updatedFiseTeorie.push(fisaTeorie);
           this.setState({ adaugaTeorieChosen: false });
-          this.setState({ subcapitolChosen: false });
+          // this.setState({ subcapitolChosen: false });
           return { fiseTeorie: updatedFiseTeorie };
         });
       })
@@ -394,12 +398,12 @@ class CapitolDB extends Component {
 
   modalCancelHandlerAdaugaTeorie = () => {
     this.setState({ adaugaTeorieChosen: false });
-    this.setState({ subcapitolChosen: false });
+    // this.setState({ subcapitolChosen: false });
   };
 
   modalCancelHandlerAdaugaSubcapitol = () => {
     this.setState({ adaugaSubcapitolChosen: false });
-    this.setState({ capitolChosen: false });
+    // this.setState({ capitolChosen: false });
   };
 
   modalCancelHandlerAdaugaCapitol = () => {
@@ -465,10 +469,47 @@ class CapitolDB extends Component {
           >
             <Button
               variant="outlined"
-              style={{ visibility: this.state.capitolChosen ? 'hidden' : 'visible' }}
+              style={{
+                visibility:
+                  !this.state.capitolChosen && this.context.role === 'Profesor'
+                    ? 'visible'
+                    : 'hidden'
+              }}
               onClick={() => this.setAdaugaCapitolChosen()}
             >
               Adauga capitol
+            </Button>
+            <Button
+              variant="outlined"
+              style={{
+                display:
+                  this.state.capitolChosen &&
+                  !this.state.subcapitolChosen &&
+                  this.context.role === 'Profesor'
+                    ? 'inline'
+                    : 'none'
+              }}
+              onClick={() => {
+                // this.setCapitolChosen(capitol);
+                this.setAdaugaSubcapitolChosen();
+              }}
+            >
+              Adauga Subcapitol
+            </Button>
+            <Button
+              variant="outlined"
+              style={{
+                display:
+                  this.state.subcapitolChosen && this.context.role === 'Profesor'
+                    ? 'inline'
+                    : 'none'
+              }}
+              onClick={() => {
+                // this.setSubcapitolChosen(subcapitol);
+                this.setAdaugaTeorieChosen();
+              }}
+            >
+              Adauga Teorie
             </Button>
           </Stack>
         </Stack>
@@ -516,15 +557,6 @@ class CapitolDB extends Component {
                         Test
                       </Button>
                     </Stack>
-                    <Button
-                      variant="outlined"
-                      onClick={() => {
-                        this.setCapitolChosen(capitol);
-                        this.setAdaugaSubcapitolChosen();
-                      }}
-                    >
-                      Adauga Subcapitol
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -534,7 +566,7 @@ class CapitolDB extends Component {
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             !this.state.subcapitolChosen &&
-            !this.state.adaugaSubcapitolChosen &&
+            // !this.state.adaugaSubcapitolChosen &&
             !this.state.adaugaTeorieChosen &&
             subcapitoleFiltrate.map((subcapitol) => (
               <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
@@ -586,15 +618,6 @@ class CapitolDB extends Component {
                         Exercitii
                       </Button>
                     </Stack>
-                    <Button
-                      variant="outlined"
-                      onClick={() => {
-                        this.setSubcapitolChosen(subcapitol);
-                        this.setAdaugaTeorieChosen();
-                      }}
-                    >
-                      Adauga Teorie
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -605,7 +628,7 @@ class CapitolDB extends Component {
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
             !this.state.adaugaSubcapitolChosen &&
-            !this.state.adaugaTeorieChosen &&
+            // !this.state.adaugaTeorieChosen &&
             fiseTeorieFiltrate.map((fisaTeorie) => (
               <Grid
                 key={fisaTeorie._id}
@@ -738,17 +761,25 @@ class CapitolDB extends Component {
                   inputRef={this.titluCapitolRef}
                   multiline
                 />
-
-                <TextField
-                  id="Clasa"
-                  label="Clasa"
-                  style={{ width: '100%', borderColor: 'yellow !important' }}
-                  rows={5}
-                  margin="dense"
-                  placeholder="Clasa"
-                  inputRef={this.clasaCapitolRef}
-                  multiline
-                />
+                <FormControl sx={{ minWidth: 150 }} margin="dense">
+                  <InputLabel id="demo-simple-select-helper-label">Clasa</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    // value={clasa}
+                    label="Clasa"
+                    inputRef={this.clasaCapitolRef}
+                  >
+                    <MenuItem value={5}>Clasa a V-a</MenuItem>
+                    <MenuItem value={6}>Clasa a VI-a</MenuItem>
+                    <MenuItem value={7}>Clasa a VII-a</MenuItem>
+                    <MenuItem value={8}>Clasa a VIII-a</MenuItem>
+                    <MenuItem value={9}>Clasa a IX-a</MenuItem>
+                    <MenuItem value={10}>Clasa a X-a</MenuItem>
+                    <MenuItem value={11}>Clasa a XI-a</MenuItem>
+                    <MenuItem value={12}>Clasa a XII-a</MenuItem>
+                  </Select>
+                </FormControl>
               </Paper>
             </ModalFisaTeorie>
           )}

@@ -39,6 +39,8 @@ export default function AccountPopover() {
     context.token = null;
     context.userId = null;
     context.role = null;
+    context.nume = null;
+    context.clasa = null;
     navigate('/dashboard/app', { replace: true });
   };
 
@@ -87,10 +89,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+            {context.nume}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {context.email}
           </Typography>
         </Box>
 

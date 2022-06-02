@@ -222,7 +222,6 @@ class FisaFormuleDB extends Component {
           const updatedFiseFormule = [...prevState.fiseFormule];
           updatedFiseFormule.push(fisaFormule);
           this.setState({ adaugaFormuleChosen: false });
-          this.setState({ subcapitolChosen: false });
           return { fiseFormule: updatedFiseFormule };
         });
       })
@@ -255,7 +254,6 @@ class FisaFormuleDB extends Component {
 
   modalCancelHandlerAdaugaFormule = () => {
     this.setState({ adaugaFormuleChosen: false });
-    this.setState({ subcapitolChosen: false });
   };
 
   modalCancelHandlerCapitol = () => {
@@ -302,6 +300,18 @@ class FisaFormuleDB extends Component {
             onClick={() => this.modalHandleClickInapoi()}
           >
             Inapoi
+          </Button>
+          <Button
+            variant="outlined"
+            style={{
+              display:
+                this.state.subcapitolChosen && this.context.role === 'Profesor' ? 'inline' : 'none'
+            }}
+            onClick={() => {
+              this.setAdaugaFormuleChosen();
+            }}
+          >
+            Adauga fisa formule
           </Button>
         </Stack>
 
@@ -409,16 +419,6 @@ class FisaFormuleDB extends Component {
                         Exercitii
                       </Button>
                     </Stack>
-                    <Button
-                      variant="outlined"
-                      href="#outlined-buttons"
-                      onClick={() => {
-                        this.setSubcapitolChosen(subcapitol);
-                        this.setAdaugaFormuleChosen();
-                      }}
-                    >
-                      Adauga formule
-                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -428,7 +428,6 @@ class FisaFormuleDB extends Component {
           {/* ------------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
-            !this.state.adaugaFormuleChosen &&
             fiseFormuleFiltrate.map((fisaFormule) => (
               <Grid key={fisaFormule._id} item container spacing={2} marginLeft={0.1}>
                 <Card>
@@ -501,5 +500,5 @@ class FisaFormuleDB extends Component {
     );
   }
 }
-
+FisaFormuleDB.contextType = AuthContext;
 export default FisaFormuleDB;

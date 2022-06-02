@@ -52,32 +52,14 @@ class ClasaPopover extends Component {
 
   constructor(props) {
     super(props);
-    // const navigate = Navigate();
 
     this.anchorRef = React.createRef();
-    // const [clasa, setClasa] = useState('0');
     this.state = {
       open: false
-      //   anchorRef: useRef(null)
     };
   }
 
-  //   handleOpen = () => {
-  //     this.setState({ open: true });
-  //   };
-
-  //   handleClose = () => {
-  //     this.setState({ open: false });
-  //   };
-
-  //   handleClick2 = () => {
-  //     // console.log('####', val);
-  //     this.setState({ open: false });
-  //   };
-
   render() {
-    // console.log(this.state.open);
-    // console.log(this.state.anchorRef);
     return (
       <>
         <Button
@@ -120,7 +102,6 @@ class ClasaPopover extends Component {
             ))}
           </Box>
         </MenuPopover>
-        {/* {this.state.open && <Navigate to="/dashboard/app" />} */}
       </>
     );
   }
