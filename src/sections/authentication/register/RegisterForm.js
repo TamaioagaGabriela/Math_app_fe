@@ -3,7 +3,17 @@ import { useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { useNavigate } from 'react-router-dom';
 // material
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
+import {
+  Stack,
+  TextField,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControl,
+  FormHelperText
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
 // import fetch from 'node-fetch';
@@ -25,7 +35,9 @@ export default function RegisterForm() {
       .required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    password: Yup.string().required('Password is required'),
+    username: Yup.string().required('Username is required'),
+    role: Yup.string().required('Role is required')
   });
 
   const formik = useFormik({
@@ -36,11 +48,12 @@ export default function RegisterForm() {
       password: '',
       username: '',
       clasa: '',
+      role: '',
       emailTutore: ''
     },
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
-      const { email, firstName, lastName, password, username, clasa, emailTutore } = values;
+      const { email, firstName, lastName, password, username, clasa, role, emailTutore } = values;
 
       setSendingEmail(true);
       // Super interesting to me that you can mess with the upper and lower case
@@ -68,7 +81,7 @@ export default function RegisterForm() {
 
       const requestBody = {
         query: `
-        mutation adaugaUser($username: String!, $parola: String!, $nume: String!, $prenume: String!, $email: String!, $emailTutore: String!, $clasa: String!) {
+        mutation adaugaUser($username: String!, $parola: String!, $nume: String!, $prenume: String!, $email: String!, $emailTutore: String!, $role: String!, $clasa: String!) {
           adaugaUser(userInput: {
             username: $username
             parola: $parola
@@ -76,6 +89,7 @@ export default function RegisterForm() {
             prenume: $prenume
             email: $email
             email_tutore: $emailTutore
+            role: $role
             clasa: $clasa
           }){
             _id
@@ -84,6 +98,7 @@ export default function RegisterForm() {
             prenume
             email
             email_tutore
+            role
             clasa
           }
         }
@@ -95,11 +110,10 @@ export default function RegisterForm() {
           prenume: firstName,
           email,
           emailTutore,
+          role,
           clasa
         }
       };
-
-      // console.log(JSON.stringify(requestBody));
 
       fetch('http://localhost:8000/graphql', {
         method: 'POST',
@@ -112,6 +126,7 @@ export default function RegisterForm() {
           // console.log(res.status);
           if (res.status !== 200 && res.status !== 201) {
             // console.log('Acest username/email deja exista');
+            console.log(requestBody);
             setErrorMessage('Acest username/email deja exista');
 
             setIsSubmitting(false);
@@ -127,7 +142,7 @@ export default function RegisterForm() {
           // console.log(resData);
         })
         .catch((err) => {
-          // console.log(err);
+          console.log(err);
         });
     }
   });
@@ -165,17 +180,52 @@ export default function RegisterForm() {
               fullWidth
               label="Username"
               {...getFieldProps('username')}
-              error={Boolean(touched.lastName && errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
+              error={Boolean(touched.username && errors.username)}
+              helperText={touched.username && errors.username}
             />
+            <FormControl
+              sx={{ minWidth: 150 }}
+              margin="dense"
+              error={Boolean(touched.role && errors.role)}
+              helperText={touched.username && errors.username}
+            >
+              <InputLabel id="demo-simple-select-helper-label">Rol</InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                label="role"
+                {...getFieldProps('role')}
+              >
+                <MenuItem value="Profesor">Profesor</MenuItem>
+                <MenuItem value="Student">Elev</MenuItem>
+              </Select>
+              <FormHelperText
+                error={Boolean(touched.role && errors.role)}
+                helperText={touched.username && errors.username}
+              >
+                This is required!
+              </FormHelperText>
+            </FormControl>
 
-            <TextField
-              fullWidth
-              label="Clasa"
-              {...getFieldProps('clasa')}
-              error={Boolean(touched.lastName && errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
-            />
+            <FormControl sx={{ minWidth: 150 }} margin="dense">
+              <InputLabel id="demo-simple-select-helper-label">Clasa</InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                // value={clasa}
+                label="Clasa"
+                {...getFieldProps('clasa')}
+              >
+                <MenuItem value="5">Clasa a V-a</MenuItem>
+                <MenuItem value="6">Clasa a VI-a</MenuItem>
+                <MenuItem value="7">Clasa a VII-a</MenuItem>
+                <MenuItem value="8">Clasa a VIII-a</MenuItem>
+                <MenuItem value="9">Clasa a IX-a</MenuItem>
+                <MenuItem value="10">Clasa a X-a</MenuItem>
+                <MenuItem value="11">Clasa a XI-a</MenuItem>
+                <MenuItem value="12">Clasa a XII-a</MenuItem>
+              </Select>
+            </FormControl>
           </Stack>
 
           <TextField

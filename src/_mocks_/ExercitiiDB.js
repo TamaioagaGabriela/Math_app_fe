@@ -662,7 +662,10 @@ class ExercitiiDB extends Component {
 
   render() {
     console.log(this.state.isLoading);
-    console.log(this.state.openFilter, this.state.filtru, this.state.order);
+
+    const capitoleFiltrate = this.state.capitole.filter(
+      (capitol) => capitol.clasa === this.context.clasa
+    );
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
@@ -856,7 +859,7 @@ class ExercitiiDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            this.state.capitole.map((capitol) => (
+            capitoleFiltrate.map((capitol) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 {/* <CapitolItem capitol={capitol} /> */}
                 <Card>

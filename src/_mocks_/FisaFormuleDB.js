@@ -404,6 +404,10 @@ class FisaFormuleDB extends Component {
   render() {
     console.log('isLoading', this.state.isLoading);
 
+    const capitoleFiltrate = this.state.capitole.filter(
+      (capitol) => capitol.clasa === this.context.clasa
+    );
+
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
     );
@@ -452,7 +456,7 @@ class FisaFormuleDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            this.state.capitole.map((capitol) => (
+            capitoleFiltrate.map((capitol) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 {/* <CapitolItem capitol={capitol} /> */}
                 <Card>

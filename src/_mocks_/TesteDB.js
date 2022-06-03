@@ -540,8 +540,6 @@ class TesteDB extends Component {
   };
 
   modalCancelHandlerCapitol = () => {
-    // console.log(this.state.isLoading);
-    // console.log('testCapitol', this.state.testCapitol);
     this.setState({
       capitolChosen: false,
       capitol: []
@@ -556,7 +554,6 @@ class TesteDB extends Component {
     this.setState({ raspunsuriCorecte: [] });
     this.setState({ nrIntrebare: -1, punctajTest: 0 });
     this.setState({ testTrimis: false });
-    // console.log(this.state.raspunsuriTestByUser);
   };
 
   modalCancelHandlerRezolvareExercitiu = () => {
@@ -575,6 +572,10 @@ class TesteDB extends Component {
   };
 
   render() {
+    const capitoleFiltrate = this.state.capitole.filter(
+      (capitol) => capitol.clasa === this.context.clasa
+    );
+
     const testeFiltrate = this.state.teste.filter(
       (test) => test.capitol_id === this.state.capitol._id
     );
@@ -618,9 +619,8 @@ class TesteDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            this.state.capitole.map((capitol) => (
+            capitoleFiltrate.map((capitol) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
-                {/* <CapitolItem capitol={capitol} /> */}
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
                     {status && (

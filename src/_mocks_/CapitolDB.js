@@ -41,6 +41,12 @@ const CapitolImgStyle = styled('img')({
 class CapitolDB extends Component {
   static context = AuthContext;
 
+  static getColorPercentage = (percentage) => {
+    if (percentage === 100) return 'success';
+    if (percentage < 50) return 'warning';
+    return 'info';
+  };
+
   constructor(props) {
     super(props);
 
@@ -64,7 +70,8 @@ class CapitolDB extends Component {
       openFilter: false,
       adaugaTeorieChosen: false,
       adaugaCapitolChosen: false,
-      adaugaSubcapitolChosen: false
+      adaugaSubcapitolChosen: false,
+      accesariFiseTeorie: []
     };
   }
 
@@ -72,6 +79,7 @@ class CapitolDB extends Component {
     this.fetchCapitole();
     this.fetchSubcapitole();
     this.fetchFiseTeorie();
+    this.fetchAccesariFiseTeorie();
   }
 
   componentWillUnmount() {
@@ -366,6 +374,130 @@ class CapitolDB extends Component {
       });
   };
 
+  fetchAccesariFiseTeorie = () => {
+    const requestBody = {
+      query: `
+        query{
+            accesariTeorie{
+              _id
+              user {
+                _id
+                username
+                email
+                nume
+                prenume
+              }  
+              teorie{
+                _id
+                subcapitol_id
+                titlu
+                descriere
+                link_video
+              }
+              createdAt
+              updatedAt  
+            }
+          }
+        `
+    };
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState({ accesariFiseTeorie: resData.data.accesariTeorie });
+        this.setState({ isLoading: false });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
+  };
+
+  adaugaAccesare = async (subcapitolId) => {
+    const fiseTeorieFiltrate = this.state.fiseTeorie.filter(
+      (fisaTeorie) => fisaTeorie.subcapitol_id === subcapitolId
+    );
+
+    const fisaId = fiseTeorieFiltrate[0]._id;
+    console.log('fisaID', fisaId);
+    console.log('this.context.userId', this.context.userId);
+    const requestBody = {
+      query: `
+        mutation{
+           adaugaAccesareTeorie(accesareTeorieInput: {
+              teorie_id:"${fisaId}",
+            user_id:"${this.context.userId}"
+            }){
+            _id
+              user{
+                _id
+              }
+              teorie{
+                _id
+                subcapitol_id
+              }
+              createdAt
+              updatedAt
+            }
+        }
+        `
+    };
+    const tkn = this.context.token;
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tkn}`
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.fetchAccesariFiseTeorie();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  getPercentagePerCapitol = (capitolId) => {
+    const subcapitoleFiltrate = this.state.subcapitole.filter(
+      (subcapitol) => subcapitol.capitol_id === capitolId
+    );
+
+    let count = 0;
+
+    for (let i = 0; i < subcapitoleFiltrate.length; i += 1) {
+      // toate accesarile unui user, filtrate in functie de capitol
+      const accesariSubcapitole = this.state.accesariFiseTeorie.filter(
+        (accesare) =>
+          accesare.user._id === this.context.userId &&
+          accesare.teorie.subcapitol_id === subcapitoleFiltrate[i]._id
+      );
+
+      if (accesariSubcapitole.length >= 1) count += 1;
+    }
+
+    if (Number.isNaN(parseInt((100 * count) / subcapitoleFiltrate.length, 10))) return 0;
+
+    return parseInt((100 * count) / subcapitoleFiltrate.length, 10);
+  };
+
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
     this.setCapitol(capitol);
@@ -432,7 +564,6 @@ class CapitolDB extends Component {
   render() {
     console.log(this.state.isLoading);
     console.log(this.state.openFilter);
-    console.log(this.context);
 
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
@@ -444,6 +575,7 @@ class CapitolDB extends Component {
       (fisaTeorie) => fisaTeorie.subcapitol_id === this.state.subcapitolTeorie._id
     );
 
+    console.log('accesariFiseTeorie', this.state.accesariFiseTeorie);
     return (
       <container>
         <Stack
@@ -523,7 +655,9 @@ class CapitolDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={CapitolDB.getColorPercentage(
+                          this.getPercentagePerCapitol(capitol._id)
+                        )}
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -532,7 +666,9 @@ class CapitolDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.getPercentagePerCapitol(capitol._id) === 100
+                          ? 'Completed'
+                          : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
                     <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
@@ -546,11 +682,7 @@ class CapitolDB extends Component {
                       <Typography variant="subtitle1">Clasa a {capitol.clasa}-a</Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setCapitolChosen(capitol)}
-                        // href="/dashboard/subcapitol"
-                      >
+                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
                         Subcapitole
                       </Button>
                       <Button variant="outlined" href="#outlined-buttons">
@@ -575,7 +707,15 @@ class CapitolDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={
+                          this.state.accesariFiseTeorie.filter(
+                            (accesare) =>
+                              accesare.user._id === this.context.userId &&
+                              accesare.teorie.subcapitol_id === subcapitol._id
+                          ).length >= 1
+                            ? 'info'
+                            : 'warning'
+                        }
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -584,7 +724,13 @@ class CapitolDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.state.accesariFiseTeorie.filter(
+                          (accesare) =>
+                            accesare.user._id === this.context.userId &&
+                            accesare.teorie.subcapitol_id === subcapitol._id
+                        ).length >= 1
+                          ? 'Vizualizat'
+                          : 'Nevizualizat'}
                       </Label>
                     )}
                     <CapitolImgStyle
@@ -610,7 +756,10 @@ class CapitolDB extends Component {
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Button
                         variant="outlined"
-                        onClick={() => this.setSubcapitolChosen(subcapitol)}
+                        onClick={() => {
+                          this.setSubcapitolChosen(subcapitol);
+                          this.adaugaAccesare(subcapitol._id);
+                        }}
                       >
                         Teorie
                       </Button>

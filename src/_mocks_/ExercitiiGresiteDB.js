@@ -388,8 +388,6 @@ class ExercitiiGresiteDB extends Component {
   };
 
   setExercitiiGresiteUser = async (listaRezolvariExercitii) => {
-    // console.log(this.state.listaRezolvariExercitii);
-    // console.log('listaaaaaa: ', listaRezolvariExercitii);
     await this.setState((prevState) => ({
       exercitiiGresiteUser: listaRezolvariExercitii.filter(
         (exercitiuRezolvat) =>
@@ -400,8 +398,6 @@ class ExercitiiGresiteDB extends Component {
   };
 
   setExercitiiGresiteUserAll = async (listaRezolvariExercitii) => {
-    // console.log(this.state.listaRezolvariExercitii);
-    // console.log('listaaaaaa: ', listaRezolvariExercitii);
     await this.setState((prevState) => ({
       exercitiiGresiteUserAll: listaRezolvariExercitii.filter(
         (exercitiuRezolvat) => exercitiuRezolvat.user._id === this.context.userId
@@ -452,10 +448,7 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ selectedAnswer: null });
     this.setState({ eroare: null });
     this.setState({ rezultatExercitiu: null });
-    this.setState({ btn1: false });
-    this.setState({ btn2: false });
-    this.setState({ btn3: false });
-    this.setState({ btn4: false });
+    this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
     this.setState({ veziRezolvare: false });
     this.setState({ exercitiiGresiteUser: [] });
@@ -477,8 +470,6 @@ class ExercitiiGresiteDB extends Component {
       this.state.exercitiuChosen &&
       !this.state.raspunsTrimis
     ) {
-      // console.log('modalCancelHandlerExercitiu');
-
       this.modalCancelHandlerExercitiu();
     } else if (
       this.state.capitolChosen &&
@@ -487,7 +478,6 @@ class ExercitiiGresiteDB extends Component {
       this.state.raspunsTrimis &&
       !this.state.veziRezolvare
     ) {
-      // console.log('modalCancelHandlerRaspuns');
       this.modalCancelHandlerRaspuns();
     } else if (
       this.state.capitolChosen &&
@@ -535,8 +525,6 @@ class ExercitiiGresiteDB extends Component {
 
     let sorted = [];
 
-    console.log('stabilizedThis[[0]]', stabilizedThis);
-
     if (this.state.order === 'asc') {
       sorted = stabilizedThis.sort((a, b) => {
         console.log('aaaaaaaa', a.nivel_dif);
@@ -564,10 +552,13 @@ class ExercitiiGresiteDB extends Component {
 
   render() {
     console.log(this.state.isLoading);
-    console.log(this.state.openFilter, this.state.filtru, this.state.order);
 
     console.log('exercitiiGresiteUserAll', this.state.exercitiiGresiteUserAll);
     console.log(this.state.exercitiiGresiteCount);
+
+    const capitoleFiltrate = this.state.capitole.filter(
+      (capitol) => capitol.clasa === this.context.clasa
+    );
 
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === this.state.capitol._id
@@ -748,9 +739,8 @@ class ExercitiiGresiteDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            this.state.capitole.map((capitol) => (
+            capitoleFiltrate.map((capitol) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
-                {/* <CapitolItem capitol={capitol} /> */}
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
                     {status && (
