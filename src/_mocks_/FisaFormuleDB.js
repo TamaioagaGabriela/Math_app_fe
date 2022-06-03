@@ -25,6 +25,12 @@ const CapitolImgStyle = styled('img')({
 class FisaFormuleDB extends Component {
   static context = AuthContext;
 
+  static getColorPercentage = (percentage) => {
+    if (percentage === 100) return 'success';
+    if (percentage < 50) return 'warning';
+    return 'info';
+  };
+
   constructor(props) {
     super(props);
 
@@ -320,16 +326,34 @@ class FisaFormuleDB extends Component {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData.data.adaugaAccesareFisa._id);
-        console.log('accesari dupa adaugare', this.state.accesariFiseFormule);
-        //  const updatedAccesari = [...prevState.accesariFiseFormule];
-        //  updatedExercitii.push(exercitiu);
-        //  console.log('updated/Exercitii', updatedExercitii);
-        //  this.setState({ adaugaExercitiuChosen: false });
+        this.fetchAccesariFiseFormule();
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  getPercentagePerCapitol = (capitolId) => {
+    const subcapitoleFiltrate = this.state.subcapitole.filter(
+      (subcapitol) => subcapitol.capitol_id === capitolId
+    );
+
+    let count = 0;
+
+    for (let i = 0; i < subcapitoleFiltrate.length; i += 1) {
+      // toate accesarile unui user, filtrate in functie de capitol
+      const accesariSubcapitole = this.state.accesariFiseFormule.filter(
+        (accesare) =>
+          accesare.user._id === this.context.userId &&
+          accesare.fisa.subcapitol_id === subcapitoleFiltrate[i]._id
+      );
+
+      if (accesariSubcapitole.length >= 1) count += 1;
+    }
+
+    if (Number.isNaN(parseInt((100 * count) / subcapitoleFiltrate.length, 10))) return 0;
+
+    return parseInt((100 * count) / subcapitoleFiltrate.length, 10);
   };
 
   setCapitolChosen = (capitol) => {
@@ -388,12 +412,14 @@ class FisaFormuleDB extends Component {
     );
 
     console.log('accesari', this.state.accesariFiseFormule);
+
     // interesant
     // console.log(
     //   fiseFormuleFiltrate[0] && fiseFormuleFiltrate[0]._id
     //     ? fiseFormuleFiltrate[0]._id
     //     : fiseFormuleFiltrate[0]
     // );
+
     return (
       <container>
         <Stack
@@ -434,7 +460,9 @@ class FisaFormuleDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={FisaFormuleDB.getColorPercentage(
+                          this.getPercentagePerCapitol(capitol._id)
+                        )}
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -443,7 +471,9 @@ class FisaFormuleDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.getPercentagePerCapitol(capitol._id) === 100
+                          ? 'Completed'
+                          : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
                     <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
@@ -481,7 +511,15 @@ class FisaFormuleDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={
+                          this.state.accesariFiseFormule.filter(
+                            (accesare) =>
+                              accesare.user._id === this.context.userId &&
+                              accesare.fisa.subcapitol_id === subcapitol._id
+                          ).length >= 1
+                            ? 'info'
+                            : 'warning'
+                        }
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -490,7 +528,13 @@ class FisaFormuleDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.state.accesariFiseFormule.filter(
+                          (accesare) =>
+                            accesare.user._id === this.context.userId &&
+                            accesare.fisa.subcapitol_id === subcapitol._id
+                        ).length >= 1
+                          ? 'Vizualizat'
+                          : 'Nevizualizat'}
                       </Label>
                     )}
                     <CapitolImgStyle
