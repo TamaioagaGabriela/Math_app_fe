@@ -2,24 +2,27 @@ import { merge } from 'lodash';
 import ReactApexChart from 'react-apexcharts';
 // material
 import { Card, CardHeader, Box } from '@mui/material';
+import React, { useContext, useState } from 'react';
 //
 import { BaseOptionChart } from '../../../components/charts';
+import AuthContext from '../../../context/auth-context';
+import CapitolDB from '../../../_mocks_/CapitolDB';
 
 // ----------------------------------------------------------------------
 
 const CHART_DATA = [
   {
-    name: 'Team A',
+    name: 'Exercitii',
     type: 'column',
     data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
   },
   {
-    name: 'Team B',
+    name: 'Teorie',
     type: 'area',
     data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
   },
   {
-    name: 'Team C',
+    name: 'Teste',
     type: 'line',
     data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
   }
@@ -57,6 +60,55 @@ export default function AppWebsiteVisits() {
       }
     }
   });
+
+  const context = useContext(AuthContext);
+
+  const ceva = CapitolDB.getColorPercentage(50);
+
+  console.log('FROM DASHBOARD', context, ceva);
+
+  const [capitole, setCapitole] = useState(null);
+  const [alreadyFetch, setAlreadyFetch] = useState(false);
+
+  const fetchCapitole = async () => {
+    const requestBody = {
+      query: `
+        query{
+            capitole{
+                _id
+                titlu
+                clasa
+            }
+        }
+        `
+    };
+
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        setCapitole(resData.data.capitole);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  if (!alreadyFetch) {
+    setAlreadyFetch(true);
+    fetchCapitole();
+  }
+  console.log('text pt dume', capitole);
 
   return (
     <Card>

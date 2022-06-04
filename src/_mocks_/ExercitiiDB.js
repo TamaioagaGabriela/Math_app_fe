@@ -61,6 +61,13 @@ class ExercitiiDB extends Component {
     return 'info';
   };
 
+  static getColorExercitiu = (status) => {
+    if (status === 'CORECT') return 'success';
+    if (status === 'GRESIT') return 'error';
+    if (status === 'NEREZOLVAT') return 'warning';
+    return 'info';
+  };
+
   constructor(props) {
     super(props);
 
@@ -76,7 +83,6 @@ class ExercitiiDB extends Component {
     this.anchorRef = React.createRef();
 
     this.state = {
-      isLoading: false,
       capitole: [],
       subcapitole: [],
       exercitii: [],
@@ -118,7 +124,6 @@ class ExercitiiDB extends Component {
   }
 
   fetchCapitole = () => {
-    this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query{
@@ -146,16 +151,13 @@ class ExercitiiDB extends Component {
       })
       .then((resData) => {
         this.setState({ capitole: resData.data.capitole });
-        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ isLoading: false });
       });
   };
 
   fetchSubcapitole = () => {
-    this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query{
@@ -183,16 +185,13 @@ class ExercitiiDB extends Component {
       })
       .then((resData) => {
         this.setState({ subcapitole: resData.data.subcapitole });
-        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ isLoading: false });
       });
   };
 
   fetchExercitii = () => {
-    this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query{
@@ -227,11 +226,9 @@ class ExercitiiDB extends Component {
       })
       .then((resData) => {
         this.setState({ exercitii: resData.data.exercitii });
-        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ isLoading: false });
       });
   };
 
@@ -279,11 +276,9 @@ class ExercitiiDB extends Component {
       })
       .then((resData) => {
         this.setState({ rezolvariExercitii: resData.data.rezolvariExercitii });
-        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ isLoading: false });
       });
   };
 
@@ -330,6 +325,7 @@ class ExercitiiDB extends Component {
             raspunsCorect: resData.data.adaugaRezolvareExercitiu.exercitiu.raspuns_corect
           });
           this.setState({ raspunsTrimis: true });
+          this.fetchRezolvariExercitii();
         })
         .catch((err) => {
           console.log(err);
@@ -522,7 +518,7 @@ class ExercitiiDB extends Component {
           };
           const updatedExercitii = [...prevState.exercitii];
           updatedExercitii.push(exercitiu);
-          console.log('updated/Exercitii', updatedExercitii);
+          //   console.log('updated/Exercitii', updatedExercitii);
           this.setState({ adaugaExercitiuChosen: false });
           return { exercitii: updatedExercitii };
         });
@@ -635,7 +631,7 @@ class ExercitiiDB extends Component {
   };
 
   applySort = (exercitiiFiltrate) => {
-    console.log('this.state.order', this.state.order);
+    // console.log('this.state.order', this.state.order);
     const stabilizedThis = exercitiiFiltrate;
 
     let sorted = [];
@@ -664,9 +660,29 @@ class ExercitiiDB extends Component {
     return sorted;
   };
 
-  render() {
-    console.log(this.state.isLoading);
+  getStatusExercitiu = (exercitiuId) => {
+    const corect = this.state.rezolvariExercitii.find(
+      (rezolvare) =>
+        rezolvare.exercitiu._id === exercitiuId &&
+        rezolvare.status === 'CORECT' &&
+        rezolvare.user._id === this.context.userId
+    );
+    if (corect) {
+      return corect.status;
+    }
+    const gresit = this.state.rezolvariExercitii.find(
+      (rezolvare) =>
+        rezolvare.exercitiu._id === exercitiuId &&
+        rezolvare.status === 'GRESIT' &&
+        rezolvare.user._id === this.context.userId
+    );
+    if (gresit) {
+      return gresit.status;
+    }
+    return 'NEREZOLVAT';
+  };
 
+  render() {
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
     );
@@ -688,8 +704,6 @@ class ExercitiiDB extends Component {
 
     const exercitiiFiltrateSortate = this.applySort(exercitiiFiltrate);
 
-    console.log(subcapitoleFiltrate);
-
     return (
       <container>
         <Stack
@@ -704,7 +718,7 @@ class ExercitiiDB extends Component {
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            Inapoi
+            inapoi
           </Button>
           {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
           {/* sortare si filtrare exercitii */}
@@ -981,7 +995,9 @@ class ExercitiiDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={ExercitiiDB.getColorExercitiu(
+                          this.getStatusExercitiu(exercitiu._id)
+                        )}
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -990,13 +1006,7 @@ class ExercitiiDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {this.state.rezolvariExercitii.find(
-                          (rezolvare) =>
-                            rezolvare.exercitiu._id === exercitiu._id &&
-                            rezolvare.user._id === this.context.userId
-                        )
-                          ? 'Rezolvat'
-                          : 'Nerezolvat'}
+                        {this.getStatusExercitiu(exercitiu._id)}
                       </Label>
                     )}
                     <CapitolImgStyle alt={exercitiu._id} src={mockImgSubcapitol(exercitiu._id)} />

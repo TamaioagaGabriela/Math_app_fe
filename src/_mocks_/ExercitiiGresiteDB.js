@@ -598,7 +598,7 @@ class ExercitiiGresiteDB extends Component {
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            Inapoi
+            Back
           </Button>
           {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
           {/* sortare si filtrare exercitii */}
