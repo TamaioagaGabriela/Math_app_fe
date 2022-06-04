@@ -378,17 +378,21 @@ class ExercitiiDB extends Component {
     );
   };
 
-  // getPercentagePerExercitiu = (exercitiuId) => {
-  //   // toate rezolvarile CORECTE ale unui user, filtrate in functie de exercitiu
-  //   const rezolvariExercitiiFiltrate = this.state.rezolvariExercitii.filter(
-  //     (rezolvare) =>
-  //       rezolvare.user._id === this.context.userId &&
-  //       rezolvare.status === 'CORECT' &&
-  //       rezolvare.exercitiu._id === exercitiuId
-  //   );
-  //   if (rezolvariExercitiiFiltrate.length === 1) return 'Rezolvat';
-  //   return 'Nerezolvat';
-  // };
+  getPercentagePerCapitol = (capitolId) => {
+    const subcapitoleFiltrate = this.state.subcapitole.filter(
+      (subcapitol) => subcapitol.capitol_id === capitolId
+    );
+
+    let suma = 0;
+
+    for (let i = 0; i < subcapitoleFiltrate.length; i += 1) {
+      suma += this.getPercentagePerSubcapitol(subcapitoleFiltrate[i]._id);
+    }
+
+    if (Number.isNaN(parseInt(suma / subcapitoleFiltrate.length, 10))) return 0;
+
+    return parseInt(suma / subcapitoleFiltrate.length, 10);
+  };
 
   setCapitolChosen = (capitol) => {
     this.setState({ capitolChosen: true });
@@ -861,13 +865,14 @@ class ExercitiiDB extends Component {
           {!this.state.capitolChosen &&
             capitoleFiltrate.map((capitol) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
-                {/* <CapitolItem capitol={capitol} /> */}
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={ExercitiiDB.getColorPercentage(
+                          this.getPercentagePerSubcapitol(capitol._id)
+                        )}
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -876,7 +881,9 @@ class ExercitiiDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.getPercentagePerCapitol(capitol._id) === 100
+                          ? 'Completed'
+                          : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
                     <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />

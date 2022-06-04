@@ -201,9 +201,9 @@ export default function RegisterForm() {
               </Select>
               <FormHelperText
                 error={Boolean(touched.role && errors.role)}
-                helperText={touched.username && errors.username}
+                helperText={touched.role && errors.role}
               >
-                This is required!
+                {touched.role && errors.role}
               </FormHelperText>
             </FormControl>
 
