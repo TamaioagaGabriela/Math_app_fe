@@ -13,9 +13,9 @@ import TesteDB from '../_mocks_/TesteDB';
 
 export default function Capitol() {
   return (
-    <Page title="Dashboard: Teste | Math app">
+    <Page title="Dashboard: Teste | Learny">
       <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
+        <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
           Teste
         </Typography>
 

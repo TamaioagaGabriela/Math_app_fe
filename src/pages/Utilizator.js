@@ -10,7 +10,7 @@ import { UtilizatorDB } from '../_mocks_/UtilizatorDB';
 
 export default function Utilizator() {
   return (
-    <Page title="Dashboard: Detalii Utilizator | Math app">
+    <Page title="Dashboard: Detalii Utilizator | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Detalii utilizator

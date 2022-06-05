@@ -12,13 +12,12 @@ import ExercitiiGresiteDB from '../_mocks_/ExercitiiGresiteDB';
 
 export default function ExercitiiGresite() {
   return (
-    <Page title="Dashboard: Exercitii gresite | Math app">
+    <Page title="Dashboard: Exercitii gresite | Learny">
       <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
+        <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
           Exercitii gresite
         </Typography>
         <ExercitiiGresiteDB />
-        {/* <ProductCartWidget /> */}
       </Container>
     </Page>
   );

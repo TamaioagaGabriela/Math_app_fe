@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 // material
 import { alpha } from '@mui/material/styles';
-import { Box, MenuItem, ListItemText, Button } from '@mui/material';
+import { Box, MenuItem, ListItemText, Button, Typography } from '@mui/material';
 // components
 import MenuPopover from '../../components/MenuPopover';
 import AuthContext from '../../context/auth-context';
@@ -49,6 +49,7 @@ const CLASE = [
 
 export default function ClasaPopover() {
   const [open, setOpen] = useState(false);
+  const [clasaAleasa, setClasaAleasa] = useState('Clasa a 5-a');
 
   const anchorRef = useRef(null);
   const navigate = useNavigate();
@@ -76,14 +77,23 @@ export default function ClasaPopover() {
         onClick={handleOpen}
         sx={{
           padding: 0,
-          width: 44,
+          width: 180,
           height: 44,
           ...(open && {
             bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
           })
         }}
       >
-        Alege clasa
+        Alege clasa -&nbsp;
+        <Typography
+          textTransform="lowercase"
+          // fontStyle="italic"
+          component="span"
+          variant="subtitle2"
+          sx={{ color: '#49BD47' }}
+        >
+          {`Clasa a ${context.clasa}-a`}
+        </Typography>
       </Button>
       <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current}>
         <Box sx={{ py: 1 }}>
@@ -92,6 +102,7 @@ export default function ClasaPopover() {
               key={option.value}
               selected={option.value === CLASE[0].value}
               onClick={() => {
+                setClasaAleasa(option.label);
                 changeClasa(option.value);
               }}
               sx={{ py: 1, px: 2.5 }}

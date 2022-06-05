@@ -432,6 +432,7 @@ class FisaFormuleDB extends Component {
           alignItems="center"
           justifyContent="space-between"
           sx={{ mb: 5 }}
+          marginTop="63px"
         >
           <Button
             variant="outlined"

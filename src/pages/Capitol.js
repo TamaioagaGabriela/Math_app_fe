@@ -43,9 +43,9 @@ export default function Capitol() {
   };
 
   return (
-    <Page title="Dashboard: Teorie | Math app">
+    <Page title="Dashboard: Teorie | Learny">
       <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
+        <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
           Teorie
         </Typography>
 

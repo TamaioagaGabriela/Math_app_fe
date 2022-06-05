@@ -11,9 +11,9 @@ import FisaFormuleDB from '../_mocks_/FisaFormuleDB';
 
 export default function FisaFormule() {
   return (
-    <Page title="Dashboard: Fisa formule | Math app">
+    <Page title="Dashboard: Fisa formule | Learny">
       <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
+        <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
           Fise Formule
         </Typography>
 

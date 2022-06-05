@@ -22,12 +22,12 @@ const MENU_OPTIONS = [
     label: 'Profil',
     icon: 'eva:person-fill',
     linkTo: '/dashboard/utilizator'
-  },
-  {
-    label: 'Setari',
-    icon: 'eva:settings-2-fill',
-    linkTo: '#'
   }
+  // {
+  //   label: 'Setari',
+  //   icon: 'eva:settings-2-fill',
+  //   linkTo: '#'
+  // }
 ];
 
 // ----------------------------------------------------------------------

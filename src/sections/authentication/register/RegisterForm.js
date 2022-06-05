@@ -30,14 +30,19 @@ export default function RegisterForm() {
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('First name required'),
-    lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
-    username: Yup.string().required('Username is required'),
-    role: Yup.string().required('Role is required')
+      .min(2, 'Prenume prea scurt!')
+      .max(50, 'Prenume prea lung!')
+      .required('Trebuie introdus un prenume'),
+    lastName: Yup.string()
+      .min(2, 'Nume prea scurt!')
+      .max(50, 'Nume prea lung!')
+      .required('Trebuie introdus un nume'),
+    email: Yup.string()
+      .email('Adresa de email nu este validă')
+      .required('Trebuie introdus un email'),
+    password: Yup.string().required('Trebuie introdusă parola'),
+    username: Yup.string().required('Trebuie ales un username'),
+    role: Yup.string().required('Trebuie ales un rol')
   });
 
   const formik = useFormik({
@@ -160,7 +165,7 @@ export default function RegisterForm() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
-              label="First name"
+              label="Prenume"
               {...getFieldProps('firstName')}
               error={Boolean(touched.firstName && errors.firstName)}
               helperText={touched.firstName && errors.firstName}
@@ -168,7 +173,7 @@ export default function RegisterForm() {
 
             <TextField
               fullWidth
-              label="Last name"
+              label="Nume"
               {...getFieldProps('lastName')}
               error={Boolean(touched.lastName && errors.lastName)}
               helperText={touched.lastName && errors.lastName}
@@ -232,7 +237,7 @@ export default function RegisterForm() {
             fullWidth
             autoComplete="username"
             type="email"
-            label="Email address"
+            label="Adresa de email"
             {...getFieldProps('email')}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
@@ -242,7 +247,7 @@ export default function RegisterForm() {
             fullWidth
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
-            label="Password"
+            label="Parola"
             {...getFieldProps('password')}
             InputProps={{
               endAdornment: (
@@ -260,7 +265,7 @@ export default function RegisterForm() {
           <TextField
             fullWidth
             type="email"
-            label="Email tutore"
+            label="Adresa de email tutore"
             {...getFieldProps('emailTutore')}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
@@ -273,7 +278,7 @@ export default function RegisterForm() {
             variant="contained"
             loading={isSubmitting}
           >
-            Register
+            Creează cont
           </LoadingButton>
         </Stack>
       </Form>

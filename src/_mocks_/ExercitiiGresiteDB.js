@@ -592,13 +592,14 @@ class ExercitiiGresiteDB extends Component {
           alignItems="center"
           justifyContent="space-between"
           sx={{ mb: 5 }}
+          marginTop="63px"
         >
           <Button
             variant="outlined"
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            Back
+            Inapoi
           </Button>
           {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
           {/* sortare si filtrare exercitii */}

@@ -16,7 +16,7 @@ const exercitiiPercentageList = [];
 
 const CHART_DATA = [
   {
-    name: 'Exercitii',
+    name: 'Exerciții',
     type: 'column',
     data: exercitiiPercentageList
   },
@@ -32,7 +32,7 @@ const CHART_DATA = [
   }
 ];
 
-export default function AppWebsiteVisits() {
+export default function AppGraficProgres() {
   const chartOptions = merge(BaseOptionChart(), {
     stroke: { width: [0, 2, 3] },
     plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
@@ -387,17 +387,20 @@ export default function AppWebsiteVisits() {
   };
 
   const getTeoriePercentage = () => {
-    console.log('capitole', capitole);
+    // console.log('capitole', capitole);
+    const capitoleFiltrate = capitole.filter((capitol) => capitol.clasa === context.clasa);
+    // console.log('capitoleFiltrate', capitoleFiltrate);
+
     if (teoriePercentageList !== []) {
       teoriePercentageList.length = 0;
     }
     if (capitoleLabelsList !== []) {
       capitoleLabelsList.length = 0;
     }
-    for (let i = 0; i < capitole.length; i += 1) {
-      capitoleLabelsList.push(capitole[i].titlu);
-      console.log('aaaa', getPercentageTeoriePerCapitol(capitole[i]._id));
-      teoriePercentageList.push(getPercentageTeoriePerCapitol(capitole[i]._id));
+    for (let i = 0; i < capitoleFiltrate.length; i += 1) {
+      capitoleLabelsList.push(capitoleFiltrate[i].titlu);
+      // console.log('aaaa', getPercentageTeoriePerCapitol(capitoleFiltrate[i]._id));
+      teoriePercentageList.push(getPercentageTeoriePerCapitol(capitoleFiltrate[i]._id));
     }
   };
 
@@ -420,11 +423,12 @@ export default function AppWebsiteVisits() {
   };
 
   const getTestePercentage = () => {
+    const capitoleFiltrate = capitole.filter((capitol) => capitol.clasa === context.clasa);
     if (testePercentageList !== []) {
       testePercentageList.length = 0;
     }
-    for (let i = 0; i < capitole.length; i += 1) {
-      testePercentageList.push(getPercentageTestPerCapitol(capitole[i]._id));
+    for (let i = 0; i < capitoleFiltrate.length; i += 1) {
+      testePercentageList.push(getPercentageTestPerCapitol(capitoleFiltrate[i]._id));
     }
   };
 
@@ -465,11 +469,12 @@ export default function AppWebsiteVisits() {
   };
 
   const getExercitiiPercentage = () => {
+    const capitoleFiltrate = capitole.filter((capitol) => capitol.clasa === context.clasa);
     if (exercitiiPercentageList !== []) {
       exercitiiPercentageList.length = 0;
     }
-    for (let i = 0; i < capitole.length; i += 1) {
-      exercitiiPercentageList.push(getPercentageExercitiiPerCapitol(capitole[i]._id));
+    for (let i = 0; i < capitoleFiltrate.length; i += 1) {
+      exercitiiPercentageList.push(getPercentageExercitiiPerCapitol(capitoleFiltrate[i]._id));
     }
   };
 

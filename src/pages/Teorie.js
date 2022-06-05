@@ -67,7 +67,7 @@ $$
 Calculate the value of $s$ when $u = 10\\frac{m}{s}$ and $a = 2\\frac{m}{s^{2}}$ at $t = 1s$
 `;
   return (
-    <Page title="Dashboard: Teorie | Math app">
+    <Page title="Dashboard: Teorie | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Teorie

@@ -712,6 +712,7 @@ class ExercitiiDB extends Component {
           alignItems="center"
           justifyContent="space-between"
           sx={{ mb: 5 }}
+          marginTop="64px"
         >
           <Button
             variant="outlined"
@@ -746,11 +747,10 @@ class ExercitiiDB extends Component {
                       : 'none'
                 }}
                 onClick={() => {
-                  // this.setSubcapitolChosen(subcapitol);
                   this.setAdaugaExercitiuChosen();
                 }}
               >
-                Adauga Exercitii
+                Adaugă Exerciții
               </Button>
               <Button
                 disableRipple
@@ -812,7 +812,7 @@ class ExercitiiDB extends Component {
                       this.modalHandleCloseFilter();
                     }}
                   >
-                    Seteaza filtrul
+                    Setează filtrul
                   </Button>
                   &nbsp;
                   <Button
@@ -823,7 +823,7 @@ class ExercitiiDB extends Component {
                     onClick={() => this.modalHandleResetFilter()}
                     startIcon={<Iconify icon="ic:round-clear-all" />}
                   >
-                    Sterge filtrul
+                    șterge filtrul
                   </Button>
                 </Box>
               </Drawer>
@@ -835,6 +835,7 @@ class ExercitiiDB extends Component {
                   // color="inherit"
                   ref={this.anchorRef}
                   variant="outlined"
+                  sx={{ width: '280px !important' }}
                   disableRipple
                   onClick={() => this.modalHandleOpenSort()}
                   endIcon={
@@ -845,7 +846,7 @@ class ExercitiiDB extends Component {
                 >
                   Sortare dificultate: &nbsp;
                   <Typography component="span" variant="subtitle2" sx={{ color: '#49BD47' }}>
-                    crescator
+                    {this.state.order === 'asc' ? 'Crescător' : 'Descrescător'}
                   </Typography>
                 </Button>
                 <Menu

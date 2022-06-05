@@ -13,9 +13,9 @@ import ExercitiiDB from '../_mocks_/ExercitiiDB';
 
 export default function Exercitii() {
   return (
-    <Page title="Dashboard: Exercitii | Math app">
+    <Page title="Dashboard: Exercitii | Learny">
       <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
+        <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
           Exercitii
         </Typography>
 
