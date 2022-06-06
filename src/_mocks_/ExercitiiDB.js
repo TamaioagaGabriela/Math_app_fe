@@ -986,7 +986,7 @@ class ExercitiiDB extends Component {
                         variant="outlined"
                         onClick={() => this.setSubcapitolChosen(subcapitol)}
                       >
-                        Exercitii
+                        Exerciții
                       </Button>
                     </Stack>
                   </Stack>
@@ -1025,7 +1025,7 @@ class ExercitiiDB extends Component {
 
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">Exercitiul {index + 1}</Typography>
+                      <Typography variant="subtitle1">Exercițiul {index + 1}</Typography>
                     </Link>
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Typography variant="subtitle1">
@@ -1045,7 +1045,7 @@ class ExercitiiDB extends Component {
                     </Typography>
                     <Stack direction="row" alignItems="center" justifyContent="center">
                       <Button variant="outlined" onClick={() => this.setExercitiuChosen(exercitiu)}>
-                        Rezolva Exercitiul
+                        Rezolvă Exercițiul
                       </Button>
                     </Stack>
                   </Stack>
@@ -1318,8 +1318,8 @@ class ExercitiiDB extends Component {
             !this.state.exercitiuChosen &&
             this.state.adaugaExercitiuChosen && (
               <ModalFisaTeorie
-                title="Adauga exercitiu"
-                numeButon="Adauga exercitiu"
+                title="Adaugă exercitiu"
+                numeButon="Adaugă exercitiu"
                 canCancel
                 canConfirm
                 onCancel={this.modalCancelHandlerAdaugaExercitiu}

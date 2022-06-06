@@ -615,7 +615,7 @@ class TesteDB extends Component {
               this.setAdaugaTestChosen();
             }}
           >
-            Adauga test
+            Adaugă test
           </Button>
         </Stack>
 
@@ -738,7 +738,7 @@ class TesteDB extends Component {
                           this.getExercitii(test);
                         }}
                       >
-                        Rezolva testul
+                        Rezolvă testul
                       </Button>
                     </Stack>
                   </Stack>
@@ -1017,8 +1017,8 @@ class TesteDB extends Component {
           )}
           {this.state.capitolChosen && !this.state.testChosen && this.state.adaugaTestChosen && (
             <ModalFisaTeorie
-              title="Adauga test"
-              numeButon="Adauga test"
+              title="Adaugă test"
+              numeButon="Adaugă test"
               canCancel
               canConfirm
               onCancel={this.modalCancelHandlerAdaugaTest}

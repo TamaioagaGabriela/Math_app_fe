@@ -603,7 +603,7 @@ class CapitolDB extends Component {
               }}
               onClick={() => this.setAdaugaCapitolChosen()}
             >
-              Adauga capitol
+              Adaugă capitol
             </Button>
             <Button
               variant="outlined"
@@ -620,7 +620,7 @@ class CapitolDB extends Component {
                 this.setAdaugaSubcapitolChosen();
               }}
             >
-              Adauga Subcapitol
+              Adaugă Subcapitol
             </Button>
             <Button
               variant="outlined"
@@ -635,7 +635,7 @@ class CapitolDB extends Component {
                 this.setAdaugaTeorieChosen();
               }}
             >
-              Adauga Teorie
+              Adaugă Teorie
             </Button>
           </Stack>
         </Stack>
@@ -866,8 +866,8 @@ class CapitolDB extends Component {
             this.state.subcapitolChosen &&
             this.state.adaugaTeorieChosen && (
               <ModalFisaTeorie
-                title="Adauga fisa teorie"
-                numeButon="Adauga teorie"
+                title="Adaugă fisa teorie"
+                numeButon="Adaugă teorie"
                 canCancel
                 canConfirm
                 onCancel={this.modalCancelHandlerAdaugaTeorie}
@@ -912,8 +912,8 @@ class CapitolDB extends Component {
           {!this.state.capitolChosen && this.state.adaugaCapitolChosen && <Backdrop />}
           {!this.state.capitolChosen && this.state.adaugaCapitolChosen && (
             <ModalFisaTeorie
-              title="Adauga capitol"
-              numeButon="Adauga capitol"
+              title="Adaugă capitol"
+              numeButon="Adaugă capitol"
               canCancel
               canConfirm
               onCancel={this.modalCancelHandlerAdaugaCapitol}
@@ -962,8 +962,8 @@ class CapitolDB extends Component {
             !this.state.subcapitolChosen &&
             this.state.adaugaSubcapitolChosen && (
               <ModalFisaTeorie
-                title="Adauga subcapitol"
-                numeButon="Adauga"
+                title="Adaugă subcapitol"
+                numeButon="Adaugă"
                 canCancel
                 canConfirm
                 onCancel={this.modalCancelHandlerAdaugaSubcapitol}

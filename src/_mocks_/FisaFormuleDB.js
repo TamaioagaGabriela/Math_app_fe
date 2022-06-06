@@ -432,7 +432,7 @@ class FisaFormuleDB extends Component {
               this.setAdaugaFormuleChosen();
             }}
           >
-            Adauga fisa formule
+            Adaugă fișă formule
           </Button>
         </Stack>
 
@@ -596,8 +596,8 @@ class FisaFormuleDB extends Component {
             this.state.subcapitolChosen &&
             this.state.adaugaFormuleChosen && (
               <ModalFisaTeorie
-                title="Adauga fisa formule"
-                numeButon="Adauga fisa formule"
+                title="Adaugă fișă formule"
+                numeButon="Adaugă fișă formule"
                 canCancel
                 canConfirm
                 onCancel={this.modalCancelHandlerAdaugaFormule}
