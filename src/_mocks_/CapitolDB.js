@@ -31,7 +31,7 @@ const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
 
 const CapitolImgStyle = styled('img')({
-  top: 0,
+  top: 15,
   width: '100%',
   height: '100%',
   objectFit: 'cover',
@@ -640,11 +640,19 @@ class CapitolDB extends Component {
           </Stack>
         </Stack>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={3} gridAutoRows="1000px">
           {!this.state.capitolChosen &&
             capitoleFiltrate.map((capitol, index) => (
-              <Grid key={capitol._id} item xs={12} sm={6} md={3}>
-                <Card>
+              <Grid
+                key={capitol._id}
+                item
+                xs={12}
+                sm={6}
+                md={3}
+                // gridTemplateRows={100}
+                // gridAutoRows="1fr"
+              >
+                <Card height="522px">
                   <Box sx={{ pt: '100%', position: 'relative' }}>
                     {status && (
                       <Label

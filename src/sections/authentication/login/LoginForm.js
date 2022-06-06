@@ -10,6 +10,7 @@ import {
   TextField,
   IconButton,
   InputAdornment,
+  Typography,
   FormControlLabel
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -173,7 +174,7 @@ export default function LoginForm() {
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
           <FormControlLabel
             control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label="Reține parola"
+            label={<Typography sx={{ fontSize: 14 }}>Reține parola</Typography>}
           />
 
           <Link component={RouterLink} variant="subtitle2" to="#" underline="hover">

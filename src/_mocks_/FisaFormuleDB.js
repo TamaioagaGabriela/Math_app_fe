@@ -473,7 +473,12 @@ class FisaFormuleDB extends Component {
                       <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" justifyContent="center">
-                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
+                      <Button
+                        variant="outlined"
+                        // textTransform={'none'}
+                        sentenceCase
+                        onClick={() => this.setCapitolChosen(capitol)}
+                      >
                         Accesează subcapitolele
                       </Button>
                     </Stack>
