@@ -19,6 +19,8 @@ export default function App() {
   const [nume, setNume] = useState(null);
   const [clasa, setClasa] = useState(null);
   const [email, setEmail] = useState(null);
+  const [capitolId, setCapitol] = useState(null);
+  const [subcapitolId, setSubcapitol] = useState(null);
   const [tokenExpiration, setTokenExpiration] = useState(null);
   const [login, setLogin] = useState({ token, userId, role });
   const [logout, setLogout] = useState({ token: null, userId: null, role: null });
@@ -36,6 +38,8 @@ export default function App() {
         setClasa(null);
         setNume(null);
         setEmail(null);
+        setCapitol(null);
+        setSubcapitol(null);
       }
     }),
     [token, userId]

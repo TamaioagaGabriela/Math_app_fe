@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
 // material
 import {
   Box,
@@ -26,6 +25,7 @@ import ModalFisaTeorie from './ModalFiseTeorie';
 import Backdrop from '../components/Backdrop/Backdrop';
 import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
+import TesteDB from './TesteDB';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
@@ -67,7 +67,6 @@ class CapitolDB extends Component {
       subcapitolTeorie: [],
       capitolChosen: false,
       subcapitolChosen: false,
-      openFilter: false,
       adaugaTeorieChosen: false,
       adaugaCapitolChosen: false,
       adaugaSubcapitolChosen: false,
@@ -201,8 +200,6 @@ class CapitolDB extends Component {
 
   modalConfirmHandlerSubcapitol = () => {
     const titlu = this.titluSubcapitolRef.current.value;
-
-    console.log(titlu, this.state.capitol._id);
     if (titlu == null) {
       return;
     }
@@ -244,7 +241,7 @@ class CapitolDB extends Component {
           };
           const updatedSubcapitole = [...prevState.subcapitole];
           updatedSubcapitole.push(subcapitol);
-          console.log('push subcapitol', updatedSubcapitole);
+          // console.log('push subcapitol', updatedSubcapitole);
           this.setState({ adaugaSubcapitolChosen: false });
           // this.setState({ capitolChosen: false });
           return { subcapitole: updatedSubcapitole };
@@ -429,8 +426,6 @@ class CapitolDB extends Component {
     );
 
     const fisaId = fiseTeorieFiltrate[0]._id;
-    console.log('fisaID', fisaId);
-    console.log('this.context.userId', this.context.userId);
     const requestBody = {
       query: `
         mutation{
@@ -563,7 +558,6 @@ class CapitolDB extends Component {
 
   render() {
     console.log(this.state.isLoading);
-    console.log(this.state.openFilter);
 
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
@@ -575,7 +569,6 @@ class CapitolDB extends Component {
       (fisaTeorie) => fisaTeorie.subcapitol_id === this.state.subcapitolTeorie._id
     );
 
-    console.log('accesariFiseTeorie', this.state.accesariFiseTeorie);
     return (
       <container>
         <Stack
@@ -649,7 +642,7 @@ class CapitolDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            capitoleFiltrate.map((capitol) => (
+            capitoleFiltrate.map((capitol, index) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
@@ -672,7 +665,7 @@ class CapitolDB extends Component {
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
+                    <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(index)} />
                   </Box>
 
                   <Stack spacing={2} sx={{ p: 3 }}>
@@ -686,8 +679,21 @@ class CapitolDB extends Component {
                       <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
                         Subcapitole
                       </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
-                        Test
+
+                      <Button
+                        variant="outlined"
+                        onClick={() => {
+                          this.context.capitolId = capitol;
+                        }}
+                      >
+                        <Link
+                          to="/dashboard/teste"
+                          color="inherit"
+                          underline="none"
+                          component={RouterLink}
+                        >
+                          Test
+                        </Link>
                       </Button>
                     </Stack>
                   </Stack>
@@ -764,9 +770,22 @@ class CapitolDB extends Component {
                       >
                         Teorie
                       </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
-                        Exercitii
-                      </Button>
+                      <Link
+                        to="/dashboard/exercitii"
+                        color="inherit"
+                        underline="none"
+                        component={RouterLink}
+                      >
+                        <Button
+                          variant="outlined"
+                          onClick={() => {
+                            this.context.capitolId = this.state.capitol;
+                            this.context.subcapitolId = subcapitol;
+                          }}
+                        >
+                          Exercitii
+                        </Button>
+                      </Link>
                     </Stack>
                   </Stack>
                 </Card>

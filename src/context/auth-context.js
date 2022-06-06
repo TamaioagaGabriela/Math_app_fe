@@ -6,6 +6,8 @@ export default React.createContext({
   nume: null,
   role: null,
   clasa: null,
+  capitolId: null,
+  subcapitolId: null,
   changeClasa: (val) => {},
   login: (token, userId, role, clasa, nume, email, tokenExpiration) => {},
   logout: () => {}

@@ -185,6 +185,10 @@ class ExercitiiDB extends Component {
       })
       .then((resData) => {
         this.setState({ subcapitole: resData.data.subcapitole });
+        if (this.context.subcapitolId !== undefined && this.context.capitolId !== undefined) {
+          this.setSubcapitolChosen(this.context.subcapitolId);
+          this.setCapitolChosen(this.context.capitolId);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -533,10 +537,14 @@ class ExercitiiDB extends Component {
       capitolChosen: false,
       capitol: []
     });
+    this.context.capitolId = undefined;
+    this.context.subcapitolId = undefined;
   };
 
   modalCancelHandlerSubcapitol = () => {
     this.setState({ subcapitolChosen: false, subcapitolExercitii: [] });
+    this.context.capitolId = undefined;
+    this.context.subcapitolId = undefined;
   };
 
   modalCancelHandlerExercitiu = () => {
@@ -545,6 +553,8 @@ class ExercitiiDB extends Component {
     this.setState({ eroare: null });
     this.setState({ rezultatExercitiu: null });
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
+    this.context.capitolId = undefined;
+    this.context.subcapitolId = undefined;
   };
 
   modalCancelHandlerRaspuns = () => {
@@ -554,6 +564,8 @@ class ExercitiiDB extends Component {
     this.setState({ rezultatExercitiu: null });
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
+    this.context.capitolId = undefined;
+    this.context.subcapitolId = undefined;
   };
 
   modalCancelHandlerVeziRezolvare = () => {
@@ -564,6 +576,8 @@ class ExercitiiDB extends Component {
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
     this.setState({ veziRezolvare: false });
+    this.context.capitolId = undefined;
+    this.context.subcapitolId = undefined;
   };
 
   modalHandleClickInapoi = () => {
@@ -631,7 +645,6 @@ class ExercitiiDB extends Component {
   };
 
   applySort = (exercitiiFiltrate) => {
-    // console.log('this.state.order', this.state.order);
     const stabilizedThis = exercitiiFiltrate;
 
     let sorted = [];
@@ -911,12 +924,9 @@ class ExercitiiDB extends Component {
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
                     </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Stack direction="row" alignItems="center" justifyContent="center">
                       <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                        Subcapitole
-                      </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
-                        Test
+                        Accesează Subcapitolele
                       </Button>
                     </Stack>
                   </Stack>

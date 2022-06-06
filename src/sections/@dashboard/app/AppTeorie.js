@@ -207,7 +207,6 @@ export default function AppTeorie() {
     }
     if (Number.isNaN(parseInt((100 * count) / subcapitoleFiltrate.length, 10))) return 0;
 
-    console.log(parseInt((100 * count) / subcapitoleFiltrate.length, 10));
     return parseInt((100 * count) / subcapitoleFiltrate.length, 10);
   };
 

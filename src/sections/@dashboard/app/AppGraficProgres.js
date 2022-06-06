@@ -382,14 +382,11 @@ export default function AppGraficProgres() {
     }
     if (Number.isNaN(parseInt((100 * count) / subcapitoleFiltrate.length, 10))) return 0;
 
-    console.log(parseInt((100 * count) / subcapitoleFiltrate.length, 10));
     return parseInt((100 * count) / subcapitoleFiltrate.length, 10);
   };
 
   const getTeoriePercentage = () => {
-    // console.log('capitole', capitole);
     const capitoleFiltrate = capitole.filter((capitol) => capitol.clasa === context.clasa);
-    // console.log('capitoleFiltrate', capitoleFiltrate);
 
     if (teoriePercentageList !== []) {
       teoriePercentageList.length = 0;
@@ -399,7 +396,6 @@ export default function AppGraficProgres() {
     }
     for (let i = 0; i < capitoleFiltrate.length; i += 1) {
       capitoleLabelsList.push(capitoleFiltrate[i].titlu);
-      // console.log('aaaa', getPercentageTeoriePerCapitol(capitoleFiltrate[i]._id));
       teoriePercentageList.push(getPercentageTeoriePerCapitol(capitoleFiltrate[i]._id));
     }
   };
@@ -464,7 +460,6 @@ export default function AppGraficProgres() {
       suma += getPercentageExercitiiPerSubcapitol(subcapitoleFiltrate[i]._id);
     }
     if (Number.isNaN(parseInt(suma / subcapitoleFiltrate.length, 10))) return 0;
-    console.log(parseInt(suma / subcapitoleFiltrate.length, 10));
     return parseInt(suma / subcapitoleFiltrate.length, 10);
   };
 
@@ -493,8 +488,6 @@ export default function AppGraficProgres() {
   getTeoriePercentage();
   getTestePercentage();
   getExercitiiPercentage();
-
-  // console.log('text', teoriePercentageList, testePercentageList, exercitiiPercentageList);
 
   return (
     <Card>

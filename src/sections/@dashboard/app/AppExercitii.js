@@ -227,7 +227,6 @@ export default function AppExercitii() {
       suma += getPercentageExercitiiPerSubcapitol(subcapitoleFiltrate[i]._id);
     }
     if (Number.isNaN(parseInt(suma / subcapitoleFiltrate.length, 10))) return 0;
-    console.log(parseInt(suma / subcapitoleFiltrate.length, 10));
     return parseInt(suma / subcapitoleFiltrate.length, 10);
   };
 

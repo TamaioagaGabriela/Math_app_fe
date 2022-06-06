@@ -38,7 +38,6 @@ class FisaFormuleDB extends Component {
     this.descriereFormuleRef = React.createRef();
 
     this.state = {
-      isLoading: false,
       capitole: [],
       subcapitole: [],
       fiseFormule: [],
@@ -64,7 +63,6 @@ class FisaFormuleDB extends Component {
   }
 
   fetchCapitole = () => {
-    this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query{
@@ -92,16 +90,13 @@ class FisaFormuleDB extends Component {
       })
       .then((resData) => {
         this.setState({ capitole: resData.data.capitole });
-        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ isLoading: false });
       });
   };
 
   fetchSubcapitole = () => {
-    this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query{
@@ -130,16 +125,13 @@ class FisaFormuleDB extends Component {
       })
       .then((resData) => {
         this.setState({ subcapitole: resData.data.subcapitole });
-        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ isLoading: false });
       });
   };
 
   fetchFiseFormule = () => {
-    this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query{
@@ -168,18 +160,15 @@ class FisaFormuleDB extends Component {
       })
       .then((resData) => {
         this.setState({ fiseFormule: resData.data.fiseFormule });
-        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ isLoading: false });
       });
   };
 
   modalConfirmHandler = () => {
     const titlu = this.titluFormuleRef.current.value;
     const descriere = this.descriereFormuleRef.current.value;
-    console.log('adaugaaaa', titlu);
 
     if (titlu == null) {
       return;
@@ -223,7 +212,6 @@ class FisaFormuleDB extends Component {
             titlu: resData.data.adaugaFisaFormule.titlu,
             descriere: resData.data.adaugaFisaFormule.descriere
           };
-          console.log('adaugaaaa', fisaFormule);
           const updatedFiseFormule = [...prevState.fiseFormule];
           updatedFiseFormule.push(fisaFormule);
           this.setState({ adaugaFormuleChosen: false });
@@ -275,11 +263,9 @@ class FisaFormuleDB extends Component {
       })
       .then((resData) => {
         this.setState({ accesariFiseFormule: resData.data.accesariFise });
-        this.setState({ isLoading: false });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ isLoading: false });
       });
   };
 
@@ -289,8 +275,7 @@ class FisaFormuleDB extends Component {
     );
 
     const fisaId = fiseFormuleFiltrate[0]._id;
-    console.log('fisaID', fisaId);
-    console.log('this.context.userId', this.context.userId);
+
     const requestBody = {
       query: `
         mutation{
@@ -402,8 +387,6 @@ class FisaFormuleDB extends Component {
   };
 
   render() {
-    console.log('isLoading', this.state.isLoading);
-
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
     );
@@ -414,8 +397,6 @@ class FisaFormuleDB extends Component {
     const fiseFormuleFiltrate = this.state.fiseFormule.filter(
       (fisaFormule) => fisaFormule.subcapitol_id === this.state.subcapitolFisaFormule._id
     );
-
-    console.log('accesari', this.state.accesariFiseFormule);
 
     // interesant
     // console.log(
@@ -491,12 +472,9 @@ class FisaFormuleDB extends Component {
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
                     </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Stack direction="row" alignItems="center" justifyContent="center">
                       <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                        Subcapitole
-                      </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
-                        Test
+                        Accesează subcapitolele
                       </Button>
                     </Stack>
                   </Stack>
@@ -562,7 +540,7 @@ class FisaFormuleDB extends Component {
                         }
                       </Typography>
                     </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Stack direction="row" alignItems="center" justifyContent="center">
                       <Button
                         variant="outlined"
                         onClick={() => {
@@ -570,10 +548,7 @@ class FisaFormuleDB extends Component {
                           this.adaugaAccesare(subcapitol._id);
                         }}
                       >
-                        Fise Formule
-                      </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
-                        Exercitii
+                        Accesează fișe Formule
                       </Button>
                     </Stack>
                   </Stack>

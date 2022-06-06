@@ -41,6 +41,8 @@ export default function AccountPopover() {
     context.role = null;
     context.nume = null;
     context.clasa = null;
+    context.subcapitolId = null;
+    context.capitolId = null;
     navigate('/dashboard/app', { replace: true });
   };
 

@@ -37,7 +37,7 @@ const sidebarConfig = [
     icon: getIcon('eva:file-text-fill')
   },
   {
-    title: 'exercitii',
+    title: 'exerciții',
     path: '/dashboard/exercitii',
     icon: getIcon('fluent:clipboard-edit-20-regular')
   },
@@ -47,7 +47,7 @@ const sidebarConfig = [
     icon: getIcon('fluent:clipboard-clock-20-regular')
   },
   {
-    title: 'exercitii gresite',
+    title: 'exerciții greșite',
     path: '/dashboard/exercitii_gresite',
     icon: getIcon('fluent:clipboard-error-20-regular')
   }

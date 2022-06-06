@@ -15,7 +15,7 @@ export default function ExercitiiGresite() {
     <Page title="Dashboard: Exercitii gresite | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
-          Exercitii gresite
+          Exerciții greșite
         </Typography>
         <ExercitiiGresiteDB />
       </Container>

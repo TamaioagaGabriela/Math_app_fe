@@ -16,7 +16,7 @@ export default function Exercitii() {
     <Page title="Dashboard: Exercitii | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
-          Exercitii
+          Exerciții
         </Typography>
 
         <ExercitiiDB />

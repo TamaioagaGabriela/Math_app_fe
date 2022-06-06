@@ -29,11 +29,6 @@ import AuthContext from '../context/auth-context';
 import { mockImgCapitol } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import './index.css';
-import {
-  ProductSort,
-  ProductCartWidget,
-  ProductFilterSidebar
-} from '../sections/@dashboard/products';
 
 const status = 'Completed';
 const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
@@ -149,6 +144,9 @@ class TesteDB extends Component {
       })
       .then((resData) => {
         this.setState({ capitole: resData.data.capitole });
+        if (this.context.capitolId !== undefined) {
+          this.setCapitolChosen(this.context.capitolId);
+        }
         this.setState({ isLoading: false });
       })
       .catch((err) => {
@@ -544,6 +542,7 @@ class TesteDB extends Component {
       capitolChosen: false,
       capitol: []
     });
+    this.context.capitolId = undefined;
   };
 
   modalCancelHandlerTest = () => {
@@ -554,11 +553,13 @@ class TesteDB extends Component {
     this.setState({ raspunsuriCorecte: [] });
     this.setState({ nrIntrebare: -1, punctajTest: 0 });
     this.setState({ testTrimis: false });
+    this.context.capitolId = undefined;
   };
 
   modalCancelHandlerRezolvareExercitiu = () => {
     this.setState({ veziRezolvare: false });
     this.setState({ nrExercitiuAles: -1 });
+    this.context.capitolId = undefined;
   };
 
   modalHandleClickInapoi = () => {
@@ -662,6 +663,7 @@ class TesteDB extends Component {
                 </Card>
               </Grid>
             ))}
+
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {/* daca am ales capitolul atunci ajung la teste */}
           {/* ---------------------------------------------------------------------------------------------------------- */}

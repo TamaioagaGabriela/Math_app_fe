@@ -350,7 +350,6 @@ class ExercitiiGresiteDB extends Component {
 
   setVeziRezolvareInainte = (exercitiu) => {
     this.setState({ exercitiuChosen: true });
-    // console.log('asta e exe ', exercitiu.varianta1);
     this.setExercitiuAles(exercitiu);
     this.setState({ veziRezolvareInainte: true });
   };
@@ -520,14 +519,12 @@ class ExercitiiGresiteDB extends Component {
   };
 
   applySort = (exercitiiFiltrate) => {
-    console.log('this.state.order', this.state.order);
     const stabilizedThis = exercitiiFiltrate;
 
     let sorted = [];
 
     if (this.state.order === 'asc') {
       sorted = stabilizedThis.sort((a, b) => {
-        console.log('aaaaaaaa', a.nivel_dif);
         if (
           (a.nivel_dif === 'ridicat' && b.nivel_dif === 'mediu') ||
           (a.nivel_dif === 'mediu' && b.nivel_dif === 'scazut')
@@ -769,16 +766,9 @@ class ExercitiiGresiteDB extends Component {
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                       <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
                     </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setCapitolChosen(capitol)}
-                        // href="/dashboard/subcapitol"
-                      >
-                        Subcapitole
-                      </Button>
-                      <Button variant="outlined" href="#outlined-buttons">
-                        Test
+                    <Stack direction="row" alignItems="center" justifyContent="center">
+                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
+                        Accesează subcapitolele
                       </Button>
                     </Stack>
                   </Stack>
@@ -1054,7 +1044,6 @@ class ExercitiiGresiteDB extends Component {
                         onClick={() => {
                           this.setColorButton('btn4');
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta4);
-                          // console.log('selectedAnswer', this.state.selectedAnswer);
                         }}
                       >
                         D. {this.state.exercitiuAles.varianta4}
@@ -1062,12 +1051,7 @@ class ExercitiiGresiteDB extends Component {
                     </div>
                   </article>
                   {this.state.eroare ? (
-                    <p
-                      className="exercitiu-err-p"
-                      // style={{ visibility: this.state.eroare ? 'visible' : 'hidden', width: '30%' }}
-                    >
-                      {this.state.eroare}
-                    </p>
+                    <p className="exercitiu-err-p">{this.state.eroare}</p>
                   ) : (
                     <p className="exercitiu-err-p" style={{ color: 'white' }}>
                       'Selecteaza o varianta de raspuns!'
