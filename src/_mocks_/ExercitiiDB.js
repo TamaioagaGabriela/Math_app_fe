@@ -27,7 +27,7 @@ import {
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
-import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
+import { mockImgExercitiiCapitole, mockImgExercitiiSubcapitole } from '../utils/mockImages';
 import ModalFisaTeorie from './ModalFiseTeorie';
 import Backdrop from '../components/Backdrop/Backdrop';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
@@ -891,7 +891,7 @@ class ExercitiiDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            capitoleFiltrate.map((capitol) => (
+            capitoleFiltrate.map((capitol, index) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
@@ -914,21 +914,32 @@ class ExercitiiDB extends Component {
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
+                    <CapitolImgStyle alt={capitol.titlu} src={mockImgExercitiiCapitole(index)} />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{capitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="center">
-                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                        Accesează Subcapitolele
-                      </Button>
-                    </Stack>
+                    <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
+                  </Stack>
+                  <Stack
+                    ml={3}
+                    mr={3}
+                    mb={3}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
+                      Accesează Subcapitolele
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -938,7 +949,7 @@ class ExercitiiDB extends Component {
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             !this.state.subcapitolChosen &&
-            subcapitoleFiltrate.map((subcapitol) => (
+            subcapitoleFiltrate.map((subcapitol, index) => (
               <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
@@ -963,32 +974,39 @@ class ExercitiiDB extends Component {
                     )}
                     <CapitolImgStyle
                       alt={subcapitol.titlu}
-                      src={mockImgSubcapitol(subcapitol._id)}
+                      src={mockImgExercitiiSubcapitole(index)}
                     />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">
-                        Capitolul:{' '}
-                        {
-                          this.state.capitole.find(
-                            (capitol) => capitol._id === subcapitol.capitol_id
-                          ).titlu
-                        }
-                      </Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setSubcapitolChosen(subcapitol)}
-                      >
-                        Exerciții
-                      </Button>
-                    </Stack>
+                    <Typography variant="subtitle2">
+                      Capitolul:{' '}
+                      {
+                        this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
+                          .titlu
+                      }
+                    </Typography>
+                  </Stack>
+                  <Stack
+                    ml={3}
+                    mr={3}
+                    mb={3}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Button variant="outlined" onClick={() => this.setSubcapitolChosen(subcapitol)}>
+                      Exerciții
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -1020,7 +1038,7 @@ class ExercitiiDB extends Component {
                         {this.getStatusExercitiu(exercitiu._id)}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={exercitiu._id} src={mockImgSubcapitol(exercitiu._id)} />
+                    <CapitolImgStyle alt={exercitiu._id} src={mockImgExercitiiSubcapitole(index)} />
                   </Box>
 
                   <Stack spacing={2} sx={{ p: 3 }}>

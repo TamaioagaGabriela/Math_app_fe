@@ -26,7 +26,7 @@ import ModalFisaTeorie from './ModalFiseTeorie';
 import Backdrop from '../components/Backdrop/Backdrop';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
-import { mockImgCapitol } from '../utils/mockImages';
+import { mockImgTesteCapitole } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import './index.css';
 
@@ -621,7 +621,7 @@ class TesteDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            capitoleFiltrate.map((capitol) => (
+            capitoleFiltrate.map((capitol, index) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
@@ -644,21 +644,32 @@ class TesteDB extends Component {
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
+                    <CapitolImgStyle alt={capitol.titlu} src={mockImgTesteCapitole(index)} />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{capitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                        Teste
-                      </Button>
-                    </Stack>
+                    <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
+                  </Stack>
+                  <Stack
+                    ml={3}
+                    mr={3}
+                    mb={3}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
+                      Teste
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -715,7 +726,7 @@ class TesteDB extends Component {
                           : 'Nerezolvat'}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={test._id} src={mockImgCapitol(test.capitol_id)} />
+                    <CapitolImgStyle alt={test._id} src={mockImgTesteCapitole(test.capitol_id)} />
                   </Box>
 
                   <Stack spacing={2} sx={{ p: 3 }}>

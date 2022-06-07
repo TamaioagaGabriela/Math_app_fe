@@ -8,7 +8,7 @@ import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
 import ModalFisaTeorie from './ModalFiseTeorie';
 import Backdrop from '../components/Backdrop/Backdrop';
-import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
+import { mockImgFormuleCapitole, mockImgFormuleSubcapitole } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 
 const status = 'Completed';
@@ -438,7 +438,7 @@ class FisaFormuleDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            capitoleFiltrate.map((capitol) => (
+            capitoleFiltrate.map((capitol, index) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 {/* <CapitolItem capitol={capitol} /> */}
                 <Card>
@@ -462,26 +462,30 @@ class FisaFormuleDB extends Component {
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
+                    <CapitolImgStyle alt={capitol.titlu} src={mockImgFormuleCapitole(index)} />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{capitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="center">
-                      <Button
-                        variant="outlined"
-                        // textTransform={'none'}
-                        sentenceCase
-                        onClick={() => this.setCapitolChosen(capitol)}
-                      >
-                        Accesează subcapitolele
-                      </Button>
-                    </Stack>
+                    <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
+                  </Stack>
+                  <Stack ml={3} mr={3} mb={3} alignItems="center" justifyContent="center">
+                    <Button
+                      variant="outlined"
+                      // textTransform={'none'}
+                      sentenceCase
+                      onClick={() => this.setCapitolChosen(capitol)}
+                    >
+                      Accesează subcapitolele
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -492,7 +496,7 @@ class FisaFormuleDB extends Component {
           {this.state.capitolChosen &&
             !this.state.subcapitolChosen &&
             !this.state.adaugaFormuleChosen &&
-            subcapitoleFiltrate.map((subcapitol) => (
+            subcapitoleFiltrate.map((subcapitol, index) => (
               <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
@@ -527,35 +531,45 @@ class FisaFormuleDB extends Component {
                     )}
                     <CapitolImgStyle
                       alt={subcapitol.titlu}
-                      src={mockImgSubcapitol(subcapitol._id)}
+                      src={mockImgFormuleSubcapitole(index)}
                     />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">
-                        Capitolul:{' '}
-                        {
-                          this.state.capitole.find(
-                            (capitol) => capitol._id === subcapitol.capitol_id
-                          ).titlu
-                        }
-                      </Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="center">
-                      <Button
-                        variant="outlined"
-                        onClick={() => {
-                          this.setSubcapitolChosen(subcapitol);
-                          this.adaugaAccesare(subcapitol._id);
-                        }}
-                      >
-                        Accesează fișe Formule
-                      </Button>
-                    </Stack>
+                    <Typography variant="subtitle2">
+                      Capitolul:{' '}
+                      {
+                        this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
+                          .titlu
+                      }
+                    </Typography>
+                  </Stack>
+                  <Stack
+                    ml={3}
+                    mr={3}
+                    mb={3}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        this.setSubcapitolChosen(subcapitol);
+                        this.adaugaAccesare(subcapitol._id);
+                      }}
+                    >
+                      Accesează fișe Formule
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
