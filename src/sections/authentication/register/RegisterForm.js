@@ -2,7 +2,6 @@ import * as Yup from 'yup';
 import { useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { useNavigate } from 'react-router-dom';
-// material
 import {
   Stack,
   TextField,
@@ -23,6 +22,7 @@ import Iconify from '../../../components/Iconify';
 
 export default function RegisterForm() {
   const navigate = useNavigate();
+  const [roleAles, setRoleAles] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -128,7 +128,6 @@ export default function RegisterForm() {
         }
       })
         .then((res) => {
-          // console.log(res.status);
           if (res.status !== 200 && res.status !== 201) {
             // console.log('Acest username/email deja exista');
             console.log(requestBody);
@@ -144,7 +143,6 @@ export default function RegisterForm() {
           if (values.email) {
             navigate('/login', { replace: true });
           }
-          // console.log(resData);
         })
         .catch((err) => {
           console.log(err);
@@ -201,8 +199,12 @@ export default function RegisterForm() {
                 label="role"
                 {...getFieldProps('role')}
               >
-                <MenuItem value="Profesor">Profesor</MenuItem>
-                <MenuItem value="Student">Elev</MenuItem>
+                <MenuItem value="Profesor" onClick={() => setRoleAles('Profesor')}>
+                  Profesor
+                </MenuItem>
+                <MenuItem value="Student" onClick={() => setRoleAles('Elev')}>
+                  Elev
+                </MenuItem>
               </Select>
               <FormHelperText
                 error={Boolean(touched.role && errors.role)}
@@ -212,12 +214,11 @@ export default function RegisterForm() {
               </FormHelperText>
             </FormControl>
 
-            <FormControl sx={{ minWidth: 150 }} margin="dense">
+            <FormControl sx={{ minWidth: 150 }} margin="dense" disabled={roleAles === 'Profesor'}>
               <InputLabel id="demo-simple-select-helper-label">Clasa</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                // value={clasa}
                 label="Clasa"
                 {...getFieldProps('clasa')}
               >

@@ -105,7 +105,7 @@ export default function LoginForm() {
               resData.data.login.tokenExpiration
             );
             context.userId = resData.data.login.userId;
-            context.clasa = resData.data.login.clasa;
+            context.clasa = resData.data.login.clasa === '' ? '5' : resData.data.login.clasa;
             context.token = resData.data.login.token;
             context.role = resData.data.login.role;
             context.nume = resData.data.login.nume;

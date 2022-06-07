@@ -584,7 +584,7 @@ class CapitolDB extends Component {
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            Inapoi
+            Înapoi
           </Button>
           <Stack
             direction="row"
@@ -616,7 +616,6 @@ class CapitolDB extends Component {
                     : 'none'
               }}
               onClick={() => {
-                // this.setCapitolChosen(capitol);
                 this.setAdaugaSubcapitolChosen();
               }}
             >
@@ -631,7 +630,6 @@ class CapitolDB extends Component {
                     : 'none'
               }}
               onClick={() => {
-                // this.setSubcapitolChosen(subcapitol);
                 this.setAdaugaTeorieChosen();
               }}
             >
@@ -640,19 +638,11 @@ class CapitolDB extends Component {
           </Stack>
         </Stack>
 
-        <Grid container spacing={3} gridAutoRows="1000px">
+        <Grid container spacing={3} minHeight="500px">
           {!this.state.capitolChosen &&
             capitoleFiltrate.map((capitol, index) => (
-              <Grid
-                key={capitol._id}
-                item
-                xs={12}
-                sm={6}
-                md={3}
-                // gridTemplateRows={100}
-                // gridAutoRows="1fr"
-              >
-                <Card height="522px">
+              <Grid key={capitol._id} item height="500px" xs={12} sm={6} md={3}>
+                <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
                     {status && (
                       <Label
@@ -676,34 +666,44 @@ class CapitolDB extends Component {
                     <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(index)} />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{capitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">Clasa a {capitol.clasa}-a</Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                        Subcapitole
-                      </Button>
-
-                      <Button
-                        variant="outlined"
-                        onClick={() => {
-                          this.context.capitolId = capitol;
-                        }}
+                    <Typography variant="subtitle2">Clasa a {capitol.clasa}-a</Typography>
+                  </Stack>
+                  <Stack
+                    ml={3}
+                    mr={3}
+                    mb={3}
+                    direction="row"
+                    alignItems="flex-end"
+                    justifyContent="space-between"
+                  >
+                    <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
+                      Subcapitole
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        this.context.capitolId = capitol;
+                      }}
+                    >
+                      <Link
+                        to="/dashboard/teste"
+                        color="inherit"
+                        underline="none"
+                        component={RouterLink}
                       >
-                        <Link
-                          to="/dashboard/teste"
-                          color="inherit"
-                          underline="none"
-                          component={RouterLink}
-                        >
-                          Test
-                        </Link>
-                      </Button>
-                    </Stack>
+                        Test
+                      </Link>
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -715,7 +715,7 @@ class CapitolDB extends Component {
             !this.state.subcapitolChosen &&
             // !this.state.adaugaSubcapitolChosen &&
             !this.state.adaugaTeorieChosen &&
-            subcapitoleFiltrate.map((subcapitol) => (
+            subcapitoleFiltrate.map((subcapitol, index) => (
               <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
@@ -748,53 +748,60 @@ class CapitolDB extends Component {
                           : 'Nevizualizat'}
                       </Label>
                     )}
-                    <CapitolImgStyle
-                      alt={subcapitol.titlu}
-                      src={mockImgSubcapitol(subcapitol._id)}
-                    />
+                    <CapitolImgStyle alt={subcapitol.titlu} src={mockImgSubcapitol(index)} />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">
-                        Capitolul:{' '}
-                        {
-                          this.state.capitole.find(
-                            (capitol) => capitol._id === subcapitol.capitol_id
-                          ).titlu
-                        }
-                      </Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Typography variant="subtitle2">
+                      Capitolul:{' '}
+                      {
+                        this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
+                          .titlu
+                      }
+                    </Typography>
+                  </Stack>
+                  <Stack
+                    ml={3}
+                    mr={3}
+                    mb={3}
+                    direction="row"
+                    alignItems="flex-end"
+                    justifyContent="space-between"
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        this.setSubcapitolChosen(subcapitol);
+                        this.adaugaAccesare(subcapitol._id);
+                      }}
+                    >
+                      Teorie
+                    </Button>
+                    <Link
+                      to="/dashboard/exercitii"
+                      color="inherit"
+                      underline="none"
+                      component={RouterLink}
+                    >
                       <Button
                         variant="outlined"
                         onClick={() => {
-                          this.setSubcapitolChosen(subcapitol);
-                          this.adaugaAccesare(subcapitol._id);
+                          this.context.capitolId = this.state.capitol;
+                          this.context.subcapitolId = subcapitol;
                         }}
                       >
-                        Teorie
+                        Exerciții
                       </Button>
-                      <Link
-                        to="/dashboard/exercitii"
-                        color="inherit"
-                        underline="none"
-                        component={RouterLink}
-                      >
-                        <Button
-                          variant="outlined"
-                          onClick={() => {
-                            this.context.capitolId = this.state.capitol;
-                            this.context.subcapitolId = subcapitol;
-                          }}
-                        >
-                          Exercitii
-                        </Button>
-                      </Link>
-                    </Stack>
+                    </Link>
                   </Stack>
                 </Card>
               </Grid>
@@ -805,7 +812,6 @@ class CapitolDB extends Component {
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
             !this.state.adaugaSubcapitolChosen &&
-            // !this.state.adaugaTeorieChosen &&
             fiseTeorieFiltrate.map((fisaTeorie) => (
               <Grid
                 key={fisaTeorie._id}

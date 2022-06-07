@@ -14,7 +14,7 @@ export default function FisaFormule() {
     <Page title="Dashboard: Fisa formule | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
-          Fise Formule
+          Fișe Formule
         </Typography>
 
         <FisaFormuleDB />

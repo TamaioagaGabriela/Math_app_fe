@@ -5,3 +5,5 @@ export const mockImgProduct = (index) => `/static/mock-images/products/product_$
 export const mockImgAvatar = (index) => `/static/mock-images/avatars/avatar_${index}.jpg`;
 export const mockImgCapitol = (index) => `/static/mock-images/capitole/cap_${index}.png`;
 export const mockImgSubcapitol = (index) => `/static/mock-images/subcapitole/subcap_${index}.png`;
+export const mockImgExercitii = (index) => `/static/mock-images/exercitii/exe_${index}.png`;
+export const mockImgTeste = (index) => `/static/mock-images/teste/test_${index}.png`;
