@@ -573,12 +573,15 @@ class FisaFormuleDB extends Component {
           {this.state.capitolChosen &&
             this.state.subcapitolChosen &&
             fiseFormuleFiltrate.map((fisaFormule) => (
-              <Grid key={fisaFormule._id} item container spacing={2} marginLeft={0.1}>
-                <Card>
-                  <Stack spacing={2} sx={{ p: 3 }}>
+              <Grid key={fisaFormule._id} item container spacing={2} marginLeft={0.1} width="100%">
+                <Card width="100%">
+                  <Stack spacing={2} sx={{ p: 3 }} width="1150px">
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">Titlu: {fisaFormule.titlu}</Typography>
+                      <Typography variant="h4">
+                        <b>{fisaFormule.titlu}</b>
+                      </Typography>
                     </Link>
+                    &nbsp;
                     <Typography variant="subtitle1">
                       Capitolul:{' '}
                       {
@@ -590,10 +593,8 @@ class FisaFormuleDB extends Component {
                     <Typography variant="subtitle1">
                       Subcapitolul: {this.state.subcapitolFisaFormule.titlu}
                     </Typography>
-                    <Typography variant="subtitle1">
-                      Descriere:
-                      <Markdown>{fisaFormule.descriere}</Markdown>
-                    </Typography>
+                    &nbsp;
+                    <Markdown>{fisaFormule.descriere}</Markdown>
                   </Stack>
                 </Card>
               </Grid>

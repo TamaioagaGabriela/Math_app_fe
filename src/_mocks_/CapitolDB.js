@@ -824,8 +824,11 @@ class CapitolDB extends Component {
                 <Card>
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">Titlu: {fisaTeorie.titlu}</Typography>
+                      <Typography variant="h4">
+                        <b>{fisaTeorie.titlu}</b>
+                      </Typography>
                     </Link>
+                    &nbsp;
                     <Typography variant="subtitle1">
                       Capitolul:{' '}
                       {
@@ -835,12 +838,11 @@ class CapitolDB extends Component {
                       }
                     </Typography>
                     <Typography variant="subtitle1">
-                      Subcapitolul: {this.state.subcapitolTeorie.titlu} {fisaTeorie.link_video}
+                      Subcapitolul: {this.state.subcapitolTeorie.titlu}
                     </Typography>
-                    <Typography variant="subtitle1">
-                      Descriere:
-                      <Markdown>{fisaTeorie.descriere}</Markdown>
-                    </Typography>
+                    {/* <Typography variant="subtitle2">Noțiuni teoretice:</Typography> */}
+                    &nbsp;
+                    <Markdown>{fisaTeorie.descriere}</Markdown>
                     <CardMedia
                       sx={{ m: 5, p: 3 }}
                       // sx={{ width: '70%' }}
