@@ -477,7 +477,7 @@ class FisaFormuleDB extends Component {
                     </Link>
                     <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
                   </Stack>
-                  <Stack ml={3} mr={3} mb={3} alignItems="center" justifyContent="center">
+                  <Stack spacing={1} ml={3} mr={3} mb={3}>
                     <Button
                       variant="outlined"
                       // textTransform={'none'}
@@ -553,14 +553,7 @@ class FisaFormuleDB extends Component {
                       }
                     </Typography>
                   </Stack>
-                  <Stack
-                    ml={3}
-                    mr={3}
-                    mb={3}
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
+                  <Stack spacing={1} ml={3} mr={3} mb={3}>
                     <Button
                       variant="outlined"
                       onClick={() => {

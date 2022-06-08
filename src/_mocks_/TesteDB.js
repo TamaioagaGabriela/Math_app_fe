@@ -26,7 +26,7 @@ import ModalFisaTeorie from './ModalFiseTeorie';
 import Backdrop from '../components/Backdrop/Backdrop';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
-import { mockImgTesteCapitole } from '../utils/mockImages';
+import { mockImgTesteCapitole, mockImgTeste } from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import './index.css';
 
@@ -726,32 +726,33 @@ class TesteDB extends Component {
                           : 'Nerezolvat'}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={test._id} src={mockImgTesteCapitole(test.capitol_id)} />
+                    <CapitolImgStyle alt={test._id} src={mockImgTeste(index)} />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">Testul {index + 1}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">
-                        Capitolul:{' '}
-                        {
-                          this.state.capitole.find((capitol) => capitol._id === test.capitol_id)
-                            .titlu
-                        }
-                      </Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => {
-                          this.getExercitii(test);
-                        }}
-                      >
-                        Rezolvă testul
-                      </Button>
-                    </Stack>
+                    <Typography variant="subtitle2">
+                      Capitolul:{' '}
+                      {this.state.capitole.find((capitol) => capitol._id === test.capitol_id).titlu}
+                    </Typography>
+                  </Stack>
+                  <Stack spacing={1} ml={3} mr={3} mb={3}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        this.getExercitii(test);
+                      }}
+                    >
+                      Rezolvă testul
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>

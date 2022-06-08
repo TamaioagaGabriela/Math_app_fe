@@ -22,7 +22,11 @@ import {
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
-import { mockImgCapitol, mockImgSubcapitol } from '../utils/mockImages';
+import {
+  mockImgExercitiiCapitole,
+  mockImgExercitiiSubcapitole,
+  mockImgExercitii
+} from '../utils/mockImages';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import { ProductCartWidget } from '../sections/@dashboard/products';
 import Iconify from '../components/Iconify';
@@ -737,7 +741,7 @@ class ExercitiiGresiteDB extends Component {
 
         <Grid container spacing={3}>
           {!this.state.capitolChosen &&
-            capitoleFiltrate.map((capitol) => (
+            capitoleFiltrate.map((capitol, index) => (
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
@@ -756,21 +760,25 @@ class ExercitiiGresiteDB extends Component {
                         {status}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={capitol.titlu} src={mockImgCapitol(capitol._id)} />
+                    <CapitolImgStyle alt={capitol.titlu} src={mockImgExercitiiCapitole(index)} />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{capitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">Clasa {capitol.clasa}</Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="center">
-                      <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                        Accesează subcapitolele
-                      </Button>
-                    </Stack>
+                    <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
+                  </Stack>
+                  <Stack spacing={1} ml={3} mr={3} mb={3}>
+                    <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
+                      Accesează subcapitolele
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -780,7 +788,7 @@ class ExercitiiGresiteDB extends Component {
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {this.state.capitolChosen &&
             !this.state.subcapitolChosen &&
-            subcapitoleFiltrate.map((subcapitol) => (
+            subcapitoleFiltrate.map((subcapitol, index) => (
               <Grid key={subcapitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
@@ -801,35 +809,45 @@ class ExercitiiGresiteDB extends Component {
                     )}
                     <CapitolImgStyle
                       alt={subcapitol.titlu}
-                      src={mockImgSubcapitol(subcapitol._id)}
+                      src={mockImgExercitiiSubcapitole(index)}
                     />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">
-                        Capitolul:{' '}
-                        {
-                          this.state.capitole.find(
-                            (capitol) => capitol._id === subcapitol.capitol_id
-                          ).titlu
-                        }
-                      </Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Button
-                        variant="outlined"
-                        onClick={() => {
-                          this.setSubcapitolChosen(subcapitol);
-                          this.fetchExercitiiGresite();
-                        }}
-                      >
-                        Exercitii gresite
-                      </Button>
-                    </Stack>
+                    <Typography variant="subtitle2">
+                      Capitolul:{' '}
+                      {
+                        this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
+                          .titlu
+                      }
+                    </Typography>
+                  </Stack>
+                  <Stack
+                    ml={3}
+                    mr={3}
+                    mb={3}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        this.setSubcapitolChosen(subcapitol);
+                        this.fetchExercitiiGresite();
+                      }}
+                    >
+                      Exerciții greșite
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
@@ -862,44 +880,49 @@ class ExercitiiGresiteDB extends Component {
                     )}
                     <CapitolImgStyle
                       alt={rezolvareExercitiu.exercitiu._id}
-                      src={mockImgSubcapitol(rezolvareExercitiu.exercitiu._id)}
+                      src={mockImgExercitii(index)}
                     />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">Exercitiul {index + 1}</Typography>
+                      <Typography variant="subtitle1">Exercițiul {index + 1}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">
-                        Capitolul:{' '}
-                        {
-                          this.state.capitole.find(
-                            (capitol) => capitol._id === this.state.subcapitolExercitii.capitol_id
-                          ).titlu
-                        }
-                      </Typography>
-                    </Stack>
-                    <Typography variant="subtitle1">
+                    <Typography variant="subtitle2">
+                      Capitolul:{' '}
+                      {
+                        this.state.capitole.find(
+                          (capitol) => capitol._id === this.state.subcapitolExercitii.capitol_id
+                        ).titlu
+                      }
+                    </Typography>
+
+                    <Typography variant="subtitle2">
                       Subcapitolul: {this.state.subcapitolExercitii.titlu}
                     </Typography>
-                    <Typography variant="subtitle1">
+                    <Typography variant="subtitle2">
                       Nivel dificultate: {rezolvareExercitiu.exercitiu.nivel_dif}
                     </Typography>
-                    <Stack spacing={1}>
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setExercitiuChosen(rezolvareExercitiu.exercitiu)}
-                      >
-                        Rezolva Exercitiul
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        onClick={() => this.setVeziRezolvareInainte(rezolvareExercitiu.exercitiu)}
-                      >
-                        Vezi rezolvare
-                      </Button>
-                    </Stack>
+                  </Stack>
+                  <Stack spacing={1} ml={3} mr={3} mb={3}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => this.setExercitiuChosen(rezolvareExercitiu.exercitiu)}
+                    >
+                      Rezolvă Exercițiul
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => this.setVeziRezolvareInainte(rezolvareExercitiu.exercitiu)}
+                    >
+                      Vezi rezolvare
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>

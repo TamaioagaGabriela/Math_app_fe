@@ -27,7 +27,11 @@ import {
 import { styled } from '@mui/material/styles';
 import Label from '../components/Label';
 import AuthContext from '../context/auth-context';
-import { mockImgExercitiiCapitole, mockImgExercitiiSubcapitole } from '../utils/mockImages';
+import {
+  mockImgExercitiiCapitole,
+  mockImgExercitiiSubcapitole,
+  mockImgExercitii
+} from '../utils/mockImages';
 import ModalFisaTeorie from './ModalFiseTeorie';
 import Backdrop from '../components/Backdrop/Backdrop';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
@@ -929,14 +933,7 @@ class ExercitiiDB extends Component {
                     </Link>
                     <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
                   </Stack>
-                  <Stack
-                    ml={3}
-                    mr={3}
-                    mb={3}
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
+                  <Stack spacing={1} ml={3} mr={3} mb={3}>
                     <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
                       Accesează Subcapitolele
                     </Button>
@@ -1038,34 +1035,42 @@ class ExercitiiDB extends Component {
                         {this.getStatusExercitiu(exercitiu._id)}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={exercitiu._id} src={mockImgExercitiiSubcapitole(index)} />
+                    <CapitolImgStyle alt={exercitiu._id} src={mockImgExercitii(index)} />
                   </Box>
 
-                  <Stack spacing={2} sx={{ p: 3 }}>
+                  <Stack
+                    spacing={2}
+                    sx={{ p: 3 }}
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    minHeight="135px"
+                  >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="subtitle1">Exercițiul {index + 1}</Typography>
                     </Link>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1">
-                        Capitolul:{' '}
-                        {
-                          this.state.capitole.find(
-                            (capitol) => capitol._id === this.state.subcapitolExercitii.capitol_id
-                          ).titlu
-                        }
-                      </Typography>
-                    </Stack>
-                    <Typography variant="subtitle1">
+                    <Typography variant="subtitle2">
+                      Capitolul:{' '}
+                      {
+                        this.state.capitole.find(
+                          (capitol) => capitol._id === this.state.subcapitolExercitii.capitol_id
+                        ).titlu
+                      }
+                    </Typography>
+                    <Typography variant="subtitle2">
                       Subcapitolul: {this.state.subcapitolExercitii.titlu}
                     </Typography>
-                    <Typography variant="subtitle1">
+                    <Typography variant="subtitle2">
                       Nivel dificultate: {exercitiu.nivel_dif}
                     </Typography>
-                    <Stack direction="row" alignItems="center" justifyContent="center">
-                      <Button variant="outlined" onClick={() => this.setExercitiuChosen(exercitiu)}>
-                        Rezolvă Exercițiul
-                      </Button>
-                    </Stack>
+                  </Stack>
+                  <Stack spacing={1} ml={3} mr={3} mb={3}>
+                    <Button
+                      variant="outlined"
+                      minWidth="530px"
+                      onClick={() => this.setExercitiuChosen(exercitiu)}
+                    >
+                      Rezolvă Exercițiul
+                    </Button>
                   </Stack>
                 </Card>
               </Grid>
