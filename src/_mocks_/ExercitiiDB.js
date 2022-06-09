@@ -352,9 +352,7 @@ class ExercitiiDB extends Component {
               exercitiu.subcapitol_id === subcapitolId &&
               exercitiu.nivel_dif === this.state.filtru.toString().toLowerCase()
           );
-
     const exercitiiFiltrateSortate = this.applySort(exercitiiFiltrate);
-
     // toate rezolvarile CORECTE ale unui user, filtrate in functie de subcapitol
     const rezolvariExercitiiFiltrate = this.state.rezolvariExercitii.filter(
       (rezolvare) =>
@@ -362,20 +360,15 @@ class ExercitiiDB extends Component {
         rezolvare.status === 'CORECT' &&
         rezolvare.exercitiu.subcapitol_id === subcapitolId
     );
-
     const idExercitiiRezolvate = rezolvariExercitiiFiltrate.map((x) => x.exercitiu._id);
-    // console.log('idExercitiiRezolvate', idExercitiiRezolvate);
-
     const rezolvariExercitiiDistincte = [...new Set(idExercitiiRezolvate)];
-    // console.log('rezolvariExercitiiDistincte', rezolvariExercitiiDistincte);
-
     if (
       Number.isNaN(
         parseInt((100 * rezolvariExercitiiDistincte.length) / exercitiiFiltrateSortate.length, 10)
       )
-    )
+    ) {
       return 0;
-
+    }
     return parseInt(
       (100 * rezolvariExercitiiDistincte.length) / exercitiiFiltrateSortate.length,
       10

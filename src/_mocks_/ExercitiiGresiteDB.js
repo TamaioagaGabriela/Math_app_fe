@@ -580,7 +580,6 @@ class ExercitiiGresiteDB extends Component {
   //       return 'Contine exercitii gresite';
   //     }
   //   }
-
   //   return 'Nu contine exercitii gresite';
   // };
 
