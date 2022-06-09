@@ -474,9 +474,7 @@ class CapitolDB extends Component {
     const subcapitoleFiltrate = this.state.subcapitole.filter(
       (subcapitol) => subcapitol.capitol_id === capitolId
     );
-
     let count = 0;
-
     for (let i = 0; i < subcapitoleFiltrate.length; i += 1) {
       // toate accesarile unui user, filtrate in functie de capitol
       const accesariSubcapitole = this.state.accesariFiseTeorie.filter(
@@ -484,12 +482,9 @@ class CapitolDB extends Component {
           accesare.user._id === this.context.userId &&
           accesare.teorie.subcapitol_id === subcapitoleFiltrate[i]._id
       );
-
       if (accesariSubcapitole.length >= 1) count += 1;
     }
-
     if (Number.isNaN(parseInt((100 * count) / subcapitoleFiltrate.length, 10))) return 0;
-
     return parseInt((100 * count) / subcapitoleFiltrate.length, 10);
   };
 
@@ -659,7 +654,7 @@ class CapitolDB extends Component {
                         }}
                       >
                         {this.getPercentagePerCapitol(capitol._id) === 100
-                          ? 'Completed'
+                          ? 'Complet'
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}

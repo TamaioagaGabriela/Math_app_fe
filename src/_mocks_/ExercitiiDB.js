@@ -116,11 +116,11 @@ class ExercitiiDB extends Component {
     };
   }
 
-  componentDidMount() {
-    this.fetchCapitole();
-    this.fetchSubcapitole();
-    this.fetchExercitii();
-    this.fetchRezolvariExercitii();
+  async componentDidMount() {
+    await this.fetchCapitole();
+    await this.fetchSubcapitole();
+    await this.fetchExercitii();
+    await this.fetchRezolvariExercitii();
   }
 
   componentWillUnmount() {
@@ -914,7 +914,7 @@ class ExercitiiDB extends Component {
                         }}
                       >
                         {this.getPercentagePerCapitol(capitol._id) === 100
-                          ? 'Completed'
+                          ? 'Complet'
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
@@ -1369,65 +1369,72 @@ class ExercitiiDB extends Component {
                     inputRef={this.rezolvareExercitiuRef}
                     multiline
                   />
-                  <TextField
-                    id="Raspuns corect"
-                    label="Raspuns corect"
-                    style={{ width: '100%' }}
-                    margin="dense"
-                    placeholder="Raspuns corect"
-                    inputRef={this.raspunsCorectExercitiuRef}
-                    multiline
-                  />
-                  <FormControl sx={{ minWidth: 180 }} margin="dense">
-                    <InputLabel id="demo-simple-select-helper-label">Nivel dificultate</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-helper-label"
-                      id="demo-simple-select-helper"
-                      label="Nivel dificultate"
-                      inputRef={this.nivelDificultateExercitiuRef}
-                    >
-                      <MenuItem value="scazut">Scazut</MenuItem>
-                      <MenuItem value="mediu">Mediu</MenuItem>
-                      <MenuItem value="ridicat">Ridicat</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <TextField
-                    id="Varianta 1"
-                    label="Varianta 1"
-                    style={{ width: '20%' }}
-                    margin="dense"
-                    marginRight="100"
-                    placeholder="Varianta 1"
-                    inputRef={this.varianta1ExercitiuRef}
-                    multiline
-                  />
-                  <TextField
-                    id="Varianta 2"
-                    label="Varianta 2"
-                    style={{ width: '20%' }}
-                    margin="dense"
-                    placeholder="Varianta 2"
-                    inputRef={this.varianta2ExercitiuRef}
-                    multiline
-                  />
-                  <TextField
-                    id="Varianta 3"
-                    label="Varianta 3"
-                    style={{ width: '20%' }}
-                    margin="dense"
-                    placeholder="Varianta 3"
-                    inputRef={this.varianta3ExercitiuRef}
-                    multiline
-                  />
-                  <TextField
-                    id="Varianta 4"
-                    label="Varianta 4"
-                    style={{ width: '20%' }}
-                    margin="dense"
-                    placeholder="Varianta 4"
-                    inputRef={this.varianta4ExercitiuRef}
-                    multiline
-                  />
+                  <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <TextField
+                      id="Raspuns corect"
+                      label="Raspuns corect"
+                      style={{ width: '49.3%' }}
+                      margin="dense"
+                      placeholder="Raspuns corect"
+                      inputRef={this.raspunsCorectExercitiuRef}
+                      multiline
+                    />
+                    <FormControl sx={{ width: '49.3%' }} margin="dense">
+                      <InputLabel id="demo-simple-select-helper-label">
+                        Nivel dificultate
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-helper-label"
+                        id="demo-simple-select-helper"
+                        label="Nivel dificultate"
+                        inputRef={this.nivelDificultateExercitiuRef}
+                      >
+                        <MenuItem value="scazut">Scazut</MenuItem>
+                        <MenuItem value="mediu">Mediu</MenuItem>
+                        <MenuItem value="ridicat">Ridicat</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Stack>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <TextField
+                      id="Varianta 1"
+                      label="Varianta 1"
+                      style={{ width: '24%' }}
+                      margin="dense"
+                      marginRight="100"
+                      placeholder="Varianta 1"
+                      inputRef={this.varianta1ExercitiuRef}
+                      multiline
+                    />
+                    <TextField
+                      id="Varianta 2"
+                      label="Varianta 2"
+                      style={{ width: '24%' }}
+                      margin="dense"
+                      placeholder="Varianta 2"
+                      inputRef={this.varianta2ExercitiuRef}
+                      multiline
+                    />
+
+                    <TextField
+                      id="Varianta 3"
+                      label="Varianta 3"
+                      style={{ width: '24%' }}
+                      margin="dense"
+                      placeholder="Varianta 3"
+                      inputRef={this.varianta3ExercitiuRef}
+                      multiline
+                    />
+                    <TextField
+                      id="Varianta 4"
+                      label="Varianta 4"
+                      style={{ width: '24%' }}
+                      margin="dense"
+                      placeholder="Varianta 4"
+                      inputRef={this.varianta4ExercitiuRef}
+                      multiline
+                    />
+                  </Stack>
                 </Paper>
               </ModalFisaTeorie>
             )}

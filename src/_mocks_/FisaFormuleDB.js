@@ -169,7 +169,6 @@ class FisaFormuleDB extends Component {
   modalConfirmHandler = () => {
     const titlu = this.titluFormuleRef.current.value;
     const descriere = this.descriereFormuleRef.current.value;
-
     if (titlu == null) {
       return;
     }
@@ -458,7 +457,7 @@ class FisaFormuleDB extends Component {
                         }}
                       >
                         {this.getPercentagePerCapitol(capitol._id) === 100
-                          ? 'Completed'
+                          ? 'Complet'
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
@@ -481,7 +480,7 @@ class FisaFormuleDB extends Component {
                     <Button
                       variant="outlined"
                       // textTransform={'none'}
-                      sentenceCase
+                      // sentenceCase
                       onClick={() => this.setCapitolChosen(capitol)}
                     >
                       Accesează subcapitolele

@@ -75,7 +75,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                 {context.nume}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {context.role}
+                {context.role === 'Student' ? 'Elev' : context.role}
               </Typography>
             </Box>
           </AccountStyle>

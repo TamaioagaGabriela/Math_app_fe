@@ -95,7 +95,7 @@ class ExercitiiGresiteDB extends Component {
     this.fetchCapitole();
     this.fetchSubcapitole();
     this.fetchExercitii();
-    // this.fetchExercitiiGresite();
+    this.fetchExercitiiGresite();
   }
 
   componentWillUnmount() {
@@ -551,6 +551,39 @@ class ExercitiiGresiteDB extends Component {
     return sorted;
   };
 
+  getStatusSubcapitol = (subcapitolId) => {
+    console.log('this.state.exercitiiGresiteUser', this.state.exercitiiGresiteUserAll);
+    // this.fetchExercitiiGresite();
+    const exercitiiGresiteFiltrate = this.state.exercitiiGresiteUserAll.filter(
+      (exercitiuRezolvat) =>
+        exercitiuRezolvat.user._id === this.context.userId &&
+        exercitiuRezolvat.exercitiu.subcapitol_id === subcapitolId
+    );
+
+    if (exercitiiGresiteFiltrate.length >= 1) {
+      return 'Contine exercitii gresite';
+    }
+    return 'Nu contine exercitii gresite';
+  };
+
+  // getStatusCapitol = (capitolId) => {
+  //   const subcapitoleFiltrate = this.state.subcapitole.filter(
+  //     (subcapitol) => subcapitol.capitol_id === capitolId
+  //   );
+  //   for (let i = 0; i < subcapitoleFiltrate.length; i += 1) {
+  //     const exercitiiGresiteFiltrate = this.state.exercitiiGresiteUserAll.filter(
+  //       (exercitiuRezolvat) =>
+  //         exercitiuRezolvat.user._id === this.context.userId &&
+  //         exercitiuRezolvat.exercitiu.subcapitol_id === subcapitoleFiltrate[i]._id
+  //     );
+  //     if (exercitiiGresiteFiltrate.length >= 1) {
+  //       return 'Contine exercitii gresite';
+  //     }
+  //   }
+
+  //   return 'Nu contine exercitii gresite';
+  // };
+
   render() {
     console.log(this.state.isLoading);
 
@@ -745,10 +778,14 @@ class ExercitiiGresiteDB extends Component {
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
-                    {status && (
+                    {/* {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={
+                          this.getStatusCapitol(capitol._id) === 'Nu contine exercitii gresite'
+                            ? 'info'
+                            : 'warning'
+                        }
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -757,9 +794,9 @@ class ExercitiiGresiteDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.getStatusCapitol(capitol._id)}
                       </Label>
-                    )}
+                    )} */}
                     <CapitolImgStyle alt={capitol.titlu} src={mockImgExercitiiCapitole(index)} />
                   </Box>
 
@@ -776,7 +813,13 @@ class ExercitiiGresiteDB extends Component {
                     <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
                   </Stack>
                   <Stack spacing={1} ml={3} mr={3} mb={3}>
-                    <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        this.fetchExercitiiGresite();
+                        this.setCapitolChosen(capitol);
+                      }}
+                    >
                       Accesează subcapitolele
                     </Button>
                   </Stack>
@@ -795,7 +838,12 @@ class ExercitiiGresiteDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color={
+                          this.getStatusSubcapitol(subcapitol._id) ===
+                          'Nu contine exercitii gresite'
+                            ? 'info'
+                            : 'warning'
+                        }
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -804,7 +852,7 @@ class ExercitiiGresiteDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        {this.getStatusSubcapitol(subcapitol._id)}
                       </Label>
                     )}
                     <CapitolImgStyle
@@ -866,7 +914,7 @@ class ExercitiiGresiteDB extends Component {
                     {status && (
                       <Label
                         variant="filled"
-                        color={(status === 'sale' && 'error') || 'info'}
+                        color="error"
                         sx={{
                           zIndex: 9,
                           top: 16,
@@ -875,7 +923,7 @@ class ExercitiiGresiteDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {status}
+                        GRESIT
                       </Label>
                     )}
                     <CapitolImgStyle

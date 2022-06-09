@@ -640,7 +640,7 @@ class TesteDB extends Component {
                         }}
                       >
                         {this.getPercentagePerCapitol(capitol._id) === 100
-                          ? 'Completed'
+                          ? 'Complet'
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
