@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import Spinner from '../components/Spinner/Spinner';
 import AuthContext from '../context/auth-context';
 
-const cover = `/static/mock-images/capitole/capp_624623ca26d81302468d69ca.png`;
+const cover = `/static/mock-images/formule/subcapitole/subcap_2.png`;
 
 const UtilizatorImgStyle = styled('img')({
   top: 0,
@@ -131,17 +131,20 @@ export class UtilizatorDB extends Component {
                   <Typography variant="subtitle1">
                     <b>Username: </b> {this.state.detaliiUser[0].username}
                   </Typography>
-                  <Typography variant="subtitle1">
-                    <b>Clasa: </b> {this.state.detaliiUser[0].clasa}
-                  </Typography>
+                  {this.state.detaliiUser[0].clasa !== '' && (
+                    <Typography variant="subtitle1">
+                      <b>Clasa: </b> {this.state.detaliiUser[0].clasa}
+                    </Typography>
+                  )}
                 </Stack>
-
                 <Typography variant="subtitle1">
                   <b>Email: </b> {this.state.detaliiUser[0].email}
                 </Typography>
-                <Typography variant="subtitle1">
-                  <b>Email tutore: </b> {this.state.detaliiUser[0].email_tutore}
-                </Typography>
+                {this.state.detaliiUser[0].email_tutore !== '' && (
+                  <Typography variant="subtitle1">
+                    <b>Email tutore: </b> {this.state.detaliiUser[0].email_tutore}
+                  </Typography>
+                )}
               </Stack>
             </Card>
           )}

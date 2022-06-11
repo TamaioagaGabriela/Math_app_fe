@@ -268,6 +268,7 @@ export default function RegisterForm() {
             type="email"
             label="Adresa de email tutore"
             {...getFieldProps('emailTutore')}
+            disabled={roleAles === 'Profesor'}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
           />
