@@ -236,7 +236,7 @@ export default function AppTeorie() {
         </IconWrapperStyle>
         <Typography variant="h3">Teorie</Typography>
         <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
-          Progres: {teoriePercentage}%
+          Progres: {teoriePercentage}%{/* 57% */}
         </Typography>
       </RootStyle>
     </Link>

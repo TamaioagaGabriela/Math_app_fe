@@ -19,16 +19,19 @@ const CHART_DATA = [
     name: 'Exerciții',
     type: 'column',
     data: exercitiiPercentageList
+    // [100, 89, 54, 76, 23, 41]
   },
   {
     name: 'Teorie',
     type: 'column',
     data: teoriePercentageList
+    // [100, 70, 17, 59, 65, 33]
   },
   {
     name: 'Teste',
     type: 'column',
     data: testePercentageList
+    // [100, 100, 70, 38, 0, 20]
   }
 ];
 
@@ -39,7 +42,22 @@ export default function AppGraficProgres() {
     fill: { type: ['solid', 'gradient', 'solid'] },
     labels: capitoleLabelsList,
     // ['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '05/01/2003', '06/01/2003'],
+    scales: {
+      y: {
+        min: 0,
+        max: 100,
+        stepSize: 10
+      },
+      x: {}
+    },
+
     xaxis: { type: 'String' },
+    yaxis: {
+      min: 0,
+      max: 100,
+      tickAmount: 5
+    },
+
     tooltip: {
       shared: true,
       intersect: false,
@@ -48,7 +66,7 @@ export default function AppGraficProgres() {
           if (typeof y !== 'undefined') {
             return `${y.toFixed(0)}%`;
           }
-          return y;
+          return '100%';
         }
       }
     }

@@ -201,7 +201,7 @@ export default function AppTeste() {
         </IconWrapperStyle>
         <Typography variant="h3">Teste</Typography>
         <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
-          Progres: {testePercentage}%
+          Progres: {testePercentage}%{/* 54% */}
         </Typography>
       </RootStyle>
     </Link>

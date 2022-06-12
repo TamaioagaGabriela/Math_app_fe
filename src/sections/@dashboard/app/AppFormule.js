@@ -240,7 +240,7 @@ export default function AppFormule() {
         {/* <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography> */}
         <Typography variant="h3">Formule</Typography>
         <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
-          Progres: {formulePercentage}%
+          Progres: {formulePercentage}%{/* 43% */}
         </Typography>
       </RootStyle>
     </Link>

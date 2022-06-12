@@ -256,7 +256,7 @@ export default function AppExercitii() {
         </IconWrapperStyle>
         <Typography variant="h3">Exerciții</Typography>
         <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
-          Progres: {exercitiiPercentage}%
+          Progres: {exercitiiPercentage}%{/* 64% */}
         </Typography>
       </RootStyle>
     </Link>
