@@ -553,7 +553,7 @@ class ExercitiiGresiteDB extends Component {
 
   getStatusSubcapitol = (subcapitolId) => {
     console.log('this.state.exercitiiGresiteUser', this.state.exercitiiGresiteUserAll);
-    // this.fetchExercitiiGresite();
+
     const exercitiiGresiteFiltrate = this.state.exercitiiGresiteUserAll.filter(
       (exercitiuRezolvat) =>
         exercitiuRezolvat.user._id === this.context.userId &&

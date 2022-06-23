@@ -80,9 +80,7 @@ export default function LoginForm() {
         }
       })
         .then((res) => {
-          // console.log(res.status);
           if (res.status !== 200 && res.status !== 201) {
-            // console.log('Email gresit, parola gresita sau email neconfirmat');
             setErrorMessage('Email gresit, parola gresita sau email neconfirmat');
 
             setIsSubmitting(false);
@@ -92,8 +90,6 @@ export default function LoginForm() {
           return res.json();
         })
         .then((resData) => {
-          // console.log('token = ', resData.data.login.token);
-          // console.log('userId = ', resData.data.login.userId);
           if (resData.data.login.token) {
             context.login(
               resData.data.login.token,
@@ -123,7 +119,7 @@ export default function LoginForm() {
           });
         })
         .catch((err) => {
-          // console.log(err);
+          console.log(err);
         });
     }
   });

@@ -241,9 +241,7 @@ class CapitolDB extends Component {
           };
           const updatedSubcapitole = [...prevState.subcapitole];
           updatedSubcapitole.push(subcapitol);
-          // console.log('push subcapitol', updatedSubcapitole);
           this.setState({ adaugaSubcapitolChosen: false });
-          // this.setState({ capitolChosen: false });
           return { subcapitole: updatedSubcapitole };
         });
       })
@@ -295,7 +293,7 @@ class CapitolDB extends Component {
             clasa: resData.data.adaugaCapitol.clasa,
             titlu: resData.data.adaugaCapitol.titlu
           };
-          // console.log('adaugaaaa', fisaTeorie);
+
           const updatedCapitole = [...prevState.capitole];
           updatedCapitole.push(capitol);
           this.setState({ adaugaCapitolChosen: false });
@@ -358,11 +356,11 @@ class CapitolDB extends Component {
             descriere: resData.data.adaugaTeorie.descriere,
             link_video: resData.data.link_video
           };
-          // console.log('adaugaaaa', fisaTeorie);
+
           const updatedFiseTeorie = [...prevState.fiseTeorie];
           updatedFiseTeorie.push(fisaTeorie);
           this.setState({ adaugaTeorieChosen: false });
-          // this.setState({ subcapitolChosen: false });
+
           return { fiseTeorie: updatedFiseTeorie };
         });
       })

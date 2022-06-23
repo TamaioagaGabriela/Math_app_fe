@@ -36,7 +36,6 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const context = useContext(AuthContext);
   const logout = () => {
-    console.log('ctx', context.subcapitolId, context.capitolId);
     context.token = null;
     context.userId = null;
     context.role = null;
@@ -49,7 +48,6 @@ export default function AccountPopover() {
   };
 
   const anchorRef = useRef(null);
-  // console.log('token accountpopover = ', context.userId);
 
   const [open, setOpen] = useState(false);
 
