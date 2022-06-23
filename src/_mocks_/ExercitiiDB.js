@@ -37,6 +37,7 @@ import Backdrop from '../components/Backdrop/Backdrop';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
 import Iconify from '../components/Iconify';
 import Scrollbar from '../components/Scrollbar';
+import ExercitiiGresiteWidget from '../sections/@dashboard/products/ExercitiiGresiteWidget';
 import './index.css';
 
 const status = 'Completed';
@@ -113,6 +114,7 @@ class ExercitiiDB extends Component {
       order: 'asc',
       adaugaExercitiuChosen: false,
       rezolvariExercitii: []
+      // exercitiiGresiteCount: []
     };
   }
 
@@ -441,6 +443,65 @@ class ExercitiiDB extends Component {
   setAdaugaExercitiuChosen = () => {
     this.setState({ adaugaExercitiuChosen: true });
   };
+
+  // fetchExercitiiGresite = () => {
+  //   const requestBody = {
+  //     query: `
+  //       query{
+  //         getExercitiiGresite{
+  //           _id
+  //           exercitiu{
+  //              _id
+  //             subcapitol_id
+  //             cerinta
+  //             rezolvare
+  //             varianta1
+  //             varianta2
+  //             varianta3
+  //             varianta4
+  //             raspuns_corect
+  //             nivel_dif
+  //           }
+  //           user{
+  //             _id
+  //           }
+  //           status
+  //           raspuns_user
+  //           createdAt
+  //         }
+  //       }
+  //       `
+  //   };
+  //   const tkn = this.context.token;
+  //   fetch('http://localhost:8000/graphql', {
+  //     method: 'POST',
+  //     body: JSON.stringify(requestBody),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${tkn}`
+  //     }
+  //   })
+  //     .then((res) => {
+  //       if (res.status !== 200 && res.status !== 201) {
+  //         throw new Error('Failed!');
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((resData) => {
+  //       this.setExercitiiGresiteCount(resData.data.getExercitiiGresite);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  // setExercitiiGresiteCount = async (listaRezolvariExercitii) => {
+  //   await this.setState((prevState) => ({
+  //     exercitiiGresiteCount: listaRezolvariExercitii.filter(
+  //       (exercitiuRezolvat) => exercitiuRezolvat.user._id === this.context.userId
+  //     ).length
+  //   }));
+  // };
 
   modalCancelHandlerAdaugaExercitiu = () => {
     this.setState({ adaugaExercitiuChosen: false });
@@ -1145,6 +1206,7 @@ class ExercitiiDB extends Component {
                     className="next-question"
                     onClick={() => {
                       this.adaugaRezolvareExercitiu();
+                      this.fetchExercitiiGresite();
                     }}
                   >
                     trimite

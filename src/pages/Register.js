@@ -67,18 +67,6 @@ export default function Register() {
 
           <RegisterForm />
 
-          <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-            Prin înregistrare, sunt de acord cu&nbsp;
-            <Link underline="always" color="textPrimary">
-              Termenii și Serviciile,
-            </Link>
-            &nbsp;precum și cu&nbsp;
-            <Link underline="always" color="textPrimary">
-              Politica de confidențialitate
-            </Link>
-            .
-          </Typography>
-
           {/* <Typography
             variant="subtitle2"
             sx={{

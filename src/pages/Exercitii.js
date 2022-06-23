@@ -9,6 +9,8 @@ import { ProductCartWidget } from '../sections/@dashboard/products';
 
 import ExercitiiDB from '../_mocks_/ExercitiiDB';
 
+import ExercitiiGresiteWidget from '../sections/@dashboard/products/ExercitiiGresiteWidget';
+
 // ----------------------------------------------------------------------
 
 export default function Exercitii() {
@@ -20,6 +22,7 @@ export default function Exercitii() {
         </Typography>
 
         <ExercitiiDB />
+        {/* <ExercitiiGresiteWidget /> */}
         <ProductCartWidget />
       </Container>
     </Page>

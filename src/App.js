@@ -38,8 +38,8 @@ export default function App() {
         setClasa(null);
         setNume(null);
         setEmail(null);
-        setCapitol(null);
-        setSubcapitol(null);
+        setCapitol(undefined);
+        setSubcapitol(undefined);
       }
     }),
     [token, userId]

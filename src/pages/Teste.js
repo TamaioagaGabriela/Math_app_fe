@@ -8,6 +8,7 @@ import Page from '../components/Page';
 import { ProductCartWidget } from '../sections/@dashboard/products';
 
 import TesteDB from '../_mocks_/TesteDB';
+import ExercitiiGresiteWidget from '../sections/@dashboard/products/ExercitiiGresiteWidget';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +21,7 @@ export default function Capitol() {
         </Typography>
 
         <TesteDB />
-        <ProductCartWidget />
+        <ExercitiiGresiteWidget />
       </Container>
     </Page>
   );

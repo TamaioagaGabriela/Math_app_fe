@@ -838,6 +838,7 @@ class CapitolDB extends Component {
                     {/* <Typography variant="subtitle2">Noțiuni teoretice:</Typography> */}
                     &nbsp;
                     <Markdown>{fisaTeorie.descriere}</Markdown>
+                    {/* fisaTeorie.link_video !== null ? */}
                     <CardMedia
                       sx={{ m: 5, p: 3 }}
                       // sx={{ width: '70%' }}

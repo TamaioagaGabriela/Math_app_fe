@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
   Stack,
   TextField,
@@ -11,7 +11,9 @@ import {
   Select,
   MenuItem,
   FormControl,
-  FormHelperText
+  FormHelperText,
+  Link,
+  Typography
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
@@ -140,9 +142,9 @@ export default function RegisterForm() {
           return res.json();
         })
         .then((resData) => {
-          if (values.email) {
-            navigate('/login', { replace: true });
-          }
+          // if (values.email) {
+          //   navigate('/login', { replace: true });
+          // }
         })
         .catch((err) => {
           console.log(err);
@@ -159,7 +161,6 @@ export default function RegisterForm() {
           <div>
             <p style={{ color: 'red' }}>{errorMessage}</p>
           </div>
-
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
@@ -177,7 +178,6 @@ export default function RegisterForm() {
               helperText={touched.lastName && errors.lastName}
             />
           </Stack>
-
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
@@ -202,7 +202,7 @@ export default function RegisterForm() {
                 <MenuItem value="Profesor" onClick={() => setRoleAles('Profesor')}>
                   Profesor
                 </MenuItem>
-                <MenuItem value="Student" onClick={() => setRoleAles('Elev')}>
+                <MenuItem value="Student" onClick={() => setRoleAles('Student')}>
                   Elev
                 </MenuItem>
               </Select>
@@ -233,7 +233,6 @@ export default function RegisterForm() {
               </Select>
             </FormControl>
           </Stack>
-
           <TextField
             fullWidth
             autoComplete="username"
@@ -243,7 +242,6 @@ export default function RegisterForm() {
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
           />
-
           <TextField
             fullWidth
             autoComplete="current-password"
@@ -262,17 +260,13 @@ export default function RegisterForm() {
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
           />
-
           <TextField
             fullWidth
             type="email"
             label="Adresa de email tutore"
             {...getFieldProps('emailTutore')}
             disabled={roleAles === 'Profesor'}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
           />
-
           <LoadingButton
             fullWidth
             size="large"
@@ -283,6 +277,20 @@ export default function RegisterForm() {
             Creează cont
           </LoadingButton>
         </Stack>
+        <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
+          Prin înregistrare, sunt de acord cu&nbsp;
+          <Link underline="always" color="textPrimary">
+            Termenii și Serviciile,
+          </Link>
+          &nbsp;precum și cu&nbsp;
+          <Link underline="always" color="textPrimary">
+            Politica de confidențialitate
+          </Link>
+          .
+        </Typography>
+        <Typography variant="body2" align="center" sx={{ color: 'rgb(45, 153, 255)', mt: 3 }}>
+          {sendingEmail ? 'Verifică adresa de email pentru confirmarea contului' : ''}
+        </Typography>
       </Form>
     </FormikProvider>
   );

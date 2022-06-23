@@ -36,13 +36,15 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const context = useContext(AuthContext);
   const logout = () => {
+    console.log('ctx', context.subcapitolId, context.capitolId);
     context.token = null;
     context.userId = null;
     context.role = null;
     context.nume = null;
     context.clasa = null;
-    context.subcapitolId = null;
-    context.capitolId = null;
+    context.email = null;
+    context.subcapitolId = undefined;
+    context.capitolId = undefined;
     navigate('/dashboard/app', { replace: true });
   };
 

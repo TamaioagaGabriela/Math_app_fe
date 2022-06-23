@@ -54,7 +54,10 @@ export default function Router() {
         { path: '*', element: <Navigate to="/404" /> }
       ]
     },
-    { path: '/email/confirm/:id', component: { Confirm } },
+    {
+      path: '/email/confirm/:id',
+      component: { Confirm }
+    },
     { path: '*', element: <Navigate to="/404" replace /> }
   ]);
 
@@ -86,7 +89,10 @@ export default function Router() {
         { path: '*', element: <Navigate to="/404" /> }
       ]
     },
-    { path: '/email/confirm/:id', component: { Confirm } },
+    {
+      path: '/email/confirm/:id',
+      component: { Confirm }
+    },
     { path: '*', element: <Navigate to="/404" replace /> }
   ]);
 

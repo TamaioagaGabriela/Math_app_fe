@@ -432,7 +432,7 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ rezultatExercitiu: null });
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ exercitiiGresiteUser: [] });
-    this.fetchExercitiiGresite();
+    // this.fetchExercitiiGresite();
   };
 
   modalCancelHandlerRaspuns = () => {
@@ -443,7 +443,7 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ btn1: false, btn2: false, btn3: false, btn4: false });
     this.setState({ raspunsTrimis: false });
     this.setState({ exercitiiGresiteUser: [] });
-    this.fetchExercitiiGresite();
+    // this.fetchExercitiiGresite();
   };
 
   modalCancelHandlerVeziRezolvare = () => {
@@ -455,7 +455,7 @@ class ExercitiiGresiteDB extends Component {
     this.setState({ raspunsTrimis: false });
     this.setState({ veziRezolvare: false });
     this.setState({ exercitiiGresiteUser: [] });
-    this.fetchExercitiiGresite();
+    // this.fetchExercitiiGresite();
   };
 
   modalHandleClickInapoi = () => {
@@ -815,7 +815,7 @@ class ExercitiiGresiteDB extends Component {
                     <Button
                       variant="outlined"
                       onClick={() => {
-                        this.fetchExercitiiGresite();
+                        // this.fetchExercitiiGresite();
                         this.setCapitolChosen(capitol);
                       }}
                     >
@@ -1309,7 +1309,7 @@ class ExercitiiGresiteDB extends Component {
               </Grid>
             )}
         </Grid>
-        <ProductCartWidget />
+        {/* <ProductCartWidget /> */}
       </container>
     );
   }

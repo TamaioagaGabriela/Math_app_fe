@@ -6,6 +6,7 @@ import { Container, Stack, Typography } from '@mui/material';
 import Page from '../components/Page';
 
 import { ProductCartWidget } from '../sections/@dashboard/products';
+import ExercitiiGresiteWidget from '../sections/@dashboard/products/ExercitiiGresiteWidget';
 
 import CapitolDB from '../_mocks_/CapitolDB';
 
@@ -50,7 +51,8 @@ export default function Capitol() {
         </Typography>
 
         <CapitolDB />
-        <ProductCartWidget />
+        {/* <ProductCartWidget /> */}
+        <ExercitiiGresiteWidget />
       </Container>
     </Page>
   );

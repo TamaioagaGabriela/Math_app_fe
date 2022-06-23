@@ -1,5 +1,7 @@
+import { useStateIfMounted } from 'use-state-if-mounted';
+import { useIsMounted } from 'usehooks-ts';
 // material
-import { useRef, useState, useContext } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Badge } from '@mui/material';
@@ -36,10 +38,21 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function CartWidget() {
   const context = useContext(AuthContext);
+
+  // const unmounted = useRef(false);
+  // useEffect(() => {
+  //   unmounted.current = true;
+  // }, []);
+
+  // !!!
   const [exercitiiGresiteCount, setExercitiiGresiteCount] = useState([]);
+  // const [exercitiiGresiteCount, setExercitiiGresiteCount] = useIsMounted([]);
+  // const [exercitiiGresiteCount, setExercitiiGresiteCount] = useStateIfMounted([]);
+  // !!!
+
   const navigate = useNavigate();
 
-  const fetchExercitiiGresite = () => {
+  const fetchExercitiiGresite = async () => {
     const requestBody = {
       query: `
         query{
@@ -68,13 +81,16 @@ export default function CartWidget() {
         `
     };
     const tkn = context.token;
+    const abortController = new AbortController();
+
     fetch('http://localhost:8000/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${tkn}`
-      }
+      },
+      signal: abortController.signal
     })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
@@ -83,12 +99,39 @@ export default function CartWidget() {
         return res.json();
       })
       .then((resData) => {
+        // console.log(resData);
+
+        // !!!
+        // asta iti cauzeaza problema, e facut update-ul pe state gresit si se face un loop care genereaza timpi mari de incarcare din cauza procesarii continue :(
         setExercitiiGresiteCount(resData.data.getExercitiiGresite);
-        // console.log('in fetch exercitiiGresiteCount', exercitiiGresiteCount);
+
+        // incercare 3
+
+        // incercare 2
+        // console.log('curent ', exercitiiGresiteCount.current);
+        // if (exercitiiGresiteCount.current) {
+        //   setExercitiiGresiteCount(resData.data.getExercitiiGresite);
+        // }
+
+        // console.log('!unmounted.current', !unmounted.current);
+        // if (unmounted.current) {
+        //   setExercitiiGresiteCount(resData.data.getExercitiiGresite);
+        // }
+
+        // incercare 1
+        // setExercitiiGresiteCount(['']);
+        // !!!
+
+        console.log('in fetch exercitiiGresiteCount', exercitiiGresiteCount);
       })
       .catch((err) => {
+        if (err.name === 'AbortError') return;
         console.log(err);
       });
+
+    return () => {
+      abortController.abort(); // stop the query by aborting on the AbortController on unmount
+    };
   };
 
   const getExercitii = () => {

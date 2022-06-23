@@ -6,6 +6,7 @@ import Page from '../components/Page';
 import { ProductCartWidget } from '../sections/@dashboard/products';
 
 import FisaFormuleDB from '../_mocks_/FisaFormuleDB';
+import ExercitiiGresiteWidget from '../sections/@dashboard/products/ExercitiiGresiteWidget';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ export default function FisaFormule() {
         </Typography>
 
         <FisaFormuleDB />
-        <ProductCartWidget />
+        <ExercitiiGresiteWidget />
       </Container>
     </Page>
   );
