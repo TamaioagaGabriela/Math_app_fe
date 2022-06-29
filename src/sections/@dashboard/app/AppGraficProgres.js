@@ -38,7 +38,7 @@ const CHART_DATA = [
 export default function AppGraficProgres() {
   const chartOptions = merge(BaseOptionChart(), {
     stroke: { width: [0, 2, 3] },
-    plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
+    plotOptions: { bar: { columnWidth: '35%', borderRadius: 4 } },
     fill: { type: ['solid', 'gradient', 'solid'] },
     labels: capitoleLabelsList,
     // ['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '05/01/2003', '06/01/2003'],
@@ -48,10 +48,27 @@ export default function AppGraficProgres() {
         max: 100,
         stepSize: 10
       },
-      x: {}
+      x: {
+        fontSize: 4000,
+        fontColor: 'black',
+        ticks: {
+          font: {
+            size: 1,
+            family: 'vazir'
+          }
+        }
+      }
     },
 
-    xaxis: { type: 'String' },
+    xaxis: {
+      type: 'String',
+      maxWidth: 900,
+      ticks: {
+        font: {
+          size: 40
+        }
+      }
+    },
     yaxis: {
       min: 0,
       max: 100,
@@ -510,8 +527,14 @@ export default function AppGraficProgres() {
   return (
     <Card>
       <CardHeader title="Progres personal" subheader={`clasa a ${context.clasa}-a`} />
-      <Box sx={{ p: 3, pb: 1 }} dir="ltr">
-        <ReactApexChart type="line" series={CHART_DATA} options={chartOptions} height={364} />
+      <Box sx={{ p: 3, pb: 5 }} dir="ltr">
+        <ReactApexChart
+          // marginBottom="40%"
+          type="line"
+          series={CHART_DATA}
+          options={chartOptions}
+          height={364}
+        />
       </Box>
     </Card>
   );

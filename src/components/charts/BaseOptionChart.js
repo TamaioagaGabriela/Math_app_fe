@@ -142,10 +142,10 @@ export default function BaseOptionChart() {
     },
 
     // Xaxis
-    xaxis: {
-      axisBorder: { show: false },
-      axisTicks: { show: false }
-    },
+    // xaxis: {
+    //   axisBorder: { show: false },
+    //   axisTicks: { show: false }
+    // },
 
     // Markers
     markers: {

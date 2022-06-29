@@ -897,7 +897,7 @@ class ExercitiiDB extends Component {
                       <Label
                         variant="filled"
                         color={ExercitiiDB.getColorPercentage(
-                          this.getPercentagePerSubcapitol(capitol._id)
+                          this.getPercentagePerCapitol(capitol._id)
                         )}
                         sx={{
                           zIndex: 9,
@@ -959,7 +959,7 @@ class ExercitiiDB extends Component {
                         }}
                       >
                         {this.getPercentagePerSubcapitol(subcapitol._id) === 100
-                          ? 'Completed'
+                          ? 'Complet'
                           : `${this.getPercentagePerSubcapitol(subcapitol._id)} %`}
                       </Label>
                     )}

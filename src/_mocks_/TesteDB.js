@@ -553,12 +553,16 @@ class TesteDB extends Component {
     this.setState({ raspunsuriCorecte: [] });
     this.setState({ nrIntrebare: -1, punctajTest: 0 });
     this.setState({ testTrimis: false });
+    // adaugat
+    this.fetchRezolvariTeste();
     this.context.capitolId = undefined;
   };
 
   modalCancelHandlerRezolvareExercitiu = () => {
     this.setState({ veziRezolvare: false });
     this.setState({ nrExercitiuAles: -1 });
+    // adaugat
+    this.fetchRezolvariTeste();
     this.context.capitolId = undefined;
   };
 
@@ -584,7 +588,7 @@ class TesteDB extends Component {
     console.log(this.state.isLoading);
 
     return (
-      <container padding="0">
+      <Container>
         <Stack
           direction="row"
           flexWrap="wrap-reverse"
@@ -674,7 +678,6 @@ class TesteDB extends Component {
                 </Card>
               </Grid>
             ))}
-
           {/* ---------------------------------------------------------------------------------------------------------- */}
           {/* daca am ales capitolul atunci ajung la teste */}
           {/* ---------------------------------------------------------------------------------------------------------- */}
@@ -700,7 +703,7 @@ class TesteDB extends Component {
                                     rezolvare.user._id === this.context.userId
                                 ).punctaj
                               }`
-                            : 0
+                            : 190
                         )}
                         sx={{
                           zIndex: 9,
@@ -1123,7 +1126,7 @@ class TesteDB extends Component {
             </ModalFisaTeorie>
           )}
         </Grid>
-      </container>
+      </Container>
     );
   }
 }

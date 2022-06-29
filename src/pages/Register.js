@@ -63,7 +63,7 @@ export default function Register() {
             </Typography>
           </Box>
 
-          <AuthSocial />
+          {/* <AuthSocial /> */}
 
           <RegisterForm />
 
