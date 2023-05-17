@@ -1,12 +1,15 @@
 import React, { Component, useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Stack, Button, Grid, Container, Typography, Card, Box, Link } from '@mui/material';
+import { Stack, Button, Grid, Container, Typography, Card, Box, Link, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Spinner from '../components/Spinner/Spinner';
 import AuthContext from '../context/auth-context';
 
-const cover = `/static/mock-images/formule/subcapitole/subcap_2.png`;
+const cover = `/static/mock-images/avatars/avatar_13.jpg`;
+//  `/static/mock-images/avatars/illustration_student.png`;
+//  '/static/mock-images/avatars/avatar_13.jpg';
+//  `/static/mock-images/formule/subcapitole/subcap_2.png`;
 
 const UtilizatorImgStyle = styled('img')({
   top: 0,
@@ -110,7 +113,22 @@ export class UtilizatorDB extends Component {
           ) : (
             <Card>
               <Box sx={{ pt: '90%', position: 'relative' }}>
-                <UtilizatorImgStyle alt={this.state.detaliiUser[0].nume} src={cover} />
+                <UtilizatorImgStyle
+                  alt={this.state.detaliiUser[0].nume}
+                  src={cover}
+                  style={{
+                    width: 320,
+                    height: 320,
+                    borderRadius: 10,
+                    marginTop: 10,
+                    marginLeft: 24
+                  }}
+                />
+                {/* <Avatar
+                  src="/static/illustrations/illustration_student.png"
+                  sx={{ width: 190, height: 90 }} // mara
+                  variant="rounded"
+                /> */}
               </Box>
               <Stack spacing={2} sx={{ p: 3 }}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">

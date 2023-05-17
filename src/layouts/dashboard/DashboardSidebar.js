@@ -3,7 +3,7 @@ import { useEffect, useContext } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
+import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
 // mocks_
 import account from '../../_mocks_/account';
 // hooks
@@ -69,7 +69,11 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="/dashboard/utilizator">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar
+              src={context.role === 'Student' ? account.photoURL1 : account.photoURL2}
+              alt="photoURL"
+              sx={{ width: 50, height: 50 }} // mara
+            />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                 {context.nume}
@@ -92,10 +96,15 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           spacing={3}
           sx={{ pt: 5, borderRadius: 2, position: 'relative' }}
         >
-          <Box
+          {/* <Box
             component="img"
-            src="/static/illustrations/illustration_avatar.png"
-            sx={{ width: 100, position: 'absolute', top: -50 }}
+            src="/static/illustrations/illustration_student.png"
+            sx={{ width: 200, position: 'absolute', top: -150 }}
+          /> */}
+          <Avatar
+            src="/static/illustrations/illustration_student.png"
+            sx={{ width: 190, height: 190, top: -100 }} // mara
+            variant="rounded"
           />
         </Stack>
       </Box>

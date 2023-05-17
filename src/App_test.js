@@ -1,7 +1,6 @@
-// routes
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import DarkModeToggle from 'react-dark-mode-toggle';
-import Darkmode from 'darkmode-js';
+import { red } from '@mui/material/colors';
 import Router from './routes';
 
 // theme
@@ -26,11 +25,8 @@ export default function App() {
   const [tokenExpiration, setTokenExpiration] = useState(null);
   const [login, setLogin] = useState({ token, userId, role });
   const [logout, setLogout] = useState({ token: null, userId: null, role: null });
-  const [isDarkMode, setIsDarkMode] = useState(() => false);
-  const darkmode = new Darkmode();
-  const widget = darkmode.showWidget();
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // const authContext = useContext(AuthContext);
   const authContext = useMemo(
     () => ({
       token,
@@ -50,12 +46,31 @@ export default function App() {
     [token, userId]
   );
 
+  useEffect(() => {
+    const bodyClasses = document.body.classList;
+    if (isDarkMode) {
+      // add "dark" class to body
+      bodyClasses.add('dark');
+    } else {
+      // remove "dark" class from body
+      bodyClasses.remove('dark');
+    }
+  }, [isDarkMode]);
+
   return (
     <AuthContext.Provider value={authContext}>
       <ThemeConfig>
         <ScrollToTop />
         <GlobalStyles />
         <BaseOptionChartStyle />
+        <div style={{ position: 'absolute', top: 10, right: 10 }}>
+          <DarkModeToggle
+            checked={isDarkMode}
+            onChange={() => setIsDarkMode(!isDarkMode)}
+            size={200}
+            color={red}
+          />
+        </div>
         <Router />
       </ThemeConfig>
     </AuthContext.Provider>

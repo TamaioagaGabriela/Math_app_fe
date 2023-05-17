@@ -1,4 +1,5 @@
 // material
+import { createGlobalStyle } from 'styled-components';
 import { useTheme } from '@mui/material/styles';
 import { GlobalStyles as GlobalThemeStyles } from '@mui/material';
 
@@ -6,6 +7,28 @@ import { GlobalStyles as GlobalThemeStyles } from '@mui/material';
 
 export default function GlobalStyles() {
   const theme = useTheme();
+  const GlobalStyles = createGlobalStyle`
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #fff;
+    color: #000;
+    font-family: 'Roboto', sans-serif;
+    transition: background-color 0.3s ease-out, color 0.3s ease-out;
+  }
+
+  /* styles for the "dark" class */
+  .dark {
+    background-color: #121212;
+    color: #fff;
+  }
+`;
 
   return (
     <GlobalThemeStyles

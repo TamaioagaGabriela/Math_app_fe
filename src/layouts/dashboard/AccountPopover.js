@@ -80,7 +80,11 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar
+          src={context.role === 'Student' ? account.photoURL1 : account.photoURL2}
+          sx={{ width: 50, height: 50 }} // mara
+          alt="photoURL"
+        />
       </IconButton>
 
       <MenuPopover

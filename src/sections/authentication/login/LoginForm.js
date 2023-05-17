@@ -1,7 +1,9 @@
 import * as Yup from 'yup';
 import React, { useState, useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
+
 // material
 import {
   Link,
@@ -14,13 +16,35 @@ import {
   FormControlLabel
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import LoginI18n from '../../../pages/Logini18n'; // Import the LoginI18n component
+
 // component
 import Iconify from '../../../components/Iconify';
 import AuthContext from '../../../context/auth-context';
 
 // ----------------------------------------------------------------------
 
+function LanguageSelector() {
+  const { i18n } = useTranslation(); // Get the i18n object from useTranslation
+
+  const handleChangeLanguage = (event) => {
+    const languageCode = event.target.value;
+    console.log('Selected language:', languageCode);
+    i18n.changeLanguage(languageCode).then(() => {
+      console.log('Language changed to:', languageCode);
+    });
+  };
+
+  return (
+    <select onChange={handleChangeLanguage}>
+      <option value="ro">Romana</option>
+      <option value="en">English</option>
+    </select>
+  );
+}
+
 export default function LoginForm() {
+  const { t } = useTranslation(); // Get the t function from useTranslation
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,9 +56,9 @@ export default function LoginForm() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
-      .email('Email-ul nu respecta formatul necesar')
-      .required('Email is required'),
-    parola: Yup.string().required('Password is required')
+      .email(t('Email-ul nu respectă formatul necesar'))
+      .required(t('Este necesară introducerea emailului')),
+    parola: Yup.string().required(t('Este necesară introducerea parolei'))
   });
 
   const formik = useFormik({
@@ -81,8 +105,8 @@ export default function LoginForm() {
       })
         .then((res) => {
           if (res.status !== 200 && res.status !== 201) {
-            setErrorMessage('Email gresit, parola gresita sau email neconfirmat');
-
+            const errorMessage = t('Email gresit, parola gresita sau email neconfirmat');
+            setErrorMessage(errorMessage);
             setIsSubmitting(false);
             navigate('/login', { replace: true });
             throw new Error('Failed!');
@@ -106,10 +130,7 @@ export default function LoginForm() {
             context.role = resData.data.login.role;
             context.nume = resData.data.login.nume;
             context.email = resData.data.login.email;
-            console.log('context', context);
           }
-          // console.log('context clasa id', context.clasa);
-          // navigate('/dashboard/app', { replace: true });
 
           navigate('/dashboard/app', {
             replace: true,
@@ -141,17 +162,17 @@ export default function LoginForm() {
             fullWidth
             autoComplete="username"
             type="email"
-            label="Adresa de email"
+            label={t('Adresa de email')}
             {...getFieldProps('email')}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
           />
-          {errors.email && touched.email ? <div>{errors.email}</div> : null}
+          {/* {errors.email && touched.email ? <div>{errors.email}</div> : null} */}
           <TextField
             fullWidth
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
-            label="Parola"
+            label={t('Parola')}
             {...getFieldProps('parola')}
             InputProps={{
               endAdornment: (
@@ -170,11 +191,11 @@ export default function LoginForm() {
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
           <FormControlLabel
             control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label={<Typography sx={{ fontSize: 14 }}>Reține parola</Typography>}
+            label={<Typography sx={{ fontSize: 14 }}>{t('Reține parola')}</Typography>}
           />
 
           <Link component={RouterLink} variant="subtitle2" to="#" underline="hover">
-            Ai uitat parola?
+            {t('Ai uitat parola?')}
           </Link>
         </Stack>
 

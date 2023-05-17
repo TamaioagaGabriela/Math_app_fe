@@ -1,0 +1,16 @@
+{
+  "Autentificare": "Login",
+  "Adresa de email": "Email address",
+  "Parola": "Password",
+  "Reține parola": "Remember me",
+  "Ai uitat parola?": "Forgot password?",
+  "Nu ai cont?": "Don't have an account?",
+  "Creează un cont nou": "Create a new account",
+  "Bine ai revenit!": "Welcome back!",
+  "Completează detaliile de mai jos.": "Complete the details below.",
+  "Email-ul nu respectă formatul necesar": "Email does't have the correct format",
+  "Limba": "Language",
+  "Este necesară introducerea emailului": "Email is mandatory",
+  "Este necesară introducerea parolei": "Password is required",
+  "Email gresit, parola gresita sau email neconfirmat": "Wrong/unconfirmed email address or wrong password"
+}
