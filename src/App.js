@@ -11,6 +11,7 @@ import GlobalStyles from './theme/globalStyles';
 import ScrollToTop from './components/ScrollToTop';
 import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
 import AuthContext from './context/auth-context';
+import { LanguageSelector } from './pages/Login';
 
 // ----------------------------------------------------------------------
 
@@ -29,13 +30,14 @@ export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => false);
   const darkmode = new Darkmode();
   const widget = darkmode.showWidget();
+  const [language, setLanguage] = useState('ro');
 
   // const authContext = useContext(AuthContext);
   const authContext = useMemo(
     () => ({
       token,
       userId,
-      login: (token, userId, role, clasa, nume, email, tokenExpiration) => {},
+      login: (token, userId, role, clasa, language, nume, email, tokenExpiration) => {},
       logout: () => {
         setToken(null);
         setRole(null);
@@ -45,6 +47,7 @@ export default function App() {
         setEmail(null);
         setCapitol(undefined);
         setSubcapitol(undefined);
+        setLanguage('ro');
       }
     }),
     [token, userId]

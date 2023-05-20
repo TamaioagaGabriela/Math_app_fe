@@ -1,3 +1,4 @@
+import { ro } from 'date-fns/locale';
 import React from 'react';
 
 export default React.createContext({
@@ -8,8 +9,10 @@ export default React.createContext({
   clasa: null,
   capitolId: null,
   subcapitolId: null,
+  language: 'ro',
+  changeLanguage: (val) => {},
   changeClasa: (val) => {},
-  login: (token, userId, role, clasa, nume, email, tokenExpiration) => {},
+  login: (token, userId, role, language, clasa, nume, email, tokenExpiration) => {},
   logout: () => {}
 });
 

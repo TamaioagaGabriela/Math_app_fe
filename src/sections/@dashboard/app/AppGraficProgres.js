@@ -526,7 +526,7 @@ export default function AppGraficProgres() {
 
   return (
     <Card>
-      <CardHeader title="Progres personal" subheader={`clasa a ${context.clasa}-a`} />
+      <CardHeader title="Progres personal" subheader={`Clasa a ${context.clasa}-a`} />
       <Box sx={{ p: 3, pb: 5 }} dir="ltr">
         <ReactApexChart
           // marginBottom="40%"

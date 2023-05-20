@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import ro from './locales/ro.json';
 import en from './locales/en.json';
+import ua from './locales/ua.json';
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -10,6 +11,9 @@ i18n.use(initReactI18next).init({
     },
     en: {
       translation: en
+    },
+    ua: {
+      translation: ua
     }
   },
   lng: 'ro', // Set the default language to Romanian

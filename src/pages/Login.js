@@ -51,11 +51,13 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-function LanguageSelector() {
+export function LanguageSelector() {
   const { i18n } = useTranslation(); // Get the i18n object from useTranslation
-
   const handleChangeLanguage = (event) => {
+    console.log('TEST2');
+
     const languageCode = event.target.value;
+    console.log('Event targe', event.target);
     console.log('Selected language:', languageCode);
     i18n.changeLanguage(languageCode).then(() => {
       console.log('Language changed to:', languageCode);

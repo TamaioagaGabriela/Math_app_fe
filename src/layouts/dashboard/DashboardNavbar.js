@@ -9,6 +9,8 @@ import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 import ClasaPopover from './ClasaPopover';
 import NotificationsPopover from './NotificationsPopover';
+import { LanguageSelector } from '../../pages/Login';
+import LanguagePopover from './LanguagePopover';
 
 // ----------------------------------------------------------------------
 
@@ -55,8 +57,8 @@ export default function DashboardNavbar({ onOpenSidebar }) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
+          <LanguagePopover />
           <ClasaPopover />
-          {/* <NotificationsPopover /> */}
           <AccountPopover />
         </Stack>
       </ToolbarStyle>
