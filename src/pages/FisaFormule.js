@@ -1,5 +1,7 @@
 // material
 import { Container, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+
 // components
 import Page from '../components/Page';
 
@@ -11,11 +13,13 @@ import ExercitiiGresiteWidget from '../sections/@dashboard/products/ExercitiiGre
 // ----------------------------------------------------------------------
 
 export default function FisaFormule() {
+  const { t } = useTranslation();
+
   return (
     <Page title="Dashboard: Fisa formule | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
-          Fișe Formule
+          {t('Fișe Formule')}
         </Typography>
 
         <FisaFormuleDB />

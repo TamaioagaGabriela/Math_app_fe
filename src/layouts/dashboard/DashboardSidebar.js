@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+import { t } from 'i18next';
+
 import { useEffect, useContext } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+
 // material
 import { styled } from '@mui/material/styles';
 import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
@@ -14,7 +18,7 @@ import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import AuthContext from '../../context/auth-context';
 //
-import sidebarConfig from './SidebarConfig';
+import SidebarConfig from './SidebarConfig';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +49,7 @@ DashboardSidebar.propTypes = {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const context = useContext(AuthContext);
   const { pathname } = useLocation();
+  const { t } = useTranslation();
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -79,14 +84,14 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                 {context.nume}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {context.role === 'Student' ? 'Elev' : context.role}
+                {context.role === 'Student' ? t('Elev') : context.role}
               </Typography>
             </Box>
           </AccountStyle>
         </Link>
       </Box>
 
-      <NavSection navConfig={sidebarConfig} />
+      <NavSection navConfig={SidebarConfig()} />
 
       <Box sx={{ flexGrow: 1 }} />
 

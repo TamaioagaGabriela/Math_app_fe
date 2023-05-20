@@ -3,6 +3,8 @@ import { alpha, styled } from '@mui/material/styles';
 import React, { useContext, useState } from 'react';
 import { Card, Typography, Link } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
 //
@@ -47,6 +49,7 @@ export default function AppExercitii() {
 
   const context = useContext(AuthContext);
   const [alreadyFetch, setAlreadyFetch] = useState(false);
+  const { t } = useTranslation();
 
   const fetchCapitole = () => {
     const requestBody = {
@@ -254,9 +257,9 @@ export default function AppExercitii() {
         <IconWrapperStyle>
           <Iconify icon="fluent:clipboard-edit-20-filled" width={24} height={24} />
         </IconWrapperStyle>
-        <Typography variant="h3">Exerciții</Typography>
+        <Typography variant="h3">{t('Exerciții')}</Typography>
         <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
-          Progres: {exercitiiPercentage}%{/* 64% */}
+          {t('Progres')}: {exercitiiPercentage}%{/* 64% */}
         </Typography>
       </RootStyle>
     </Link>

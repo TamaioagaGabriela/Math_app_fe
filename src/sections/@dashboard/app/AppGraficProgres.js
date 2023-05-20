@@ -3,6 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 // material
 import { Card, CardHeader, Box } from '@mui/material';
 import React, { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 //
 import { BaseOptionChart } from '../../../components/charts';
 import AuthContext from '../../../context/auth-context';
@@ -14,28 +15,28 @@ const capitoleLabelsList = [];
 const testePercentageList = [];
 const exercitiiPercentageList = [];
 
-const CHART_DATA = [
-  {
-    name: 'Exerciții',
-    type: 'column',
-    data: exercitiiPercentageList
-    // [100, 89, 54, 76, 23, 41]
-  },
-  {
-    name: 'Teorie',
-    type: 'column',
-    data: teoriePercentageList
-    // [100, 70, 17, 59, 65, 33]
-  },
-  {
-    name: 'Teste',
-    type: 'column',
-    data: testePercentageList
-    // [100, 100, 70, 38, 0, 20]
-  }
-];
-
 export default function AppGraficProgres() {
+  const { t } = useTranslation();
+  const CHART_DATA = [
+    {
+      name: t('Exerciții'),
+      type: 'column',
+      data: exercitiiPercentageList
+      // [100, 89, 54, 76, 23, 41]
+    },
+    {
+      name: t('Teorie'),
+      type: 'column',
+      data: teoriePercentageList
+      // [100, 70, 17, 59, 65, 33]
+    },
+    {
+      name: t('Teste'),
+      type: 'column',
+      data: testePercentageList
+      // [100, 100, 70, 38, 0, 20]
+    }
+  ];
   const chartOptions = merge(BaseOptionChart(), {
     stroke: { width: [0, 2, 3] },
     plotOptions: { bar: { columnWidth: '35%', borderRadius: 4 } },
@@ -526,7 +527,7 @@ export default function AppGraficProgres() {
 
   return (
     <Card>
-      <CardHeader title="Progres personal" subheader={`Clasa a ${context.clasa}-a`} />
+      <CardHeader title={t('Progres personal')} subheader={t(`Clasa a ${context.clasa}-a`)} />
       <Box sx={{ p: 3, pb: 5 }} dir="ltr">
         <ReactApexChart
           // marginBottom="40%"

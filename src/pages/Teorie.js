@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+
 // material
 import { Container, Stack, Typography } from '@mui/material';
 import Markdown from '../sections/@dashboard/teorie/TeorieComponent';
@@ -16,6 +18,7 @@ import {
 
 export default function Teorie() {
   const [openFilter, setOpenFilter] = useState(false);
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -70,7 +73,7 @@ Calculate the value of $s$ when $u = 10\\frac{m}{s}$ and $a = 2\\frac{m}{s^{2}}$
     <Page title="Dashboard: Teorie | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Teorie
+          {t('Teorie')}
         </Typography>
 
         <Stack
@@ -92,7 +95,6 @@ Calculate the value of $s$ when $u = 10\\frac{m}{s}$ and $a = 2\\frac{m}{s^{2}}$
           </Stack>
         </Stack>
         <Markdown>{content}</Markdown>
-        {/* <ProductList products={PRODUCTS} /> */}
         <ProductCartWidget />
       </Container>
     </Page>

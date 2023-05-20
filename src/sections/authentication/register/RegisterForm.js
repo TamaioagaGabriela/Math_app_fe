@@ -1,5 +1,7 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+
 import { useFormik, Form, FormikProvider } from 'formik';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
@@ -30,21 +32,23 @@ export default function RegisterForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
 
+  const { t } = useTranslation();
+
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
-      .min(2, 'Prenume prea scurt!')
-      .max(50, 'Prenume prea lung!')
-      .required('Trebuie introdus un prenume'),
+      .min(2, t('Prenume prea scurt!'))
+      .max(50, t('Prenume prea lung!'))
+      .required(t('Trebuie introdus un prenume')),
     lastName: Yup.string()
-      .min(2, 'Nume prea scurt!')
-      .max(50, 'Nume prea lung!')
-      .required('Trebuie introdus un nume'),
+      .min(2, t('Nume prea scurt!'))
+      .max(50, t('Nume prea lung!'))
+      .required(t('Trebuie introdus un nume')),
     email: Yup.string()
-      .email('Adresa de email nu este validă')
-      .required('Trebuie introdus un email'),
-    password: Yup.string().required('Trebuie introdusă parola'),
-    username: Yup.string().required('Trebuie ales un username'),
-    role: Yup.string().required('Trebuie ales un rol')
+      .email(t('Adresa de email nu este validă'))
+      .required(t('Trebuie introdus un email')),
+    password: Yup.string().required(t('Trebuie introdusă parola')),
+    username: Yup.string().required(t('Trebuie ales un username')),
+    role: Yup.string().required(t('Trebuie ales un rol'))
   });
 
   const formik = useFormik({
@@ -164,7 +168,7 @@ export default function RegisterForm() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
-              label="Prenume"
+              label={t('Prenume')}
               {...getFieldProps('firstName')}
               error={Boolean(touched.firstName && errors.firstName)}
               helperText={touched.firstName && errors.firstName}
@@ -172,7 +176,7 @@ export default function RegisterForm() {
 
             <TextField
               fullWidth
-              label="Nume"
+              label={t('Nume')}
               {...getFieldProps('lastName')}
               error={Boolean(touched.lastName && errors.lastName)}
               helperText={touched.lastName && errors.lastName}
@@ -181,7 +185,7 @@ export default function RegisterForm() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
-              label="Username"
+              label={t('Username')}
               {...getFieldProps('username')}
               error={Boolean(touched.username && errors.username)}
               helperText={touched.username && errors.username}
@@ -200,10 +204,10 @@ export default function RegisterForm() {
                 {...getFieldProps('role')}
               >
                 <MenuItem value="Profesor" onClick={() => setRoleAles('Profesor')}>
-                  Profesor
+                  {t('Profesor')}
                 </MenuItem>
                 <MenuItem value="Student" onClick={() => setRoleAles('Student')}>
-                  Elev
+                  {t('Elev')}
                 </MenuItem>
               </Select>
               <FormHelperText
@@ -219,17 +223,17 @@ export default function RegisterForm() {
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                label="Clasa"
+                label={t('Clasa')}
                 {...getFieldProps('clasa')}
               >
-                <MenuItem value="5">Clasa a V-a</MenuItem>
-                <MenuItem value="6">Clasa a VI-a</MenuItem>
-                <MenuItem value="7">Clasa a VII-a</MenuItem>
-                <MenuItem value="8">Clasa a VIII-a</MenuItem>
-                <MenuItem value="9">Clasa a IX-a</MenuItem>
-                <MenuItem value="10">Clasa a X-a</MenuItem>
-                <MenuItem value="11">Clasa a XI-a</MenuItem>
-                <MenuItem value="12">Clasa a XII-a</MenuItem>
+                <MenuItem value="5">{t('Clasa a V-a')}</MenuItem>
+                <MenuItem value="6">{t('Clasa a VI-a')}</MenuItem>
+                <MenuItem value="7">{t('Clasa a VII-a')}</MenuItem>
+                <MenuItem value="8">{t('Clasa a VIII-a')}</MenuItem>
+                <MenuItem value="9">{t('Clasa a IX-a')}</MenuItem>
+                <MenuItem value="10">{t('Clasa a X-a')}</MenuItem>
+                <MenuItem value="11">{t('Clasa a XI-a')}</MenuItem>
+                <MenuItem value="12">{t('Clasa a XII-a')}</MenuItem>
               </Select>
             </FormControl>
           </Stack>
@@ -237,7 +241,7 @@ export default function RegisterForm() {
             fullWidth
             autoComplete="username"
             type="email"
-            label="Adresa de email"
+            label={t('Adresa de email')}
             {...getFieldProps('email')}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
@@ -246,7 +250,7 @@ export default function RegisterForm() {
             fullWidth
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
-            label="Parola"
+            label={t('Parola')}
             {...getFieldProps('password')}
             InputProps={{
               endAdornment: (
@@ -263,7 +267,7 @@ export default function RegisterForm() {
           <TextField
             fullWidth
             type="email"
-            label="Adresa de email tutore"
+            label={t('Adresa de email tutore')}
             {...getFieldProps('emailTutore')}
             disabled={roleAles === 'Profesor'}
           />
@@ -274,22 +278,22 @@ export default function RegisterForm() {
             variant="contained"
             loading={isSubmitting}
           >
-            Creează cont
+            {t('Creează cont')}
           </LoadingButton>
         </Stack>
         <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-          Prin înregistrare, sunt de acord cu&nbsp;
+          {t('Prin înregistrare, sunt de acord')} {t('cu')}&nbsp;
           <Link underline="always" color="textPrimary">
-            Termenii și Serviciile,
+            {t('Termenii și Serviciile')},
           </Link>
-          &nbsp;precum și cu&nbsp;
+          &nbsp;{t('precum și cu')}&nbsp;
           <Link underline="always" color="textPrimary">
-            Politica de confidențialitate
+            {t('Politica de confidențialitate')}
           </Link>
           .
         </Typography>
         <Typography variant="body2" align="center" sx={{ color: 'rgb(45, 153, 255)', mt: 3 }}>
-          {sendingEmail ? 'Verifică adresa de email pentru confirmarea contului' : ''}
+          {sendingEmail ? t('Verifică adresa de email pentru confirmarea contului') : ''}
         </Typography>
       </Form>
     </FormikProvider>

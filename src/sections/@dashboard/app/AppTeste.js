@@ -3,6 +3,8 @@ import { alpha, styled } from '@mui/material/styles';
 import React, { useContext, useState } from 'react';
 import { Card, Typography, Link } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
 //
@@ -47,6 +49,7 @@ export default function AppTeste() {
 
   const context = useContext(AuthContext);
   const [alreadyFetch, setAlreadyFetch] = useState(false);
+  const { t } = useTranslation();
 
   const fetchCapitole = () => {
     const requestBody = {
@@ -199,9 +202,9 @@ export default function AppTeste() {
         <IconWrapperStyle>
           <Iconify icon="fluent:clipboard-clock-20-filled" width={24} height={24} />
         </IconWrapperStyle>
-        <Typography variant="h3">Teste</Typography>
+        <Typography variant="h3">{t('Teste')}</Typography>
         <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
-          Progres: {testePercentage}%{/* 54% */}
+          {t('Progres')}: {testePercentage}%{/* 54% */}
         </Typography>
       </RootStyle>
     </Link>

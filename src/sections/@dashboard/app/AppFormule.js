@@ -3,6 +3,7 @@ import { alpha, styled } from '@mui/material/styles';
 import React, { useContext, useState } from 'react';
 import { Card, Typography, Link } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 // component
 import Iconify from '../../../components/Iconify';
 import AuthContext from '../../../context/auth-context';
@@ -45,6 +46,7 @@ export default function AppFormule() {
 
   const context = useContext(AuthContext);
   const [alreadyFetch, setAlreadyFetch] = useState(false);
+  const { t } = useTranslation();
 
   const fetchCapitole = () => {
     const requestBody = {
@@ -238,9 +240,9 @@ export default function AppFormule() {
           <Iconify icon="eva:file-text-fill" width={24} height={24} />
         </IconWrapperStyle>
         {/* <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography> */}
-        <Typography variant="h3">Formule</Typography>
+        <Typography variant="h3">{t('Formule')}</Typography>
         <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
-          Progres: {formulePercentage}%{/* 43% */}
+          {t('Progres')}: {formulePercentage}%{/* 43% */}
         </Typography>
       </RootStyle>
     </Link>
