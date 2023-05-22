@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -386,6 +387,8 @@ class FisaFormuleDB extends Component {
   };
 
   render() {
+    const { t } = this.props;
+
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
     );
@@ -396,13 +399,6 @@ class FisaFormuleDB extends Component {
     const fiseFormuleFiltrate = this.state.fiseFormule.filter(
       (fisaFormule) => fisaFormule.subcapitol_id === this.state.subcapitolFisaFormule._id
     );
-
-    // interesant
-    // console.log(
-    //   fiseFormuleFiltrate[0] && fiseFormuleFiltrate[0]._id
-    //     ? fiseFormuleFiltrate[0]._id
-    //     : fiseFormuleFiltrate[0]
-    // );
 
     return (
       <container>
@@ -419,7 +415,7 @@ class FisaFormuleDB extends Component {
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            Inapoi
+            {t('Înapoi')}
           </Button>
           <Button
             variant="outlined"
@@ -431,7 +427,7 @@ class FisaFormuleDB extends Component {
               this.setAdaugaFormuleChosen();
             }}
           >
-            Adaugă fișă formule
+            {t('Adaugă fișă formule')}
           </Button>
         </Stack>
 
@@ -457,11 +453,11 @@ class FisaFormuleDB extends Component {
                         }}
                       >
                         {this.getPercentagePerCapitol(capitol._id) === 100
-                          ? 'Complet'
+                          ? t('Complet')
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
-                    <CapitolImgStyle alt={capitol.titlu} src={mockImgFormuleCapitole(index)} />
+                    <CapitolImgStyle alt={t(capitol.titlu)} src={mockImgFormuleCapitole(index)} />
                   </Box>
 
                   <Stack
@@ -472,9 +468,9 @@ class FisaFormuleDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{capitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(capitol.titlu)}</Typography>
                     </Link>
-                    <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
+                    <Typography variant="subtitle2">{t(`Clasa a ${capitol.clasa}-a`)}</Typography>
                   </Stack>
                   <Stack spacing={1} ml={3} mr={3} mb={3}>
                     <Button
@@ -483,7 +479,7 @@ class FisaFormuleDB extends Component {
                       // sentenceCase
                       onClick={() => this.setCapitolChosen(capitol)}
                     >
-                      Accesează subcapitolele
+                      {t('Accesează subcapitolele')}
                     </Button>
                   </Stack>
                 </Card>
@@ -524,12 +520,12 @@ class FisaFormuleDB extends Component {
                             accesare.user._id === this.context.userId &&
                             accesare.fisa.subcapitol_id === subcapitol._id
                         ).length >= 1
-                          ? 'Vizualizat'
-                          : 'Nevizualizat'}
+                          ? t('Vizualizat')
+                          : t('Nevizualizat')}
                       </Label>
                     )}
                     <CapitolImgStyle
-                      alt={subcapitol.titlu}
+                      alt={t(subcapitol.titlu)}
                       src={mockImgFormuleSubcapitole(index)}
                     />
                   </Box>
@@ -545,11 +541,11 @@ class FisaFormuleDB extends Component {
                       <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
                     </Link>
                     <Typography variant="subtitle2">
-                      Capitolul:{' '}
-                      {
+                      {t('Capitolul')}:{' '}
+                      {t(
                         this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
                           .titlu
-                      }
+                      )}
                     </Typography>
                   </Stack>
                   <Stack spacing={1} ml={3} mr={3} mb={3}>
@@ -560,7 +556,7 @@ class FisaFormuleDB extends Component {
                         this.adaugaAccesare(subcapitol._id);
                       }}
                     >
-                      Accesează fișe Formule
+                      {t('Accesează fișe formule')}
                     </Button>
                   </Stack>
                 </Card>
@@ -577,23 +573,23 @@ class FisaFormuleDB extends Component {
                   <Stack spacing={2} sx={{ p: 3 }} width="1150px">
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="h4">
-                        <b>{fisaFormule.titlu}</b>
+                        <b>{t(fisaFormule.titlu)}</b>
                       </Typography>
                     </Link>
                     &nbsp;
                     <Typography variant="subtitle1">
-                      Capitolul:{' '}
-                      {
+                      {t('Capitolul')}:{' '}
+                      {t(
                         this.state.capitole.find(
                           (capitol) => capitol._id === this.state.subcapitolFisaFormule.capitol_id
                         ).titlu
-                      }
+                      )}
                     </Typography>
                     <Typography variant="subtitle1">
-                      Subcapitolul: {this.state.subcapitolFisaFormule.titlu}
+                      {t('Subcapitolul')}: {t(this.state.subcapitolFisaFormule.titlu)}
                     </Typography>
                     &nbsp;
-                    <Markdown>{fisaFormule.descriere}</Markdown>
+                    <Markdown>{t(fisaFormule.descriere)}</Markdown>
                   </Stack>
                 </Card>
               </Grid>
@@ -608,7 +604,7 @@ class FisaFormuleDB extends Component {
             this.state.subcapitolChosen &&
             this.state.adaugaFormuleChosen && (
               <ModalFisaTeorie
-                title="Adaugă fișă formule"
+                title={t('Adaugă fișă formule')}
                 numeButon="Adaugă fișă formule"
                 canCancel
                 canConfirm
@@ -619,7 +615,7 @@ class FisaFormuleDB extends Component {
                 <Paper>
                   <TextField
                     id="Titlu"
-                    label="Titlu"
+                    label={t('Titlu')}
                     style={{ width: '100%' }}
                     margin="dense"
                     placeholder="Titlu"
@@ -628,7 +624,7 @@ class FisaFormuleDB extends Component {
                   />
                   <TextField
                     id="Descriere"
-                    label="Descriere"
+                    label={t('Descriere')}
                     style={{ width: '100%', borderColor: 'yellow !important' }}
                     rows={5}
                     margin="dense"
@@ -645,4 +641,4 @@ class FisaFormuleDB extends Component {
   }
 }
 FisaFormuleDB.contextType = AuthContext;
-export default FisaFormuleDB;
+export default withTranslation()(FisaFormuleDB);

@@ -236,7 +236,7 @@ export default function AppTeorie() {
         <IconWrapperStyle>
           <Iconify icon="fluent:book-20-filled" width={24} height={24} />
         </IconWrapperStyle>
-        <Typography variant="h3">{t('Teorie')}</Typography>
+        <Typography variant="h3">{t('Lecții teoretice')}</Typography>
         <Typography variant="subtitle1" sx={{ opacity: 0.72 }}>
           {t('Progres')}: {teoriePercentage}%{/* 57% */}
         </Typography>

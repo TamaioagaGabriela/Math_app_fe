@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+
 import { Link as RouterLink, Navigate } from 'react-router-dom';
 // material
 import {
@@ -38,7 +40,7 @@ const CapitolImgStyle = styled('img')({
   position: 'absolute'
 });
 
-class CapitolDB extends Component {
+class CapitolDB extends React.Component {
   static context = AuthContext;
 
   static getColorPercentage = (percentage) => {
@@ -552,6 +554,8 @@ class CapitolDB extends Component {
   render() {
     console.log(this.state.isLoading);
 
+    const { t } = this.props;
+
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
     );
@@ -577,7 +581,7 @@ class CapitolDB extends Component {
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            Înapoi
+            {t('Înapoi')}
           </Button>
           <Stack
             direction="row"
@@ -596,7 +600,7 @@ class CapitolDB extends Component {
               }}
               onClick={() => this.setAdaugaCapitolChosen()}
             >
-              Adaugă capitol
+              {t('Adaugă capitol')}
             </Button>
             <Button
               variant="outlined"
@@ -612,7 +616,7 @@ class CapitolDB extends Component {
                 this.setAdaugaSubcapitolChosen();
               }}
             >
-              Adaugă Subcapitol
+              {t('Adaugă Subcapitol')}
             </Button>
             <Button
               variant="outlined"
@@ -626,7 +630,7 @@ class CapitolDB extends Component {
                 this.setAdaugaTeorieChosen();
               }}
             >
-              Adaugă Teorie
+              {t('Adaugă Lecții teoretice')}
             </Button>
           </Stack>
         </Stack>
@@ -652,7 +656,7 @@ class CapitolDB extends Component {
                         }}
                       >
                         {this.getPercentagePerCapitol(capitol._id) === 100
-                          ? 'Complet'
+                          ? t('Complet')
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
@@ -667,9 +671,9 @@ class CapitolDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{capitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(capitol.titlu)}</Typography>
                     </Link>
-                    <Typography variant="subtitle2">Clasa a {capitol.clasa}-a</Typography>
+                    <Typography variant="subtitle2">{t(`Clasa a ${capitol.clasa}-a`)}</Typography>
                   </Stack>
                   <Stack
                     ml={3}
@@ -680,7 +684,7 @@ class CapitolDB extends Component {
                     justifyContent="space-between"
                   >
                     <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                      Subcapitole
+                      {t('Subcapitole')}
                     </Button>
                     <Button
                       variant="outlined"
@@ -694,7 +698,7 @@ class CapitolDB extends Component {
                         underline="none"
                         component={RouterLink}
                       >
-                        Test
+                        {t('Test')}
                       </Link>
                     </Button>
                   </Stack>
@@ -737,8 +741,8 @@ class CapitolDB extends Component {
                             accesare.user._id === this.context.userId &&
                             accesare.teorie.subcapitol_id === subcapitol._id
                         ).length >= 1
-                          ? 'Vizualizat'
-                          : 'Nevizualizat'}
+                          ? t('Vizualizat')
+                          : t('Nevizualizat')}
                       </Label>
                     )}
                     <CapitolImgStyle alt={subcapitol.titlu} src={mockImgSubcapitol(index)} />
@@ -755,11 +759,11 @@ class CapitolDB extends Component {
                       <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
                     </Link>
                     <Typography variant="subtitle2">
-                      Capitolul:{' '}
-                      {
+                      {t('Capitolul')}:{' '}
+                      {t(
                         this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
                           .titlu
-                      }
+                      )}
                     </Typography>
                   </Stack>
                   <Stack
@@ -777,7 +781,7 @@ class CapitolDB extends Component {
                         this.adaugaAccesare(subcapitol._id);
                       }}
                     >
-                      Teorie
+                      {t('Lecții teoretice')}
                     </Button>
                     <Link
                       to="/dashboard/exercitii"
@@ -792,7 +796,7 @@ class CapitolDB extends Component {
                           this.context.subcapitolId = subcapitol;
                         }}
                       >
-                        Exerciții
+                        {t('Probleme')}
                       </Button>
                     </Link>
                   </Stack>
@@ -850,18 +854,6 @@ class CapitolDB extends Component {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     />
-                    {/* 
-                  <video
-                    width="100%"
-                    controls
-                    controlsList="nodownload"
-                    poster="link to your poster image"
-                  >
-                    {' '}
-                    <track default kind="captions" />
-                    <source src="https://www.youtube.com/watch?v=DHEOF_rcND8" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video> */}
                   </Stack>
                 </Card>
               </Grid>
@@ -887,7 +879,7 @@ class CapitolDB extends Component {
                 <Paper>
                   <TextField
                     id="Titlu"
-                    label="Titlu"
+                    label={t('Titlu')}
                     style={{ width: '100%' }}
                     margin="dense"
                     placeholder="Titlu"
@@ -896,7 +888,7 @@ class CapitolDB extends Component {
                   />
                   <TextField
                     id="Link video explicativ"
-                    label="Link video explicativ"
+                    label={t('Link video explicativ')}
                     style={{ width: '100%' }}
                     margin="dense"
                     placeholder="Link video explicativ"
@@ -905,7 +897,7 @@ class CapitolDB extends Component {
                   />
                   <TextField
                     id="Descriere"
-                    label="Descriere"
+                    label={t('Descriere')}
                     style={{ width: '100%', borderColor: 'yellow !important' }}
                     rows={5}
                     margin="dense"
@@ -933,7 +925,7 @@ class CapitolDB extends Component {
               <Paper>
                 <TextField
                   id="Titlu"
-                  label="Titlu"
+                  label={t('Titlu')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Titlu"
@@ -949,14 +941,14 @@ class CapitolDB extends Component {
                     label="Clasa"
                     inputRef={this.clasaCapitolRef}
                   >
-                    <MenuItem value={5}>Clasa a V-a</MenuItem>
-                    <MenuItem value={6}>Clasa a VI-a</MenuItem>
-                    <MenuItem value={7}>Clasa a VII-a</MenuItem>
-                    <MenuItem value={8}>Clasa a VIII-a</MenuItem>
-                    <MenuItem value={9}>Clasa a IX-a</MenuItem>
-                    <MenuItem value={10}>Clasa a X-a</MenuItem>
-                    <MenuItem value={11}>Clasa a XI-a</MenuItem>
-                    <MenuItem value={12}>Clasa a XII-a</MenuItem>
+                    <MenuItem value={5}>{t('Clasa a V-a')}</MenuItem>
+                    <MenuItem value={6}>{t('Clasa a VI-a')}</MenuItem>
+                    <MenuItem value={7}>{t('Clasa a VII-a')}</MenuItem>
+                    <MenuItem value={8}>{t('Clasa a VIII-a')}</MenuItem>
+                    <MenuItem value={9}>{t('Clasa a IX-a')}</MenuItem>
+                    <MenuItem value={10}>{t('Clasa a X-a')}</MenuItem>
+                    <MenuItem value={11}>{t('Clasa a XI-a')}</MenuItem>
+                    <MenuItem value={12}>{t('Clasa a XII-a')}</MenuItem>
                   </Select>
                 </FormControl>
               </Paper>
@@ -972,7 +964,7 @@ class CapitolDB extends Component {
             !this.state.subcapitolChosen &&
             this.state.adaugaSubcapitolChosen && (
               <ModalFisaTeorie
-                title="Adaugă subcapitol"
+                title={t('Adaugă subcapitol')}
                 numeButon="Adaugă"
                 canCancel
                 canConfirm
@@ -983,7 +975,7 @@ class CapitolDB extends Component {
                 <Paper>
                   <TextField
                     id="Titlu"
-                    label="Titlu"
+                    label={t('Titlu')}
                     style={{ width: '100%' }}
                     margin="dense"
                     placeholder="Titlu"
@@ -1001,4 +993,4 @@ class CapitolDB extends Component {
 
 CapitolDB.contextType = AuthContext;
 
-export default CapitolDB;
+export default withTranslation()(CapitolDB);

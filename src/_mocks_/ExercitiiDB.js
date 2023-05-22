@@ -761,7 +761,7 @@ class ExercitiiDB extends Component {
                   this.setAdaugaExercitiuChosen();
                 }}
               >
-                Adaugă Exerciții
+                Adaugă Probleme
               </Button>
               <Button
                 disableRipple
@@ -996,7 +996,7 @@ class ExercitiiDB extends Component {
                     justifyContent="space-between"
                   >
                     <Button variant="outlined" onClick={() => this.setSubcapitolChosen(subcapitol)}>
-                      Exerciții
+                      Probleme
                     </Button>
                   </Stack>
                 </Card>

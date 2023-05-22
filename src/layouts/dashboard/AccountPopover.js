@@ -1,5 +1,7 @@
 import { useRef, useState, useContext } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
@@ -23,11 +25,6 @@ const MENU_OPTIONS = [
     icon: 'eva:person-fill',
     linkTo: '/dashboard/utilizator'
   }
-  // {
-  //   label: 'Setari',
-  //   icon: 'eva:settings-2-fill',
-  //   linkTo: '#'
-  // }
 ];
 
 // ----------------------------------------------------------------------
@@ -57,6 +54,21 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const { t } = useTranslation();
+
+  const MENU_OPTIONS = [
+    {
+      label: t('Pagina principala'),
+      icon: 'eva:home-fill',
+      linkTo: '/dashboard/app'
+    },
+    {
+      label: t('Profil'),
+      icon: 'eva:person-fill',
+      linkTo: '/dashboard/utilizator'
+    }
+  ];
 
   return (
     <>

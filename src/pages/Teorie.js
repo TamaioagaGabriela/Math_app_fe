@@ -73,7 +73,7 @@ Calculate the value of $s$ when $u = 10\\frac{m}{s}$ and $a = 2\\frac{m}{s^{2}}$
     <Page title="Dashboard: Teorie | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          {t('Teorie')}
+          {t('Lecții teoretice')}
         </Typography>
 
         <Stack

@@ -50,7 +50,7 @@ export default function Capitol() {
     <Page title="Dashboard: Teorie | Learny">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }} marginTop="-20px">
-          {t('Teorie')}
+          {t('Lecții teoretice')}
         </Typography>
 
         <CapitolDB />

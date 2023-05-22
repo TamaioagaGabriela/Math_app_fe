@@ -893,7 +893,7 @@ class ExercitiiGresiteDB extends Component {
                         this.fetchExercitiiGresite();
                       }}
                     >
-                      Exerciții greșite
+                      Rezolvări incorecte
                     </Button>
                   </Stack>
                 </Card>

@@ -14,7 +14,7 @@ function SidebarConfig() {
       icon: getIcon('eva:pie-chart-2-fill')
     },
     {
-      title: t('Teorie'),
+      title: t('Lecții teoretice'),
       path: '/dashboard/teorie',
       icon: getIcon('fluent:book-20-filled')
     },
@@ -24,7 +24,7 @@ function SidebarConfig() {
       icon: getIcon('eva:file-text-fill')
     },
     {
-      title: t('Exerciții'),
+      title: t('Probleme'),
       path: '/dashboard/exercitii',
       icon: getIcon('fluent:clipboard-edit-20-regular')
     },
@@ -34,7 +34,7 @@ function SidebarConfig() {
       icon: getIcon('fluent:clipboard-clock-20-regular')
     },
     {
-      title: t('Exerciții greșite'),
+      title: t('Rezolvări incorecte'),
       path: '/dashboard/exercitii_gresite',
       icon: getIcon('fluent:clipboard-error-20-regular')
     }

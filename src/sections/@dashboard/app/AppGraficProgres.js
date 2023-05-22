@@ -16,25 +16,22 @@ const testePercentageList = [];
 const exercitiiPercentageList = [];
 
 export default function AppGraficProgres() {
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
   const CHART_DATA = [
     {
-      name: t('Exerciții'),
+      name: t('Probleme'),
       type: 'column',
       data: exercitiiPercentageList
-      // [100, 89, 54, 76, 23, 41]
     },
     {
-      name: t('Teorie'),
+      name: t('Lecții teoretice'),
       type: 'column',
       data: teoriePercentageList
-      // [100, 70, 17, 59, 65, 33]
     },
     {
       name: t('Teste'),
       type: 'column',
       data: testePercentageList
-      // [100, 100, 70, 38, 0, 20]
     }
   ];
   const chartOptions = merge(BaseOptionChart(), {
@@ -42,7 +39,6 @@ export default function AppGraficProgres() {
     plotOptions: { bar: { columnWidth: '35%', borderRadius: 4 } },
     fill: { type: ['solid', 'gradient', 'solid'] },
     labels: capitoleLabelsList,
-    // ['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '05/01/2003', '06/01/2003'],
     scales: {
       y: {
         min: 0,
@@ -431,7 +427,7 @@ export default function AppGraficProgres() {
       capitoleLabelsList.length = 0;
     }
     for (let i = 0; i < capitoleFiltrate.length; i += 1) {
-      capitoleLabelsList.push(capitoleFiltrate[i].titlu);
+      capitoleLabelsList.push(t(capitoleFiltrate[i].titlu));
       teoriePercentageList.push(getPercentageTeoriePerCapitol(capitoleFiltrate[i]._id));
     }
   };
@@ -509,9 +505,10 @@ export default function AppGraficProgres() {
     }
   };
 
+  fetchCapitole();
+
   if (!alreadyFetch) {
     setAlreadyFetch(true);
-    fetchCapitole();
     fetchSubcapitole();
     fetchFiseTeorie();
     fetchAccesariFiseTeorie();
