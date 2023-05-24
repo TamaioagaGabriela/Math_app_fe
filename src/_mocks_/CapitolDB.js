@@ -756,7 +756,7 @@ class CapitolDB extends React.Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(subcapitol.titlu)}</Typography>
                     </Link>
                     <Typography variant="subtitle2">
                       {t('Capitolul')}:{' '}
@@ -822,20 +822,20 @@ class CapitolDB extends React.Component {
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
                       <Typography variant="h4">
-                        <b>{fisaTeorie.titlu}</b>
+                        <b>{t(fisaTeorie.titlu)}</b>
                       </Typography>
                     </Link>
                     &nbsp;
                     <Typography variant="subtitle1">
-                      Capitolul:{' '}
-                      {
+                      {t('Capitolul')}:{' '}
+                      {t(
                         this.state.capitole.find(
                           (capitol) => capitol._id === this.state.subcapitolTeorie.capitol_id
                         ).titlu
-                      }
+                      )}
                     </Typography>
                     <Typography variant="subtitle1">
-                      Subcapitolul: {this.state.subcapitolTeorie.titlu}
+                      {t('Subcapitolul')}: {t(this.state.subcapitolTeorie.titlu)}
                     </Typography>
                     {/* <Typography variant="subtitle2">Noțiuni teoretice:</Typography> */}
                     &nbsp;

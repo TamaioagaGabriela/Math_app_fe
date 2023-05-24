@@ -538,7 +538,7 @@ class FisaFormuleDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(subcapitol.titlu)}</Typography>
                     </Link>
                     <Typography variant="subtitle2">
                       {t('Capitolul')}:{' '}

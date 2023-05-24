@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -566,24 +567,9 @@ class ExercitiiGresiteDB extends Component {
     return 'Nu contine exercitii gresite';
   };
 
-  // getStatusCapitol = (capitolId) => {
-  //   const subcapitoleFiltrate = this.state.subcapitole.filter(
-  //     (subcapitol) => subcapitol.capitol_id === capitolId
-  //   );
-  //   for (let i = 0; i < subcapitoleFiltrate.length; i += 1) {
-  //     const exercitiiGresiteFiltrate = this.state.exercitiiGresiteUserAll.filter(
-  //       (exercitiuRezolvat) =>
-  //         exercitiuRezolvat.user._id === this.context.userId &&
-  //         exercitiuRezolvat.exercitiu.subcapitol_id === subcapitoleFiltrate[i]._id
-  //     );
-  //     if (exercitiiGresiteFiltrate.length >= 1) {
-  //       return 'Contine exercitii gresite';
-  //     }
-  //   }
-  //   return 'Nu contine exercitii gresite';
-  // };
-
   render() {
+    const { t } = this.props;
+
     console.log(this.state.isLoading);
 
     console.log('exercitiiGresiteUserAll', this.state.exercitiiGresiteUserAll);
@@ -632,7 +618,7 @@ class ExercitiiGresiteDB extends Component {
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            Inapoi
+            {t('Înapoi')}
           </Button>
           {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
           {/* sortare si filtrare exercitii */}
@@ -654,7 +640,7 @@ class ExercitiiGresiteDB extends Component {
                 endIcon={<Iconify icon="ic:round-filter-list" />}
                 onClick={() => this.modalHandleOpenFilter()}
               >
-                Filtrare&nbsp;
+                {t('Filtrare')}&nbsp;
               </Button>
               <Drawer
                 anchor="right"
@@ -671,7 +657,7 @@ class ExercitiiGresiteDB extends Component {
                   sx={{ px: 1, py: 2 }}
                 >
                   <Typography variant="subtitle1" sx={{ ml: 1 }}>
-                    Filtre
+                    {t('Filtre')}
                   </Typography>
                   <IconButton onClick={() => this.modalHandleCloseFilter()}>
                     <Iconify icon="eva:close-fill" width={20} height={20} />
@@ -682,7 +668,7 @@ class ExercitiiGresiteDB extends Component {
                   <Stack spacing={3} sx={{ p: 3 }}>
                     <div>
                       <Typography variant="subtitle1" gutterBottom>
-                        Nivel de dificultate
+                        {t('Nivel de dificultate')}
                       </Typography>
                       <RadioGroup>
                         {FILTER_NIVEL_DIFICULTATE_OPTIONS.map((item) => (
@@ -708,7 +694,7 @@ class ExercitiiGresiteDB extends Component {
                       this.modalHandleCloseFilter();
                     }}
                   >
-                    Seteaza filtrul
+                    {t('Seteaza filtrul')}
                   </Button>
                   &nbsp;
                   <Button
@@ -739,9 +725,9 @@ class ExercitiiGresiteDB extends Component {
                     />
                   }
                 >
-                  Sortare dificultate: &nbsp;
+                  {t('Sortare dificultate')}: &nbsp;
                   <Typography component="span" variant="subtitle2" sx={{ color: '#49BD47' }}>
-                    crescator
+                    {t('crescator')}
                   </Typography>
                 </Button>
                 <Menu
@@ -762,7 +748,7 @@ class ExercitiiGresiteDB extends Component {
                       }}
                       sx={{ typography: 'body2' }}
                     >
-                      {option.label}
+                      {t(option.label)}
                     </MenuItem>
                   ))}
                 </Menu>
@@ -777,25 +763,6 @@ class ExercitiiGresiteDB extends Component {
               <Grid key={capitol._id} item xs={12} sm={6} md={3}>
                 <Card>
                   <Box sx={{ pt: '100%', position: 'relative' }}>
-                    {/* {status && (
-                      <Label
-                        variant="filled"
-                        color={
-                          this.getStatusCapitol(capitol._id) === 'Nu contine exercitii gresite'
-                            ? 'info'
-                            : 'warning'
-                        }
-                        sx={{
-                          zIndex: 9,
-                          top: 16,
-                          right: 16,
-                          position: 'absolute',
-                          textTransform: 'uppercase'
-                        }}
-                      >
-                        {this.getStatusCapitol(capitol._id)}
-                      </Label>
-                    )} */}
                     <CapitolImgStyle alt={capitol.titlu} src={mockImgExercitiiCapitole(index)} />
                   </Box>
 
@@ -807,9 +774,9 @@ class ExercitiiGresiteDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{capitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(capitol.titlu)}</Typography>
                     </Link>
-                    <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
+                    <Typography variant="subtitle2">{t(`Clasa a ${capitol.clasa}-a`)}</Typography>
                   </Stack>
                   <Stack spacing={1} ml={3} mr={3} mb={3}>
                     <Button
@@ -819,7 +786,7 @@ class ExercitiiGresiteDB extends Component {
                         this.setCapitolChosen(capitol);
                       }}
                     >
-                      Accesează subcapitolele
+                      {t('Accesează subcapitolele')}
                     </Button>
                   </Stack>
                 </Card>
@@ -851,7 +818,7 @@ class ExercitiiGresiteDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {this.getStatusSubcapitol(subcapitol._id)}
+                        {t(this.getStatusSubcapitol(subcapitol._id))}
                       </Label>
                     )}
                     <CapitolImgStyle
@@ -868,14 +835,14 @@ class ExercitiiGresiteDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(subcapitol.titlu)}</Typography>
                     </Link>
                     <Typography variant="subtitle2">
-                      Capitolul:{' '}
-                      {
+                      {t('Capitolul')}:{' '}
+                      {t(
                         this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
                           .titlu
-                      }
+                      )}
                     </Typography>
                   </Stack>
                   <Stack
@@ -893,7 +860,7 @@ class ExercitiiGresiteDB extends Component {
                         this.fetchExercitiiGresite();
                       }}
                     >
-                      Rezolvări incorecte
+                      {t('Rezolvări incorecte')}
                     </Button>
                   </Stack>
                 </Card>
@@ -922,7 +889,7 @@ class ExercitiiGresiteDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        GRESIT
+                        {t('GRESIT')}
                       </Label>
                     )}
                     <CapitolImgStyle
@@ -942,19 +909,19 @@ class ExercitiiGresiteDB extends Component {
                       <Typography variant="subtitle1">Exercițiul {index + 1}</Typography>
                     </Link>
                     <Typography variant="subtitle2">
-                      Capitolul:{' '}
-                      {
+                      {t('Capitolul')}:{' '}
+                      {t(
                         this.state.capitole.find(
                           (capitol) => capitol._id === this.state.subcapitolExercitii.capitol_id
                         ).titlu
-                      }
+                      )}
                     </Typography>
 
                     <Typography variant="subtitle2">
-                      Subcapitolul: {this.state.subcapitolExercitii.titlu}
+                      {t('Subcapitolul')}: {t(this.state.subcapitolExercitii.titlu)}
                     </Typography>
                     <Typography variant="subtitle2">
-                      Nivel dificultate: {rezolvareExercitiu.exercitiu.nivel_dif}
+                      {t('Nivel dificultate')}: {t(rezolvareExercitiu.exercitiu.nivel_dif)}
                     </Typography>
                   </Stack>
                   <Stack spacing={1} ml={3} mr={3} mb={3}>
@@ -962,13 +929,13 @@ class ExercitiiGresiteDB extends Component {
                       variant="outlined"
                       onClick={() => this.setExercitiuChosen(rezolvareExercitiu.exercitiu)}
                     >
-                      Rezolvă Exercițiul
+                      {t('Rezolvă Exercițiul')}
                     </Button>
                     <Button
                       variant="outlined"
                       onClick={() => this.setVeziRezolvareInainte(rezolvareExercitiu.exercitiu)}
                     >
-                      Vezi rezolvare
+                      {t('Vezi rezolvare')}
                     </Button>
                   </Stack>
                 </Card>
@@ -994,7 +961,7 @@ class ExercitiiGresiteDB extends Component {
                   <article className="container">
                     <h2>
                       {' '}
-                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                      <Markdown>{t(this.state.exercitiuAles.cerinta)}</Markdown>{' '}
                     </h2>
                     <div className="btn-container">
                       <Button
@@ -1007,7 +974,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        A. {this.state.exercitiuAles.varianta1}
+                        A. {t(this.state.exercitiuAles.varianta1)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1019,7 +986,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        B. {this.state.exercitiuAles.varianta2}
+                        B. {t(this.state.exercitiuAles.varianta2)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1031,7 +998,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        C. {this.state.exercitiuAles.varianta3}
+                        C. {t(this.state.exercitiuAles.varianta3)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1043,17 +1010,17 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        D. {this.state.exercitiuAles.varianta4}
+                        D. {t(this.state.exercitiuAles.varianta4)}
                       </Button>
                     </div>
                   </article>
 
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <h2>
-                      <b>Rezolvare:</b>
+                      <b>{t('Rezolvare')}:</b>
                     </h2>
                     <Typography variant="subtitle1">
-                      <Markdown>{this.state.exercitiuAles.rezolvare}</Markdown>
+                      <Markdown>{t(this.state.exercitiuAles.rezolvare)}</Markdown>
                     </Typography>
                   </Stack>
                 </section>
@@ -1079,7 +1046,7 @@ class ExercitiiGresiteDB extends Component {
                   <article className="container">
                     <h2>
                       {' '}
-                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                      <Markdown>{t(this.state.exercitiuAles.cerinta)}</Markdown>{' '}
                     </h2>
                     <div className="btn-container">
                       <Button
@@ -1089,7 +1056,7 @@ class ExercitiiGresiteDB extends Component {
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta1);
                         }}
                       >
-                        A. {this.state.exercitiuAles.varianta1}
+                        A. {t(this.state.exercitiuAles.varianta1)}
                       </Button>
                       <Button
                         className={this.state.btn2 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1098,7 +1065,7 @@ class ExercitiiGresiteDB extends Component {
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta2);
                         }}
                       >
-                        B. {this.state.exercitiuAles.varianta2}
+                        B. {t(this.state.exercitiuAles.varianta2)}
                       </Button>
                       <Button
                         className={this.state.btn3 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1107,7 +1074,7 @@ class ExercitiiGresiteDB extends Component {
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta3);
                         }}
                       >
-                        C. {this.state.exercitiuAles.varianta3}
+                        C. {t(this.state.exercitiuAles.varianta3)}
                       </Button>
                       <Button
                         className={this.state.btn4 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1116,7 +1083,7 @@ class ExercitiiGresiteDB extends Component {
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta4);
                         }}
                       >
-                        D. {this.state.exercitiuAles.varianta4}
+                        D. {t(this.state.exercitiuAles.varianta4)}
                       </Button>
                     </div>
                   </article>
@@ -1124,7 +1091,7 @@ class ExercitiiGresiteDB extends Component {
                     <p className="exercitiu-err-p">{this.state.eroare}</p>
                   ) : (
                     <p className="exercitiu-err-p" style={{ color: 'white' }}>
-                      'Selecteaza o varianta de raspuns!'
+                      {t('Selecteaza o varianta de raspuns!')}
                     </p>
                   )}
                   <Button
@@ -1133,7 +1100,7 @@ class ExercitiiGresiteDB extends Component {
                       this.adaugaRezolvareExercitiu();
                     }}
                   >
-                    trimite
+                    {t('Trimite')}
                   </Button>
                 </section>
               </Grid>
@@ -1158,7 +1125,7 @@ class ExercitiiGresiteDB extends Component {
                   <article className="container">
                     <h2>
                       {' '}
-                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                      <Markdown>{t(this.state.exercitiuAles.cerinta)}</Markdown>{' '}
                     </h2>
                     <div className="btn-container">
                       <Button
@@ -1170,7 +1137,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        A. {this.state.exercitiuAles.varianta1}
+                        A. {t(this.state.exercitiuAles.varianta1)}
                       </Button>
                       <Button
                         className={this.state.btn2 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1181,7 +1148,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        B. {this.state.exercitiuAles.varianta2}
+                        B. {t(this.state.exercitiuAles.varianta2)}
                       </Button>
                       <Button
                         className={this.state.btn3 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1192,7 +1159,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        C. {this.state.exercitiuAles.varianta3}
+                        C. {t(this.state.exercitiuAles.varianta3)}
                       </Button>
                       <Button
                         className={this.state.btn4 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1203,7 +1170,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        D. {this.state.exercitiuAles.varianta4}
+                        D. {t(this.state.exercitiuAles.varianta4)}
                       </Button>
                     </div>
                   </article>
@@ -1214,7 +1181,7 @@ class ExercitiiGresiteDB extends Component {
                       fontSize: '1.1rem'
                     }}
                   >
-                    Raspuns: {this.state.rezultatExercitiu}
+                    {t('Raspuns')}: {t(this.state.rezultatExercitiu)}
                   </p>
                   <Button
                     className="next-question"
@@ -1222,7 +1189,7 @@ class ExercitiiGresiteDB extends Component {
                       this.setState({ veziRezolvare: true });
                     }}
                   >
-                    Vezi rezolvarea
+                    {t('Vezi rezolvarea')}
                   </Button>
                 </section>
               </Grid>
@@ -1247,7 +1214,7 @@ class ExercitiiGresiteDB extends Component {
                   <article className="container">
                     <h2>
                       {' '}
-                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                      <Markdown>{t(this.state.exercitiuAles.cerinta)}</Markdown>{' '}
                     </h2>
                     <div className="btn-container">
                       <Button
@@ -1259,7 +1226,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        A. {this.state.exercitiuAles.varianta1}
+                        A. {t(this.state.exercitiuAles.varianta1)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1270,7 +1237,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        B. {this.state.exercitiuAles.varianta2}
+                        B. {t(this.state.exercitiuAles.varianta2)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1281,7 +1248,7 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        C. {this.state.exercitiuAles.varianta3}
+                        C. {t(this.state.exercitiuAles.varianta3)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1292,27 +1259,26 @@ class ExercitiiGresiteDB extends Component {
                               : 'red'
                         }}
                       >
-                        D. {this.state.exercitiuAles.varianta4}
+                        D. {t(this.state.exercitiuAles.varianta4)}
                       </Button>
                     </div>
                   </article>
 
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <h2>
-                      <b>Rezolvare:</b>
+                      <b>{t('Rezolvare')}:</b>
                     </h2>
                     <Typography variant="subtitle1">
-                      <Markdown>{this.state.exercitiuAles.rezolvare}</Markdown>
+                      <Markdown>{t(this.state.exercitiuAles.rezolvare)}</Markdown>
                     </Typography>
                   </Stack>
                 </section>
               </Grid>
             )}
         </Grid>
-        {/* <ProductCartWidget /> */}
       </container>
     );
   }
 }
 ExercitiiGresiteDB.contextType = AuthContext;
-export default ExercitiiGresiteDB;
+export default withTranslation()(ExercitiiGresiteDB);

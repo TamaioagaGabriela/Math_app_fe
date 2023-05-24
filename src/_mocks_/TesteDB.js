@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
 
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -577,6 +578,8 @@ class TesteDB extends Component {
   };
 
   render() {
+    const { t } = this.props;
+
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
     );
@@ -602,7 +605,7 @@ class TesteDB extends Component {
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            Inapoi
+            {t('Înapoi')}
           </Button>
           <Button
             variant="outlined"
@@ -619,7 +622,7 @@ class TesteDB extends Component {
               this.setAdaugaTestChosen();
             }}
           >
-            Adaugă test
+            {t('Adaugă test')}
           </Button>
         </Stack>
 
@@ -644,7 +647,7 @@ class TesteDB extends Component {
                         }}
                       >
                         {this.getPercentagePerCapitol(capitol._id) === 100
-                          ? 'Complet'
+                          ? t('COMPLET')
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
@@ -659,9 +662,9 @@ class TesteDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{capitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(capitol.titlu)}</Typography>
                     </Link>
-                    <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
+                    <Typography variant="subtitle2">{t(`Clasa a ${capitol.clasa}-a`)}</Typography>
                   </Stack>
                   <Stack
                     ml={3}
@@ -672,7 +675,7 @@ class TesteDB extends Component {
                     justifyContent="space-between"
                   >
                     <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                      Teste
+                      {t('Teste')}
                     </Button>
                   </Stack>
                 </Card>
@@ -726,7 +729,7 @@ class TesteDB extends Component {
                                   rezolvare.user._id === this.context.userId
                               ).punctaj
                             } / 100`
-                          : 'Nerezolvat'}
+                          : t('Nerezolvat')}
                       </Label>
                     )}
                     <CapitolImgStyle alt={test._id} src={mockImgTeste(index)} />
@@ -740,11 +743,15 @@ class TesteDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">Testul {index + 1}</Typography>
+                      <Typography variant="subtitle1">
+                        {t('Testul')} {index + 1}
+                      </Typography>
                     </Link>
                     <Typography variant="subtitle2">
-                      Capitolul:{' '}
-                      {this.state.capitole.find((capitol) => capitol._id === test.capitol_id).titlu}
+                      {t('Capitolul')}:{' '}
+                      {t(
+                        this.state.capitole.find((capitol) => capitol._id === test.capitol_id).titlu
+                      )}
                     </Typography>
                   </Stack>
                   <Stack spacing={1} ml={3} mr={3} mb={3}>
@@ -754,7 +761,7 @@ class TesteDB extends Component {
                         this.getExercitii(test);
                       }}
                     >
-                      Rezolvă testul
+                      {t('Rezolvă testul')}
                     </Button>
                   </Stack>
                 </Card>
@@ -777,11 +784,13 @@ class TesteDB extends Component {
               >
                 <section className="quiz">
                   <article className="container">
-                    <h3>Intrebarea {this.state.nrIntrebare + 1}/9</h3>
+                    <h3>
+                      {t('Întrebarea')} {this.state.nrIntrebare + 1}/9
+                    </h3>
                     <h2>
                       {' '}
                       <Markdown>
-                        {this.state.exercitiiTest[this.state.nrIntrebare][0].cerinta}
+                        {t(this.state.exercitiiTest[this.state.nrIntrebare][0].cerinta)}
                       </Markdown>{' '}
                     </h2>
                     <div className="btn-container">
@@ -794,7 +803,7 @@ class TesteDB extends Component {
                           );
                         }}
                       >
-                        A. {this.state.exercitiiTest[this.state.nrIntrebare][0].varianta1}
+                        A. {t(this.state.exercitiiTest[this.state.nrIntrebare][0].varianta1)}
                       </Button>
                       <Button
                         className={this.state.btn2 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -805,7 +814,7 @@ class TesteDB extends Component {
                           );
                         }}
                       >
-                        B. {this.state.exercitiiTest[this.state.nrIntrebare][0].varianta2}
+                        B. {t(this.state.exercitiiTest[this.state.nrIntrebare][0].varianta2)}
                       </Button>
                       <Button
                         className={this.state.btn3 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -816,7 +825,7 @@ class TesteDB extends Component {
                           );
                         }}
                       >
-                        C. {this.state.exercitiiTest[this.state.nrIntrebare][0].varianta3}
+                        C. {t(this.state.exercitiiTest[this.state.nrIntrebare][0].varianta3)}
                       </Button>
                       <Button
                         className={this.state.btn4 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -827,7 +836,7 @@ class TesteDB extends Component {
                           );
                         }}
                       >
-                        D. {this.state.exercitiiTest[this.state.nrIntrebare][0].varianta4}
+                        D. {t(this.state.exercitiiTest[this.state.nrIntrebare][0].varianta4)}
                       </Button>
                     </div>
                   </article>
@@ -836,11 +845,11 @@ class TesteDB extends Component {
                       className="exercitiu-err-p"
                       style={{ visibility: this.state.eroare ? 'visible' : 'hidden', width: '30%' }}
                     >
-                      {this.state.eroare}
+                      {t(this.state.eroare)}
                     </p>
                   ) : (
                     <p className="exercitiu-err-p" style={{ color: 'white' }}>
-                      'Selecteaza o varianta de raspuns!'
+                      {t('Selecteaza o varianta de raspuns!')}
                     </p>
                   )}
                   <Button
@@ -849,7 +858,7 @@ class TesteDB extends Component {
                       this.adaugaRaspunsSelectat();
                     }}
                   >
-                    {this.state.nrIntrebare === 8 ? 'Trimite' : 'Urmatoarea intrebare'}
+                    {this.state.nrIntrebare === 8 ? t('Trimite') : t('Urmatoarea intrebare')}
                   </Button>
                 </section>
               </Grid>
@@ -867,8 +876,8 @@ class TesteDB extends Component {
                 <Card marginLeft={20}>
                   <Typography variant="subtitle1" margin={2}>
                     {this.state.punctajTest < 50
-                      ? 'Mai ai de exersat! Punctajul obtinut este: '
-                      : 'Felicitari! Ai obtinut punctajul: '}
+                      ? t('Mai ai de exersat! Punctajul obtinut este: ')
+                      : t('Felicitari! Ai obtinut punctajul: ')}
                     {this.state.punctajTest} !
                   </Typography>
                 </Card>
@@ -927,7 +936,7 @@ class TesteDB extends Component {
                           this.setState({ nrExercitiuAles: index });
                         }}
                       >
-                        Vezi rezolvarea
+                        {t('Vezi rezolvarea')}
                       </Button>
                     </Stack>
                   </Card>
@@ -956,7 +965,7 @@ class TesteDB extends Component {
                     <h2>
                       {' '}
                       <Markdown>
-                        {this.state.exercitiiTest[this.state.nrExercitiuAles][0].cerinta}
+                        {t(this.state.exercitiiTest[this.state.nrExercitiuAles][0].cerinta)}
                       </Markdown>{' '}
                     </h2>
                     <div className="btn-container">
@@ -970,7 +979,7 @@ class TesteDB extends Component {
                               : 'red'
                         }}
                       >
-                        A. {this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta1}
+                        A. {t(this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta1)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -982,7 +991,7 @@ class TesteDB extends Component {
                               : 'red'
                         }}
                       >
-                        B. {this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta2}
+                        B. {t(this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta2)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -994,7 +1003,7 @@ class TesteDB extends Component {
                               : 'red'
                         }}
                       >
-                        C. {this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta3}
+                        C. {t(this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta3)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1006,18 +1015,18 @@ class TesteDB extends Component {
                               : 'red'
                         }}
                       >
-                        D. {this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta4}
+                        D. {t(this.state.exercitiiTest[this.state.nrExercitiuAles][0].varianta4)}
                       </Button>
                     </div>
                   </article>
 
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <h2>
-                      <b>Rezolvare:</b>
+                      <b>{t('Rezolvare')}:</b>
                     </h2>
                     <Typography variant="subtitle1">
                       <Markdown>
-                        {this.state.exercitiiTest[this.state.nrExercitiuAles][0].rezolvare}
+                        {t(this.state.exercitiiTest[this.state.nrExercitiuAles][0].rezolvare)}
                       </Markdown>
                     </Typography>
                   </Stack>
@@ -1032,7 +1041,7 @@ class TesteDB extends Component {
           )}
           {this.state.capitolChosen && !this.state.testChosen && this.state.adaugaTestChosen && (
             <ModalFisaTeorie
-              title="Adaugă test"
+              title={t('Adaugă test')}
               numeButon="Adaugă test"
               canCancel
               canConfirm
@@ -1043,7 +1052,7 @@ class TesteDB extends Component {
               <Paper>
                 <TextField
                   id="Exercitiu 1"
-                  label="Exercitiu 1"
+                  label={t('Exercitiu 1')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 1"
@@ -1052,7 +1061,7 @@ class TesteDB extends Component {
                 />
                 <TextField
                   id="Exercitiu 2"
-                  label="Exercitiu 2"
+                  label={t('Exercitiu 2')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 2"
@@ -1061,7 +1070,7 @@ class TesteDB extends Component {
                 />
                 <TextField
                   id="Exercitiu 3"
-                  label="Exercitiu 3"
+                  label={t('Exercitiu 3')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 3"
@@ -1070,7 +1079,7 @@ class TesteDB extends Component {
                 />
                 <TextField
                   id="Exercitiu 4"
-                  label="Exercitiu 4"
+                  label={t('Exercitiu 4')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 4"
@@ -1079,7 +1088,7 @@ class TesteDB extends Component {
                 />
                 <TextField
                   id="Exercitiu 5"
-                  label="Exercitiu 5"
+                  label={t('Exercitiu 5')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 5"
@@ -1088,7 +1097,7 @@ class TesteDB extends Component {
                 />
                 <TextField
                   id="Exercitiu 6"
-                  label="Exercitiu 6"
+                  label={t('Exercitiu 6')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 6"
@@ -1097,7 +1106,7 @@ class TesteDB extends Component {
                 />
                 <TextField
                   id="Exercitiu 7"
-                  label="Exercitiu 7"
+                  label={t('Exercitiu 7')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 7"
@@ -1106,7 +1115,7 @@ class TesteDB extends Component {
                 />
                 <TextField
                   id="Exercitiu 8"
-                  label="Exercitiu 8"
+                  label={t('Exercitiu 8')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 8"
@@ -1115,7 +1124,7 @@ class TesteDB extends Component {
                 />
                 <TextField
                   id="Exercitiu 9"
-                  label="Exercitiu 9"
+                  label={t('Exercitiu 9')}
                   style={{ width: '100%' }}
                   margin="dense"
                   placeholder="Exercitiu 9"
@@ -1131,4 +1140,4 @@ class TesteDB extends Component {
   }
 }
 TesteDB.contextType = AuthContext;
-export default TesteDB;
+export default withTranslation()(TesteDB);

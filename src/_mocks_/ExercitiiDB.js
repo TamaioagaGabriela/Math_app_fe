@@ -1,5 +1,7 @@
 // eslint-disable-line react/no-unused-state
 import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
@@ -694,6 +696,8 @@ class ExercitiiDB extends Component {
   };
 
   render() {
+    const { t } = this.props;
+
     const capitoleFiltrate = this.state.capitole.filter(
       (capitol) => capitol.clasa === this.context.clasa
     );
@@ -730,7 +734,7 @@ class ExercitiiDB extends Component {
             style={{ visibility: this.state.capitolChosen ? 'visible' : 'hidden' }}
             onClick={() => this.modalHandleClickInapoi()}
           >
-            inapoi
+            {t('Înapoi')}
           </Button>
           {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
           {/* sortare si filtrare exercitii */}
@@ -761,7 +765,7 @@ class ExercitiiDB extends Component {
                   this.setAdaugaExercitiuChosen();
                 }}
               >
-                Adaugă Probleme
+                {t('Adaugă Probleme')}
               </Button>
               <Button
                 disableRipple
@@ -769,7 +773,7 @@ class ExercitiiDB extends Component {
                 endIcon={<Iconify icon="ic:round-filter-list" />}
                 onClick={() => this.modalHandleOpenFilter()}
               >
-                Filtrare&nbsp;
+                {t('Filtrare')}&nbsp;
               </Button>
               <Drawer
                 anchor="right"
@@ -786,7 +790,7 @@ class ExercitiiDB extends Component {
                   sx={{ px: 1, py: 2 }}
                 >
                   <Typography variant="subtitle1" sx={{ ml: 1 }}>
-                    Filtre
+                    {t('Filtre')}
                   </Typography>
                   <IconButton onClick={() => this.modalHandleCloseFilter()}>
                     <Iconify icon="eva:close-fill" width={20} height={20} />
@@ -797,7 +801,7 @@ class ExercitiiDB extends Component {
                   <Stack spacing={3} sx={{ p: 3 }}>
                     <div>
                       <Typography variant="subtitle1" gutterBottom>
-                        Nivel de dificultate
+                        {t('Nivel de dificultate')}
                       </Typography>
                       <RadioGroup>
                         {FILTER_NIVEL_DIFICULTATE_OPTIONS.map((item) => (
@@ -805,7 +809,7 @@ class ExercitiiDB extends Component {
                             key={item}
                             value={item}
                             control={<Radio />}
-                            label={item}
+                            label={t(item)}
                             onClick={() => this.setState({ filtru: item })}
                           />
                         ))}
@@ -823,7 +827,7 @@ class ExercitiiDB extends Component {
                       this.modalHandleCloseFilter();
                     }}
                   >
-                    Setează filtrul
+                    {t('Setează filtrul')}
                   </Button>
                   &nbsp;
                   <Button
@@ -834,7 +838,7 @@ class ExercitiiDB extends Component {
                     onClick={() => this.modalHandleResetFilter()}
                     startIcon={<Iconify icon="ic:round-clear-all" />}
                   >
-                    șterge filtrul
+                    {t('șterge filtrul')}
                   </Button>
                 </Box>
               </Drawer>
@@ -855,9 +859,9 @@ class ExercitiiDB extends Component {
                     />
                   }
                 >
-                  Sortare dificultate: &nbsp;
+                  {t('Sortare dificultate')}: &nbsp;
                   <Typography component="span" variant="subtitle2" sx={{ color: '#49BD47' }}>
-                    {this.state.order === 'asc' ? 'Crescător' : 'Descrescător'}
+                    {this.state.order === 'asc' ? t('Crescător') : t('Descrescător')}
                   </Typography>
                 </Button>
                 <Menu
@@ -878,7 +882,7 @@ class ExercitiiDB extends Component {
                       }}
                       sx={{ typography: 'body2' }}
                     >
-                      {option.label}
+                      {t(option.label)}
                     </MenuItem>
                   ))}
                 </Menu>
@@ -908,7 +912,7 @@ class ExercitiiDB extends Component {
                         }}
                       >
                         {this.getPercentagePerCapitol(capitol._id) === 100
-                          ? 'Complet'
+                          ? t('Complet')
                           : `${this.getPercentagePerCapitol(capitol._id)} %`}
                       </Label>
                     )}
@@ -923,13 +927,13 @@ class ExercitiiDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{capitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(capitol.titlu)}</Typography>
                     </Link>
-                    <Typography variant="subtitle2">Clasa {capitol.clasa}</Typography>
+                    <Typography variant="subtitle2">{t(`Clasa a ${capitol.clasa}-a`)}</Typography>
                   </Stack>
                   <Stack spacing={1} ml={3} mr={3} mb={3}>
                     <Button variant="outlined" onClick={() => this.setCapitolChosen(capitol)}>
-                      Accesează Subcapitolele
+                      {t('Accesează subcapitolele')}
                     </Button>
                   </Stack>
                 </Card>
@@ -959,7 +963,7 @@ class ExercitiiDB extends Component {
                         }}
                       >
                         {this.getPercentagePerSubcapitol(subcapitol._id) === 100
-                          ? 'Complet'
+                          ? t('Complet')
                           : `${this.getPercentagePerSubcapitol(subcapitol._id)} %`}
                       </Label>
                     )}
@@ -977,14 +981,14 @@ class ExercitiiDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">{subcapitol.titlu}</Typography>
+                      <Typography variant="subtitle1">{t(subcapitol.titlu)}</Typography>
                     </Link>
                     <Typography variant="subtitle2">
-                      Capitolul:{' '}
-                      {
+                      {t('Capitolul')}:{' '}
+                      {t(
                         this.state.capitole.find((capitol) => capitol._id === subcapitol.capitol_id)
                           .titlu
-                      }
+                      )}
                     </Typography>
                   </Stack>
                   <Stack
@@ -996,7 +1000,7 @@ class ExercitiiDB extends Component {
                     justifyContent="space-between"
                   >
                     <Button variant="outlined" onClick={() => this.setSubcapitolChosen(subcapitol)}>
-                      Probleme
+                      {t('Probleme')}
                     </Button>
                   </Stack>
                 </Card>
@@ -1026,7 +1030,7 @@ class ExercitiiDB extends Component {
                           textTransform: 'uppercase'
                         }}
                       >
-                        {this.getStatusExercitiu(exercitiu._id)}
+                        {t(this.getStatusExercitiu(exercitiu._id))}
                       </Label>
                     )}
                     <CapitolImgStyle alt={exercitiu._id} src={mockImgExercitii(index)} />
@@ -1040,21 +1044,23 @@ class ExercitiiDB extends Component {
                     minHeight="135px"
                   >
                     <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                      <Typography variant="subtitle1">Exercițiul {index + 1}</Typography>
+                      <Typography variant="subtitle1">
+                        {t('Exercițiul')} {index + 1}
+                      </Typography>
                     </Link>
                     <Typography variant="subtitle2">
-                      Capitolul:{' '}
-                      {
+                      {t('Capitolul')}:{' '}
+                      {t(
                         this.state.capitole.find(
                           (capitol) => capitol._id === this.state.subcapitolExercitii.capitol_id
                         ).titlu
-                      }
+                      )}
                     </Typography>
                     <Typography variant="subtitle2">
-                      Subcapitolul: {this.state.subcapitolExercitii.titlu}
+                      {t('Subcapitolul')}: {t(this.state.subcapitolExercitii.titlu)}
                     </Typography>
                     <Typography variant="subtitle2">
-                      Nivel dificultate: {exercitiu.nivel_dif}
+                      {t('Nivel dificultate')}: {t(exercitiu.nivel_dif)}
                     </Typography>
                   </Stack>
                   <Stack spacing={1} ml={3} mr={3} mb={3}>
@@ -1063,7 +1069,7 @@ class ExercitiiDB extends Component {
                       minWidth="530px"
                       onClick={() => this.setExercitiuChosen(exercitiu)}
                     >
-                      Rezolvă Exercițiul
+                      {t('Rezolvă Exercițiul')}
                     </Button>
                   </Stack>
                 </Card>
@@ -1098,7 +1104,7 @@ class ExercitiiDB extends Component {
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta1);
                         }}
                       >
-                        A. {this.state.exercitiuAles.varianta1}
+                        A. {t(this.state.exercitiuAles.varianta1)}
                       </Button>
                       <Button
                         className={this.state.btn2 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1107,7 +1113,7 @@ class ExercitiiDB extends Component {
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta2);
                         }}
                       >
-                        B. {this.state.exercitiuAles.varianta2}
+                        B. {t(this.state.exercitiuAles.varianta2)}
                       </Button>
                       <Button
                         className={this.state.btn3 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1116,7 +1122,7 @@ class ExercitiiDB extends Component {
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta3);
                         }}
                       >
-                        C. {this.state.exercitiuAles.varianta3}
+                        C. {t(this.state.exercitiuAles.varianta3)}
                       </Button>
                       <Button
                         className={this.state.btn4 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1125,20 +1131,15 @@ class ExercitiiDB extends Component {
                           this.setSelectedAnswer(this.state.exercitiuAles.varianta4);
                         }}
                       >
-                        D. {this.state.exercitiuAles.varianta4}
+                        D. {t(this.state.exercitiuAles.varianta4)}
                       </Button>
                     </div>
                   </article>
                   {this.state.eroare ? (
-                    <p
-                      className="exercitiu-err-p"
-                      // style={{ visibility: this.state.eroare ? 'visible' : 'hidden', width: '30%' }}
-                    >
-                      {this.state.eroare}
-                    </p>
+                    <p className="exercitiu-err-p">{this.state.eroare}</p>
                   ) : (
                     <p className="exercitiu-err-p" style={{ color: 'white' }}>
-                      'Selecteaza o varianta de raspuns!'
+                      {t('Selecteaza o varianta de raspuns!')}
                     </p>
                   )}
                   <Button
@@ -1148,7 +1149,7 @@ class ExercitiiDB extends Component {
                       this.fetchExercitiiGresite();
                     }}
                   >
-                    trimite
+                    {t('Trimite')}
                   </Button>
                 </section>
               </Grid>
@@ -1173,7 +1174,7 @@ class ExercitiiDB extends Component {
                   <article className="container">
                     <h2>
                       {' '}
-                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                      <Markdown>{t(this.state.exercitiuAles.cerinta)}</Markdown>{' '}
                     </h2>
                     <div className="btn-container">
                       <Button
@@ -1185,7 +1186,7 @@ class ExercitiiDB extends Component {
                               : 'red'
                         }}
                       >
-                        A. {this.state.exercitiuAles.varianta1}
+                        A. {t(this.state.exercitiuAles.varianta1)}
                       </Button>
                       <Button
                         className={this.state.btn2 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1196,7 +1197,7 @@ class ExercitiiDB extends Component {
                               : 'red'
                         }}
                       >
-                        B. {this.state.exercitiuAles.varianta2}
+                        B. {t(this.state.exercitiuAles.varianta2)}
                       </Button>
                       <Button
                         className={this.state.btn3 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1207,7 +1208,7 @@ class ExercitiiDB extends Component {
                               : 'red'
                         }}
                       >
-                        C. {this.state.exercitiuAles.varianta3}
+                        C. {t(this.state.exercitiuAles.varianta3)}
                       </Button>
                       <Button
                         className={this.state.btn4 ? 'answer-clicked-btn' : 'answer-btn'}
@@ -1218,7 +1219,7 @@ class ExercitiiDB extends Component {
                               : 'red'
                         }}
                       >
-                        D. {this.state.exercitiuAles.varianta4}
+                        D. {t(this.state.exercitiuAles.varianta4)}
                       </Button>
                     </div>
                   </article>
@@ -1229,7 +1230,7 @@ class ExercitiiDB extends Component {
                       fontSize: '1.1rem'
                     }}
                   >
-                    Raspuns: {this.state.rezultatExercitiu}
+                    {t('Raspuns')}: {t(this.state.rezultatExercitiu)}
                   </p>
                   <Button
                     className="next-question"
@@ -1237,7 +1238,7 @@ class ExercitiiDB extends Component {
                       this.setState({ veziRezolvare: true });
                     }}
                   >
-                    Vezi rezolvarea
+                    {t('Vezi rezolvarea')}
                   </Button>
                 </section>
               </Grid>
@@ -1262,7 +1263,7 @@ class ExercitiiDB extends Component {
                   <article className="container">
                     <h2>
                       {' '}
-                      <Markdown>{this.state.exercitiuAles.cerinta}</Markdown>{' '}
+                      <Markdown>{t(this.state.exercitiuAles.cerinta)}</Markdown>{' '}
                     </h2>
                     <div className="btn-container">
                       <Button
@@ -1274,7 +1275,7 @@ class ExercitiiDB extends Component {
                               : 'red'
                         }}
                       >
-                        A. {this.state.exercitiuAles.varianta1}
+                        A. {t(this.state.exercitiuAles.varianta1)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1285,7 +1286,7 @@ class ExercitiiDB extends Component {
                               : 'red'
                         }}
                       >
-                        B. {this.state.exercitiuAles.varianta2}
+                        B. {t(this.state.exercitiuAles.varianta2)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1296,7 +1297,7 @@ class ExercitiiDB extends Component {
                               : 'red'
                         }}
                       >
-                        C. {this.state.exercitiuAles.varianta3}
+                        C. {t(this.state.exercitiuAles.varianta3)}
                       </Button>
                       <Button
                         className="answer-btn"
@@ -1307,17 +1308,17 @@ class ExercitiiDB extends Component {
                               : 'red'
                         }}
                       >
-                        D. {this.state.exercitiuAles.varianta4}
+                        D. {t(this.state.exercitiuAles.varianta4)}
                       </Button>
                     </div>
                   </article>
 
                   <Stack spacing={2} sx={{ p: 3 }}>
                     <h2>
-                      <b>Rezolvare:</b>
+                      <b>{t('Rezolvare')}:</b>
                     </h2>
                     <Typography variant="subtitle1">
-                      <Markdown>{this.state.exercitiuAles.rezolvare}</Markdown>
+                      <Markdown>{t(this.state.exercitiuAles.rezolvare)}</Markdown>
                     </Typography>
                   </Stack>
                 </section>
@@ -1335,7 +1336,7 @@ class ExercitiiDB extends Component {
             !this.state.exercitiuChosen &&
             this.state.adaugaExercitiuChosen && (
               <ModalFisaTeorie
-                title="Adaugă exercitiu"
+                title={t('Adaugă exercitiu')}
                 numeButon="Adaugă exercitiu"
                 canCancel
                 canConfirm
@@ -1346,7 +1347,7 @@ class ExercitiiDB extends Component {
                 <Paper>
                   <TextField
                     id="Cerinta"
-                    label="Cerinta"
+                    label={t('Cerinta')}
                     style={{ width: '100%' }}
                     margin="dense"
                     placeholder="Cerinta"
@@ -1355,7 +1356,7 @@ class ExercitiiDB extends Component {
                   />
                   <TextField
                     id="Rezolvare"
-                    label="Rezolvare"
+                    label={t('Rezolvare')}
                     style={{ width: '100%', borderColor: 'yellow !important' }}
                     rows={5}
                     margin="dense"
@@ -1366,7 +1367,7 @@ class ExercitiiDB extends Component {
                   <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <TextField
                       id="Raspuns corect"
-                      label="Raspuns corect"
+                      label={t('Raspuns corect')}
                       style={{ width: '49.3%' }}
                       margin="dense"
                       placeholder="Raspuns corect"
@@ -1375,24 +1376,24 @@ class ExercitiiDB extends Component {
                     />
                     <FormControl sx={{ width: '49.3%' }} margin="dense">
                       <InputLabel id="demo-simple-select-helper-label">
-                        Nivel dificultate
+                        {t('Nivel dificultate')}
                       </InputLabel>
                       <Select
                         labelId="demo-simple-select-helper-label"
                         id="demo-simple-select-helper"
-                        label="Nivel dificultate"
+                        label={t('Nivel dificultate')}
                         inputRef={this.nivelDificultateExercitiuRef}
                       >
-                        <MenuItem value="scazut">Scazut</MenuItem>
-                        <MenuItem value="mediu">Mediu</MenuItem>
-                        <MenuItem value="ridicat">Ridicat</MenuItem>
+                        <MenuItem value="scazut">{t('Scazut')}</MenuItem>
+                        <MenuItem value="mediu">{t('Mediu')}</MenuItem>
+                        <MenuItem value="ridicat">{t('Ridicat')}</MenuItem>
                       </Select>
                     </FormControl>
                   </Stack>
                   <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <TextField
                       id="Varianta 1"
-                      label="Varianta 1"
+                      label={t('Varianta 1')}
                       style={{ width: '24%' }}
                       margin="dense"
                       marginRight="100"
@@ -1402,7 +1403,7 @@ class ExercitiiDB extends Component {
                     />
                     <TextField
                       id="Varianta 2"
-                      label="Varianta 2"
+                      label={t('Varianta 2')}
                       style={{ width: '24%' }}
                       margin="dense"
                       placeholder="Varianta 2"
@@ -1412,7 +1413,7 @@ class ExercitiiDB extends Component {
 
                     <TextField
                       id="Varianta 3"
-                      label="Varianta 3"
+                      label={t('Varianta 3')}
                       style={{ width: '24%' }}
                       margin="dense"
                       placeholder="Varianta 3"
@@ -1421,7 +1422,7 @@ class ExercitiiDB extends Component {
                     />
                     <TextField
                       id="Varianta 4"
-                      label="Varianta 4"
+                      label={t('Varianta 4')}
                       style={{ width: '24%' }}
                       margin="dense"
                       placeholder="Varianta 4"
@@ -1438,4 +1439,4 @@ class ExercitiiDB extends Component {
   }
 }
 ExercitiiDB.contextType = AuthContext;
-export default ExercitiiDB;
+export default withTranslation()(ExercitiiDB);
