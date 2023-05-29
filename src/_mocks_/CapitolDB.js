@@ -839,7 +839,7 @@ class CapitolDB extends React.Component {
                     </Typography>
                     {/* <Typography variant="subtitle2">Noțiuni teoretice:</Typography> */}
                     &nbsp;
-                    <Markdown>{fisaTeorie.descriere}</Markdown>
+                    <Markdown>{t(fisaTeorie.descriere)}</Markdown>
                     {/* fisaTeorie.link_video !== null ? */}
                     <CardMedia
                       sx={{ m: 5, p: 3 }}

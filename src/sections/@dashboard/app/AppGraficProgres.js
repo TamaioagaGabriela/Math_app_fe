@@ -16,7 +16,7 @@ const testePercentageList = [];
 const exercitiiPercentageList = [];
 
 export default function AppGraficProgres() {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const CHART_DATA = [
     {
       name: t('Probleme'),

@@ -1,5 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { useState } from 'react';
+
+import { useState, useContext, useEffect } from 'react';
 
 import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 // material
@@ -16,7 +17,9 @@ import {
   Box,
   MenuItem,
   InputLabel,
-  FormControl
+  FormControl,
+  IconButton,
+  Popover
 } from '@mui/material';
 // layouts
 import AuthLayout from '../layouts/AuthLayout';
@@ -24,6 +27,8 @@ import AuthLayout from '../layouts/AuthLayout';
 import Page from '../components/Page';
 import { LoginForm } from '../sections/authentication/login';
 import AuthSocial from '../sections/authentication/AuthSocial';
+import AuthContext from '../context/auth-context';
+
 import LoginI18n from './Logini18n'; // Import the LoginI18n component
 
 // ----------------------------------------------------------------------
@@ -74,6 +79,10 @@ const LANGS = [
 // ----------------------------------------------------------------------
 
 export function LanguageSelector() {
+  const [limbaAleasa, setLimbaAleasa] = useState('ro');
+  const context = useContext(AuthContext);
+  console.log(context.limbaAleasaPic);
+
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -86,8 +95,13 @@ export function LanguageSelector() {
 
   const { i18n } = useTranslation(); // Get the i18n object from useTranslation
 
+  const changeLimbaAleasaPic = (val) => {
+    context.limbaAleasaPic = val;
+  };
+
   const handleChangeLanguage = (event) => {
     const languageCode = event?.target?.value;
+
     console.log('Event target', event?.target?.value);
 
     console.log('Selected language:', languageCode);
@@ -96,66 +110,135 @@ export function LanguageSelector() {
     });
   };
 
-  return (
-    // <Select onChange={handleChangeLanguage} sx={{ py: 1, px: 5 }}>
-    //   <Typography
-    //     textTransform="lowercase"
-    //     // fontStyle="italic"
-    //     component="span"
-    //     variant="subtitle2"
-    //     sx={{ color: '#49BD47' }}
-    //   >
-    //     Alege limba
-    //   </Typography>
-    //   <option value="ro">Romana</option>
-    //   <option value="en">English</option>
-    // </Select>
+  const handleChangeLanguage1 = (languageCode) => {
+    console.log('value = ', languageCode);
 
-    <FormControl
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      PaperProps={{
-        sx: {
-          p: 1,
-          mt: 1.5,
-          ml: 0.75,
-          width: 180,
-          '& .MuiMenuItem-root': {
-            px: 1,
-            typography: 'body2',
-            borderRadius: 0.75
-          }
-        }
-      }}
-    >
-      <Select
-        defaultValue="ro"
-        onChange={handleChangeLanguage}
+    i18n.changeLanguage(languageCode).then(() => {
+      console.log('Language changed to:', languageCode);
+    });
+    setOpen(null);
+  };
+
+  return (
+    <>
+      <IconButton
+        onClick={handleOpen}
+        sx={{
+          padding: 0,
+          width: 35,
+          height: 35,
+          ...(open && {
+            bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
+          })
+        }}
+      >
+        <img
+          src={context.limbaAleasaPic !== undefined ? context.limbaAleasaPic : LANGS[0].icon}
+          alt={LANGS[0].label}
+        />
+      </IconButton>
+
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
           sx: {
-            padding: 0,
-            width: 44,
-            height: 44,
-            ...(open && {
-              bgcolor: (theme) =>
-                alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
-            })
+            p: 1,
+            mt: 1.5,
+            ml: 0.75,
+            width: 180,
+            '& .MuiMenuItem-root': {
+              px: 1,
+              typography: 'body2',
+              borderRadius: 0.75
+            }
           }
         }}
       >
-        <MenuItem value="ro">
-          <Box component="img" alt={LANGS[0].label} src={LANGS[0].icon} sx={{ width: 28, mr: 2 }} />
-        </MenuItem>
-        <MenuItem value="en">
-          <Box component="img" alt={LANGS[1].label} src={LANGS[1].icon} sx={{ width: 28, mr: 2 }} />
-        </MenuItem>
-        <MenuItem value="ua">
-          <Box component="img" alt={LANGS[2].label} src={LANGS[2].icon} sx={{ width: 28, mr: 2 }} />
-        </MenuItem>
-      </Select>
-    </FormControl>
+        <Stack spacing={0.75}>
+          {LANGS.map((option) => (
+            <MenuItem
+              key={option.value}
+              // selected={option.value === LANGS[0].value}
+              onClick={() => {
+                setLimbaAleasa(option.value);
+                // setLimbaAleasaPic(option.icon);
+                changeLimbaAleasaPic(option.icon);
+                // console.log('context:', limbaAleasa);
+                handleChangeLanguage1(option.value);
+              }}
+            >
+              <Box component="img" alt={option.label} src={option.icon} sx={{ width: 28, mr: 2 }} />
+              {option.label}
+            </MenuItem>
+          ))}
+        </Stack>
+      </Popover>
+
+      {/* <FormControl
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            mt: 1.5,
+            ml: 0.75,
+            width: 180,
+            '& .MuiMenuItem-root': {
+              px: 1,
+              typography: 'body2',
+              borderRadius: 0.75
+            }
+          }
+        }}
+      >
+        <Select
+          defaultValue="ro"
+          onChange={handleChangeLanguage}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            sx: {
+              padding: 0,
+              width: 44,
+              height: 44,
+              ...(open && {
+                bgcolor: (theme) =>
+                  alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
+              })
+            }
+          }}
+        >
+          <MenuItem value="ro">
+            <Box
+              component="img"
+              alt={LANGS[0].label}
+              src={LANGS[0].icon}
+              sx={{ width: 28, mr: 2 }}
+            />
+          </MenuItem>
+          <MenuItem value="en">
+            <Box
+              component="img"
+              alt={LANGS[1].label}
+              src={LANGS[1].icon}
+              sx={{ width: 28, mr: 2 }}
+            />
+          </MenuItem>
+          <MenuItem value="ua">
+            <Box
+              component="img"
+              alt={LANGS[2].label}
+              src={LANGS[2].icon}
+              sx={{ width: 28, mr: 2 }}
+            />
+          </MenuItem>
+        </Select>
+      </FormControl> */}
+    </>
   );
 }
 
@@ -166,7 +249,7 @@ export default function Login() {
     <RootStyle title={t('Login')}>
       <AuthLayout>
         <LanguageSelector />
-        {t('Nu ai cont?')} &nbsp;
+        &nbsp;&nbsp;&nbsp;{t('Nu ai cont?')} &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
           {t('Creează un cont nou')}
         </Link>
@@ -174,7 +257,8 @@ export default function Login() {
       </AuthLayout>
 
       <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
-        <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+        <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5, marginTop: 18 }}>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           {t('Bine ai revenit!')}
         </Typography>
         <img

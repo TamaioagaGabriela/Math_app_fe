@@ -43,11 +43,11 @@ export default function App() {
         setRole(null);
         setUserId(null);
         setClasa(null);
+        setLanguage('ro');
         setNume(null);
         setEmail(null);
         setCapitol(undefined);
         setSubcapitol(undefined);
-        setLanguage('ro');
       }
     }),
     [token, userId]
